@@ -1,0 +1,3 @@
+"""
+VisionCraftAI テストスイート
+"""
