@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python:*)",
+      "Bash(pip:*)",
+      "Bash(pytest:*)",
+      "Bash(mkdir:*)",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep"
+    ],
+    "deny": []
+  },
+  "autoApprove": {
+    "imageGeneration": true,
+    "fileSave": true,
+    "packageInstall": true
+  },
+  "environment": {
+    "pythonVersion": "3.12+",
+    "requiredEnvVars": [
+      "GOOGLE_APPLICATION_CREDENTIALS",
+      "GOOGLE_CLOUD_PROJECT"
+    ]
+  },
+  "project": {
+    "name": "VisionCraftAI",
+    "type": "ai-image-generation",
+    "language": "python"
+  }
+}
