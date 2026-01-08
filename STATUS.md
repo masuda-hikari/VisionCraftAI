@@ -1,9 +1,9 @@
-﻿﻿# VisionCraftAI - ステータス
+# VisionCraftAI - ステータス
 
 最終更新: 2026-01-08
 
 ## 現在の状況
-- 状況: Phase 7 デプロイ準備完了
+- 状況: Phase 8 デプロイ自動化完了
 - 進捗: テストスイート全パス（217 passed, 1 skipped）
 
 ## Phase 1 進捗（完了）
@@ -77,10 +77,21 @@
 | .env.example更新（Stripe設定追加） | 完了 |
 | デプロイガイド作成 | 完了 |
 
+## Phase 8 進捗（完了）
+| タスク | 状態 |
+|--------|------|
+| Google Cloud セットアップスクリプト（setup_gcloud.py） | 完了 |
+| Cloud Run デプロイスクリプト（deploy_cloudrun.py） | 完了 |
+| Stripe セットアップスクリプト（setup_stripe.py） | 完了 |
+
 ## 次のアクション
-1. Google Cloud認証情報の設定・API接続テスト
-2. Stripe本番環境設定（APIキー、価格ID登録）
-3. 本番デプロイ（Cloud Run/Fly.io/Vercel等）
+1. **Google Cloud認証情報の設定**
+   - `python scripts/setup_gcloud.py --project YOUR_PROJECT_ID`
+   - サービスアカウント認証情報をcredentials/に配置
+2. **Stripe本番環境設定**
+   - `python scripts/setup_stripe.py --api-key sk_live_xxx --webhook-url https://your-domain.com`
+3. **本番デプロイ実行**
+   - `python scripts/deploy_cloudrun.py --project YOUR_PROJECT_ID`
 4. ドメイン設定・SSL証明書
 5. マーケティング・初期ユーザー獲得
 
@@ -128,6 +139,11 @@
 - `Dockerfile` - 本番用Dockerイメージ（マルチステージビルド）
 - `docker-compose.yml` - Docker Compose設定（開発/本番）
 - `docs/DEPLOY_GUIDE.md` - デプロイ手順書
+
+### 自動化スクリプト
+- `scripts/setup_gcloud.py` - Google Cloud環境セットアップ
+- `scripts/deploy_cloudrun.py` - Cloud Runデプロイ自動化
+- `scripts/setup_stripe.py` - Stripe本番環境セットアップ
 
 ## APIエンドポイント一覧
 | エンドポイント | メソッド | 認証 | 説明 |
@@ -187,16 +203,12 @@
 | credits_500 | 500 | +100 | $149.99 |
 
 ## 最近の変更
+- 2026-01-08: Phase 8 デプロイ自動化スクリプト作成
+  - setup_gcloud.py: Google Cloud環境セットアップ自動化
+  - deploy_cloudrun.py: Cloud Runデプロイ自動化
+  - setup_stripe.py: Stripe本番環境セットアップ自動化
 - 2026-01-08: Phase 7 デプロイ準備完了
-  - Dockerfile作成（マルチステージビルド）
-  - docker-compose.yml作成（開発/本番モード対応）
-  - デプロイガイド作成（docs/DEPLOY_GUIDE.md）
-  - 環境変数テンプレート更新
 - 2026-01-08: Phase 6 Webインターフェース実装完了
-  - ランディングページ作成（HTML/CSS/JS）
-  - 料金プラン表示・デモ機能実装
-  - 静的ファイル配信・テンプレートエンジン統合
-  - 全217テストパス
 - 2026-01-08: Phase 5 Stripe決済統合完了
 - 2026-01-08: Phase 4 認証・認可システム実装
 - 2026-01-08: Phase 3 FastAPI RESTful API実装
@@ -215,6 +227,18 @@ uvicorn src.api.app:app --reload --port 8000
 # http://localhost:8000 (ランディングページ)
 # http://localhost:8000/docs (Swagger UI)
 # http://localhost:8000/redoc (ReDoc)
+```
+
+## デプロイ手順
+```bash
+# 1. Google Cloud セットアップ
+python scripts/setup_gcloud.py --project YOUR_PROJECT_ID
+
+# 2. Stripe セットアップ（本番APIキー使用）
+python scripts/setup_stripe.py --api-key sk_live_xxx --webhook-url https://your-domain.com
+
+# 3. Cloud Run デプロイ
+python scripts/deploy_cloudrun.py --project YOUR_PROJECT_ID
 ```
 
 ## 認証方法
