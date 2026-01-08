@@ -3,8 +3,8 @@
 最終更新: 2026-01-09
 
 ## 現在の状況
-- 状況: Phase 13 ユーザーダッシュボード完備
-- 進捗: テストスイート全パス（319 passed, 1 skipped）
+- 状況: Phase 14 本番運用監視機能完備
+- 進捗: テストスイート全パス（347 passed, 1 skipped）
 
 ## Phase 1 進捗（完了）
 | タスク | 状態 |
@@ -142,6 +142,17 @@
 | ナビゲーションリンク追加 | 完了 |
 | ダッシュボードテスト18件追加 | 完了 |
 
+## Phase 14 進捗（完了）
+| タスク | 状態 |
+|--------|------|
+| モニタリングモジュール実装（src/utils/monitoring.py） | 完了 |
+| ヘルスチェッカー（複数コンポーネント対応） | 完了 |
+| メトリクスコレクター（Prometheus対応） | 完了 |
+| 構造化ロガー（JSON出力） | 完了 |
+| Kubernetes Liveness/Readiness Probe | 完了 |
+| モニタリングAPIエンドポイント（/api/v1/monitoring/*） | 完了 |
+| モニタリングテスト28件追加 | 完了 |
+
 ## 次のアクション
 1. **Google Cloud認証情報の設定**（ブロッカー）
    - `python scripts/setup_gcloud.py --project YOUR_PROJECT_ID`
@@ -173,6 +184,10 @@
 - `src/api/schemas.py` - Pydanticスキーマ定義
 - `src/api/demo_routes.py` - デモAPIエンドポイント
 - `src/api/contact_routes.py` - お問い合わせAPIエンドポイント
+- `src/api/monitoring_routes.py` - モニタリングAPIエンドポイント
+
+### モニタリング
+- `src/utils/monitoring.py` - ヘルスチェック・メトリクス・構造化ロギング
 
 ### 管理者
 - `src/api/admin/dashboard.py` - 管理者ダッシュボード機能
@@ -300,6 +315,15 @@
 | `/api/v1/admin/contacts/stats` | GET | **管理者** | お問い合わせ統計 |
 | `/api/v1/admin/export` | GET | **管理者** | データエクスポート |
 
+### モニタリングエンドポイント
+| エンドポイント | メソッド | 認証 | 説明 |
+|---------------|---------|------|------|
+| `/api/v1/monitoring/liveness` | GET | 不要 | Kubernetes Liveness Probe |
+| `/api/v1/monitoring/readiness` | GET | 不要 | Kubernetes Readiness Probe |
+| `/api/v1/monitoring/health` | GET | 不要 | 詳細ヘルスチェック |
+| `/api/v1/monitoring/metrics` | GET | 不要 | アプリメトリクス（JSON） |
+| `/api/v1/monitoring/metrics/prometheus` | GET | 不要 | Prometheusメトリクス |
+
 ## プラン階層
 | プラン | 月間制限 | 日間制限 | 最大解像度 | バッチ上限 | 価格 |
 |--------|---------|---------|-----------|----------|------|
@@ -317,6 +341,14 @@
 | credits_500 | 500 | +100 | $149.99 |
 
 ## 最近の変更
+- 2026-01-09: Phase 14 本番運用監視機能
+  - モニタリングモジュール（src/utils/monitoring.py）
+  - ヘルスチェッカー（複数コンポーネント並列チェック）
+  - メトリクスコレクター（カウンター/ゲージ/ヒストグラム）
+  - 構造化ロガー（JSON出力対応）
+  - Kubernetes Liveness/Readiness Probe
+  - Prometheusメトリクスエクスポート
+  - モニタリングテスト28件追加（347 passed, 1 skipped）
 - 2026-01-09: Phase 13 ユーザーダッシュボード
   - ユーザーダッシュボードページ（templates/dashboard.html）
   - ダッシュボードCSS（static/css/dashboard.css）
