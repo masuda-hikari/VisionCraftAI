@@ -1,0 +1,808 @@
+/* VisionCraftAI - ダッシュボードスタイル */
+
+/* ログインオーバーレイ */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.login-modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+.login-modal h2 {
+    margin-bottom: 8px;
+}
+
+.login-modal > p {
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+}
+
+.login-modal .form-group {
+    text-align: left;
+    margin-bottom: 24px;
+}
+
+.login-modal label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.login-modal input {
+    width: 100%;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    color: var(--text-primary);
+    font-family: monospace;
+    font-size: 1rem;
+}
+
+.login-modal input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.login-modal .btn-primary {
+    width: 100%;
+    display: block;
+    padding: 14px;
+    margin-bottom: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.login-help {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.login-help a {
+    color: var(--primary);
+}
+
+/* ダッシュボードメイン */
+.dashboard-main {
+    padding-top: 100px;
+    padding-bottom: 60px;
+    min-height: calc(100vh - 200px);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.dashboard-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tier-badge {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.tier-badge.free { background: var(--text-secondary); }
+.tier-badge.basic { background: var(--success); }
+.tier-badge.pro { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); }
+.tier-badge.enterprise { background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); }
+
+.user-id {
+    color: var(--text-secondary);
+    font-family: monospace;
+    font-size: 0.875rem;
+}
+
+/* KPIカード */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.kpi-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.kpi-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+}
+
+.kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.kpi-label {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.kpi-sublabel {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+
+.kpi-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--border);
+}
+
+.kpi-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    transition: width 0.5s ease;
+}
+
+/* タブナビゲーション */
+.dashboard-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    background: var(--bg-card);
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    color: var(--text-primary);
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.tab-btn.active {
+    background: var(--primary);
+    color: white;
+}
+
+/* タブコンテンツ */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* セクションカード */
+.section-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.section-card h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    margin-bottom: 0;
+}
+
+/* 現在のプラン */
+.current-plan {
+    display: grid;
+    gap: 24px;
+}
+
+.plan-info h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.plan-info p {
+    color: var(--success);
+    font-weight: 500;
+}
+
+.plan-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+}
+
+.plan-detail {
+    background: var(--bg-dark);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.detail-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.detail-value {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.plan-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.plan-actions .btn-primary,
+.plan-actions .btn-secondary {
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.plan-actions .btn-secondary {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+}
+
+/* プラン比較テーブル */
+.plan-comparison {
+    overflow-x: auto;
+}
+
+.plan-comparison table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.plan-comparison th,
+.plan-comparison td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.plan-comparison th {
+    background: var(--bg-dark);
+    font-weight: 600;
+}
+
+.plan-comparison th:first-child,
+.plan-comparison td:first-child {
+    color: var(--text-secondary);
+}
+
+/* 使用量統計 */
+.usage-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 24px;
+}
+
+.usage-stat {
+    text-align: center;
+    padding: 16px;
+    background: var(--bg-dark);
+    border-radius: 8px;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+/* 使用量チャート */
+.usage-chart {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-data {
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* レート制限 */
+.rate-limit-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.rate-limit-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bg-dark);
+    border-radius: 8px;
+}
+
+.rate-label {
+    color: var(--text-secondary);
+}
+
+.rate-value {
+    font-weight: 600;
+}
+
+/* APIキー一覧 */
+.api-keys-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.api-key-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: var(--bg-dark);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.api-key-info {
+    flex: 1;
+}
+
+.api-key-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.api-key-id {
+    font-family: monospace;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.api-key-meta {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.api-key-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.api-key-actions button {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.api-key-actions button:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.api-key-actions button.danger:hover {
+    border-color: var(--error);
+    color: var(--error);
+}
+
+/* コード例 */
+.code-example {
+    margin-bottom: 24px;
+}
+
+.code-example h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+.code-example pre {
+    background: var(--bg-dark);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+}
+
+.code-example code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.api-key-placeholder {
+    color: var(--accent);
+}
+
+/* クレジット残高 */
+.credit-balance-display {
+    text-align: center;
+    padding: 32px;
+}
+
+.credit-main {
+    margin-bottom: 8px;
+}
+
+.credit-value {
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.credit-label {
+    color: var(--text-secondary);
+    margin-left: 8px;
+}
+
+.credit-bonus {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+/* クレジットパッケージ */
+.credit-packages {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.credit-package {
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.credit-package:hover {
+    border-color: var(--primary);
+}
+
+.credit-package.popular {
+    border-color: var(--primary);
+}
+
+.package-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.package-credits {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.package-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 16px;
+}
+
+.credit-package button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* 取引履歴 */
+.transactions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: var(--bg-dark);
+    border-radius: 8px;
+}
+
+.transaction-info {
+    flex: 1;
+}
+
+.transaction-type {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.transaction-date {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.transaction-amount {
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.transaction-amount.positive {
+    color: var(--success);
+}
+
+.transaction-amount.negative {
+    color: var(--error);
+}
+
+/* モーダル */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+}
+
+.modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 500px;
+    width: 90%;
+}
+
+.modal h2 {
+    margin-bottom: 16px;
+}
+
+.modal .form-group {
+    margin-bottom: 20px;
+}
+
+.modal label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.modal input,
+.modal textarea {
+    width: 100%;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.modal textarea {
+    height: 80px;
+    resize: vertical;
+}
+
+.modal input:focus,
+.modal textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+.modal-actions button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.warning-text {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 20px;
+    color: var(--accent);
+    font-size: 0.875rem;
+}
+
+.key-display {
+    display: flex;
+    gap: 12px;
+    background: var(--bg-dark);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 24px;
+}
+
+.key-display code {
+    flex: 1;
+    font-family: monospace;
+    font-size: 0.875rem;
+    word-break: break-all;
+}
+
+.copy-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.copy-btn:hover {
+    background: var(--primary-dark);
+}
+
+/* ナビゲーション拡張 */
+.nav-logout {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.nav-logout:hover {
+    border-color: var(--error);
+    color: var(--error);
+}
+
+/* フッター調整 */
+.dashboard-footer {
+    padding: 20px 0;
+    margin-top: auto;
+}
+
+.dashboard-footer .footer-bottom {
+    padding-top: 0;
+    border-top: none;
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .dashboard-tabs {
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        flex: none;
+        width: calc(50% - 4px);
+    }
+
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .plan-actions {
+        flex-direction: column;
+    }
+
+    .api-key-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .api-key-actions {
+        width: 100%;
+    }
+
+    .api-key-actions button {
+        flex: 1;
+    }
+}

@@ -193,6 +193,15 @@ async def admin_page(request: Request):
     return HTMLResponse("<h1>管理者ダッシュボード</h1><p>ページが見つかりません</p>", status_code=404)
 
 
+# ユーザーダッシュボードページ
+@app.get("/dashboard", tags=["Pages"], response_class=HTMLResponse)
+async def dashboard_page(request: Request):
+    """ユーザーダッシュボードページ"""
+    if templates:
+        return templates.TemplateResponse(request, "dashboard.html")
+    return HTMLResponse("<h1>ダッシュボード</h1><p>ページが見つかりません</p>", status_code=404)
+
+
 def run_server(host: str = "0.0.0.0", port: int = 8000, reload: bool = False):
     """
     開発サーバーを起動
