@@ -1,10 +1,10 @@
-﻿# VisionCraftAI - ステータス
+# VisionCraftAI - ステータス
 
 最終更新: 2026-01-08
 
 ## 現在の状況
-- 状況: Phase 5 Stripe決済統合・クレジットシステム完了
-- 進捗: テストスイート全パス（216 passed, 1 skipped）
+- 状況: Phase 6 Webインターフェース実装完了
+- 進捗: テストスイート全パス（217 passed, 1 skipped）
 
 ## Phase 1 進捗（完了）
 | タスク | 状態 |
@@ -59,12 +59,22 @@
 | Webhook処理実装 | 完了 |
 | 決済テスト52件 | 完了 |
 
+## Phase 6 進捗（完了）
+| タスク | 状態 |
+|--------|------|
+| ランディングページHTML/CSS | 完了 |
+| フロントエンドJavaScript | 完了 |
+| 静的ファイル配信設定（FastAPI） | 完了 |
+| テンプレートエンジン統合（Jinja2） | 完了 |
+| デモ機能（画像生成UI） | 完了 |
+| 料金プラン表示 | 完了 |
+
 ## 次のアクション
 1. Google Cloud認証情報の設定・API接続テスト
 2. Stripe本番環境設定（APIキー、価格ID登録）
-3. 簡易Webインターフェースの作成
-4. ユーザー登録・アカウント管理機能
-5. 本番デプロイ準備
+3. 本番デプロイ（Cloud Run/Fly.io/Vercel等）
+4. ドメイン設定・SSL証明書
+5. マーケティング・初期ユーザー獲得
 
 ## ブロッカー
 - Google Cloud サービスアカウント認証情報が必要
@@ -93,7 +103,7 @@
 - `src/api/auth/schemas.py` - 認証スキーマ
 - `src/api/auth/routes.py` - 認証エンドポイント
 
-### 決済（新規）
+### 決済
 - `src/api/payment/models.py` - Subscription, CreditBalance, CreditTransaction モデル
 - `src/api/payment/stripe_client.py` - Stripe APIクライアント（テストモード対応）
 - `src/api/payment/subscription_manager.py` - サブスクリプション管理
@@ -101,10 +111,15 @@
 - `src/api/payment/schemas.py` - 決済スキーマ
 - `src/api/payment/routes.py` - 決済エンドポイント
 
+### フロントエンド（新規）
+- `templates/index.html` - ランディングページ
+- `static/css/style.css` - スタイルシート
+- `static/js/app.js` - フロントエンドJavaScript
+
 ## APIエンドポイント一覧
 | エンドポイント | メソッド | 認証 | 説明 |
 |---------------|---------|------|------|
-| `/` | GET | 不要 | API情報 |
+| `/` | GET | 不要 | ランディングページ / API情報 |
 | `/api/v1/health` | GET | 不要 | ヘルスチェック |
 | `/api/v1/generate` | POST | **必須** | 画像生成 |
 | `/api/v1/batch/generate` | POST | **必須** | バッチ画像生成 |
@@ -128,7 +143,7 @@
 | `/api/v1/auth/rate-limit` | GET | **必須** | レート制限状況 |
 | `/api/v1/auth/verify` | GET | **必須** | 認証確認 |
 
-### 決済エンドポイント（新規）
+### 決済エンドポイント
 | エンドポイント | メソッド | 認証 | 説明 |
 |---------------|---------|------|------|
 | `/api/v1/payment/plans` | GET | 不要 | プラン一覧 |
@@ -150,7 +165,7 @@
 | Pro | 500枚 | 50枚 | 2048x2048 | 50 | $29.99/月 |
 | Enterprise | 無制限 | 無制限 | 4096x4096 | 100 | $99.99/月 |
 
-## クレジットパッケージ（新規）
+## クレジットパッケージ
 | パッケージ | クレジット | ボーナス | 価格 |
 |-----------|-----------|---------|------|
 | credits_10 | 10 | 0 | $4.99 |
@@ -159,15 +174,12 @@
 | credits_500 | 500 | +100 | $149.99 |
 
 ## 最近の変更
+- 2026-01-08: Phase 6 Webインターフェース実装完了
+  - ランディングページ作成（HTML/CSS/JS）
+  - 料金プラン表示・デモ機能実装
+  - 静的ファイル配信・テンプレートエンジン統合
+  - 全217テストパス
 - 2026-01-08: Phase 5 Stripe決済統合完了
-  - 決済モデル定義（Subscription, CreditBalance, CreditTransaction）
-  - Stripeクライアント実装（テストモード・本番モード対応）
-  - サブスクリプション管理（作成・更新・キャンセル）
-  - クレジットシステム（購入・使用・ボーナス・履歴）
-  - 決済エンドポイント実装
-  - Webhook処理（checkout.session.completed, subscription.updated等）
-  - 決済テスト52件追加
-  - 全216テストパス
 - 2026-01-08: Phase 4 認証・認可システム実装
 - 2026-01-08: Phase 3 FastAPI RESTful API実装
 - 2026-01-08: Phase 2 コア機能拡充
@@ -181,7 +193,8 @@ python -m src.api.app
 # または
 uvicorn src.api.app:app --reload --port 8000
 
-# APIドキュメント
+# アクセス先
+# http://localhost:8000 (ランディングページ)
 # http://localhost:8000/docs (Swagger UI)
 # http://localhost:8000/redoc (ReDoc)
 ```
@@ -198,30 +211,4 @@ curl -X POST http://localhost:8000/api/v1/generate \
   -H "Content-Type: application/json" \
   -H "X-API-Key: vca_xxxxxxxx.xxxxxxxx" \
   -d '{"prompt": "A beautiful sunset"}'
-```
-
-## サブスクリプション作成
-```bash
-# サブスクリプション作成（Freeプラン）
-curl -X POST http://localhost:8000/api/v1/payment/subscriptions \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: vca_xxxxxxxx.xxxxxxxx" \
-  -d '{"email": "user@example.com", "plan_id": "free"}'
-
-# サブスクリプション作成（有料プラン）
-curl -X POST http://localhost:8000/api/v1/payment/subscriptions \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: vca_xxxxxxxx.xxxxxxxx" \
-  -d '{"email": "user@example.com", "plan_id": "basic"}'
-# → checkout_url にリダイレクトして決済完了
-```
-
-## クレジット購入
-```bash
-# クレジット購入Intent作成
-curl -X POST http://localhost:8000/api/v1/payment/credits/purchase \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: vca_xxxxxxxx.xxxxxxxx" \
-  -d '{"package_id": "credits_50"}'
-# → client_secret を使用してStripe.jsで決済完了
 ```

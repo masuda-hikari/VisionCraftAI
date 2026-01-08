@@ -7,15 +7,21 @@ VisionCraftAI - FastAPIアプリケーション
 
 import logging
 from contextlib import asynccontextmanager
+from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from src.api.routes import router
 from src.api.auth.routes import router as auth_router
 from src.api.payment.routes import router as payment_router
 from src.utils.config import Config
+
+# プロジェクトルートディレクトリ
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # ログ設定
 logging.basicConfig(
@@ -102,27 +108,45 @@ async def global_exception_handler(request, exc):
     )
 
 
+# 静的ファイルとテンプレートの設定
+static_dir = BASE_DIR / "static"
+templates_dir = BASE_DIR / "templates"
+
+# 静的ファイルディレクトリが存在する場合のみマウント
+if static_dir.exists():
+    app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+
+# テンプレートエンジン
+templates = Jinja2Templates(directory=str(templates_dir)) if templates_dir.exists() else None
+
 # ルーター登録
 app.include_router(router, prefix="/api/v1")
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(payment_router)
 
 
-# ルートエンドポイント
-@app.get("/", tags=["Root"])
-async def root():
+# ルートエンドポイント（HTMLまたはJSON）
+@app.get("/", tags=["Root"], response_class=HTMLResponse)
+async def root(request: Request):
     """
     ルートエンドポイント
 
-    API情報を返します。
+    Webブラウザの場合はHTMLページを返し、APIクライアントの場合はJSON情報を返します。
     """
-    return {
+    # Accept ヘッダーをチェックしてHTMLを求めているか確認
+    accept = request.headers.get("accept", "")
+    if templates and ("text/html" in accept or "*/*" in accept):
+        return templates.TemplateResponse(request, "index.html")
+
+    # APIクライアント向けにJSON応答
+    return JSONResponse({
         "name": "VisionCraftAI API",
         "version": "0.1.0",
         "description": "AI画像生成プラットフォーム",
         "docs": "/docs",
         "health": "/api/v1/health",
-    }
+        "web_ui": "/",
+    })
 
 
 def run_server(host: str = "0.0.0.0", port: int = 8000, reload: bool = False):

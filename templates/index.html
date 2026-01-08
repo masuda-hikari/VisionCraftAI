@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="VisionCraftAI - 最先端AI画像生成プラットフォーム。Google Gemini APIを活用した高品質な画像生成サービス。">
+    <meta name="keywords" content="AI, 画像生成, Gemini, API, 人工知能, 画像編集">
+    <title>VisionCraftAI - AI画像生成プラットフォーム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- ナビゲーション -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">VisionCraftAI</a>
+            <ul class="nav-links">
+                <li><a href="#features">特徴</a></li>
+                <li><a href="#pricing">料金</a></li>
+                <li><a href="#demo">デモ</a></li>
+                <li><a href="/docs">API Docs</a></li>
+            </ul>
+            <a href="#demo" class="nav-cta">無料で試す</a>
+        </div>
+    </nav>
+
+    <!-- ヒーローセクション -->
+    <section class="hero">
+        <div class="container">
+            <h1>
+                AIで<span>想像</span>を<span>創造</span>する
+            </h1>
+            <p>
+                Google Geminiの最先端AI技術を活用した画像生成プラットフォーム。
+                テキストプロンプトから高品質な画像を瞬時に生成。
+            </p>
+            <div class="hero-buttons">
+                <a href="#demo" class="btn-primary">無料で画像を生成</a>
+                <a href="/docs" class="btn-secondary">APIドキュメント</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 特徴セクション -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">なぜVisionCraftAI?</h2>
+            <p class="section-subtitle">プロフェッショナルからホビーストまで、あらゆるニーズに応える機能</p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>高速生成</h3>
+                    <p>Google Gemini APIによる高速な画像生成。数秒で高品質な画像をお届けします。</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>高品質出力</h3>
+                    <p>最大4096x4096の高解像度に対応。商用利用可能な品質を実現します。</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3>柔軟なAPI</h3>
+                    <p>RESTful APIで簡単統合。バッチ処理やWebhookにも対応しています。</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>安全・安心</h3>
+                    <p>不適切コンテンツの自動フィルタリング。プロンプト検証で安全な画像生成を保証。</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>使用量管理</h3>
+                    <p>リアルタイムの使用量トラッキング。コスト管理も簡単にできます。</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>柔軟な料金体系</h3>
+                    <p>無料プランから始めて、ニーズに合わせてアップグレード。クレジット購入も可能。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 料金セクション -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title">シンプルな料金プラン</h2>
+            <p class="section-subtitle">無料で始めて、必要に応じてアップグレード</p>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">$0<span>/月</span></div>
+                    <p class="price-desc">個人利用・お試しに最適</p>
+                    <ul class="pricing-features">
+                        <li>月5枚まで生成</li>
+                        <li>最大512x512解像度</li>
+                        <li>基本的なスタイル</li>
+                        <li>コミュニティサポート</li>
+                    </ul>
+                    <a href="#demo" class="pricing-btn pricing-btn-secondary" data-plan="free">無料で始める</a>
+                </div>
+
+                <div class="pricing-card">
+                    <h3>Basic</h3>
+                    <div class="price">$9.99<span>/月</span></div>
+                    <p class="price-desc">個人クリエイター向け</p>
+                    <ul class="pricing-features">
+                        <li>月100枚まで生成</li>
+                        <li>最大1024x1024解像度</li>
+                        <li>全スタイル利用可能</li>
+                        <li>メールサポート</li>
+                        <li>APIアクセス</li>
+                    </ul>
+                    <a href="#" class="pricing-btn pricing-btn-primary" data-plan="basic">Basic を選択</a>
+                </div>
+
+                <div class="pricing-card popular">
+                    <h3>Pro</h3>
+                    <div class="price">$29.99<span>/月</span></div>
+                    <p class="price-desc">プロフェッショナル向け</p>
+                    <ul class="pricing-features">
+                        <li>月500枚まで生成</li>
+                        <li>最大2048x2048解像度</li>
+                        <li>優先処理キュー</li>
+                        <li>バッチ処理（50枚同時）</li>
+                        <li>優先サポート</li>
+                    </ul>
+                    <a href="#" class="pricing-btn pricing-btn-primary" data-plan="pro">Pro を選択</a>
+                </div>
+
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">$99.99<span>/月</span></div>
+                    <p class="price-desc">ビジネス・大規模利用</p>
+                    <ul class="pricing-features">
+                        <li>無制限生成</li>
+                        <li>最大4096x4096解像度</li>
+                        <li>専用APIエンドポイント</li>
+                        <li>SLA保証</li>
+                        <li>専任サポート担当</li>
+                    </ul>
+                    <a href="#" class="pricing-btn pricing-btn-secondary" data-plan="enterprise">お問い合わせ</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- デモセクション -->
+    <section class="demo-section" id="demo">
+        <div class="container">
+            <h2 class="section-title">今すぐ試してみよう</h2>
+            <p class="section-subtitle">プロンプトを入力して、AIが生成する画像を体験</p>
+
+            <div class="demo-container">
+                <div class="api-key-section">
+                    <label for="apiKeyInput">APIキー（オプション）</label>
+                    <input type="text" id="apiKeyInput" placeholder="vca_xxxxxxxx.xxxxxxxx">
+                    <small>
+                        APIキーがない場合は <a href="#" id="createKeyBtn">無料キーを作成</a> するか、
+                        デモモードでお試しいただけます。
+                    </small>
+                </div>
+
+                <div class="demo-form">
+                    <label for="promptInput">プロンプト</label>
+                    <textarea id="promptInput" placeholder="例: A serene Japanese garden with cherry blossoms at sunset, photorealistic, 4K quality">A beautiful mountain landscape at golden hour with dramatic clouds, ultra detailed, professional photography</textarea>
+
+                    <div class="demo-options">
+                        <select id="widthSelect">
+                            <option value="512">512px</option>
+                            <option value="1024" selected>1024px</option>
+                            <option value="2048">2048px</option>
+                        </select>
+                        <span>×</span>
+                        <select id="heightSelect">
+                            <option value="512">512px</option>
+                            <option value="1024" selected>1024px</option>
+                            <option value="2048">2048px</option>
+                        </select>
+                        <select id="styleSelect">
+                            <option value="">スタイルなし</option>
+                            <option value="photorealistic">フォトリアリスティック</option>
+                            <option value="artistic">アーティスティック</option>
+                            <option value="anime">アニメ調</option>
+                            <option value="digital_art">デジタルアート</option>
+                        </select>
+                    </div>
+
+                    <button id="generateBtn" class="generate-btn">画像を生成</button>
+                </div>
+
+                <div class="demo-result" id="resultContainer">
+                    <div class="result-placeholder" id="resultPlaceholder">
+                        生成された画像がここに表示されます
+                    </div>
+                    <img class="result-image" id="resultImage" alt="Generated Image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo">VisionCraftAI</div>
+                    <p>
+                        最先端のAI技術で、あなたの創造性を解放します。
+                        テキストから画像へ、想像を現実に。
+                    </p>
+                </div>
+
+                <div class="footer-links">
+                    <h4>プロダクト</h4>
+                    <ul>
+                        <li><a href="#features">特徴</a></li>
+                        <li><a href="#pricing">料金</a></li>
+                        <li><a href="/docs">API</a></li>
+                        <li><a href="#demo">デモ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4>リソース</h4>
+                    <ul>
+                        <li><a href="/docs">ドキュメント</a></li>
+                        <li><a href="/redoc">API Reference</a></li>
+                        <li><a href="#">チュートリアル</a></li>
+                        <li><a href="#">サンプルコード</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="#">ヘルプセンター</a></li>
+                        <li><a href="#">お問い合わせ</a></li>
+                        <li><a href="#">利用規約</a></li>
+                        <li><a href="#">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 VisionCraftAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 通知 -->
+    <div id="notification" class="notification"></div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
