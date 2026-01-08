@@ -3,8 +3,8 @@
 最終更新: 2026-01-09
 
 ## 現在の状況
-- 状況: Phase 12 管理者ダッシュボード完備
-- 進捗: テストスイート全パス（301 passed, 1 skipped）
+- 状況: Phase 13 ユーザーダッシュボード完備
+- 進捗: テストスイート全パス（319 passed, 1 skipped）
 
 ## Phase 1 進捗（完了）
 | タスク | 状態 |
@@ -128,6 +128,20 @@
 | お問い合わせ統計 | 完了 |
 | 管理者テスト31件追加 | 完了 |
 
+## Phase 13 進捗（完了）
+| タスク | 状態 |
+|--------|------|
+| ユーザーダッシュボードページ（templates/dashboard.html） | 完了 |
+| ダッシュボードCSS（static/css/dashboard.css） | 完了 |
+| ダッシュボードJS（static/js/dashboard.js） | 完了 |
+| ログイン/ログアウト機能 | 完了 |
+| サブスクリプション管理UI | 完了 |
+| 使用量表示UI | 完了 |
+| APIキー管理UI | 完了 |
+| クレジット管理UI | 完了 |
+| ナビゲーションリンク追加 | 完了 |
+| ダッシュボードテスト18件追加 | 完了 |
+
 ## 次のアクション
 1. **Google Cloud認証情報の設定**（ブロッカー）
    - `python scripts/setup_gcloud.py --project YOUR_PROJECT_ID`
@@ -187,8 +201,11 @@
 - `templates/privacy.html` - プライバシーポリシーページ
 - `templates/contact.html` - お問い合わせページ
 - `templates/admin.html` - 管理者ダッシュボードページ
+- `templates/dashboard.html` - ユーザーダッシュボードページ
 - `static/css/style.css` - スタイルシート
+- `static/css/dashboard.css` - ダッシュボードスタイル
 - `static/js/app.js` - フロントエンドJavaScript
+- `static/js/dashboard.js` - ダッシュボードJavaScript
 
 ### ドキュメント
 - `docs/USER_GUIDE.md` - ユーザーガイド
@@ -216,6 +233,7 @@
 | `/terms` | GET | 不要 | 利用規約ページ |
 | `/privacy` | GET | 不要 | プライバシーポリシーページ |
 | `/contact` | GET | 不要 | お問い合わせページ |
+| `/dashboard` | GET | 不要 | ユーザーダッシュボード |
 | `/api/v1/health` | GET | 不要 | ヘルスチェック |
 | `/api/v1/generate` | POST | **必須** | 画像生成 |
 | `/api/v1/batch/generate` | POST | **必須** | バッチ画像生成 |
@@ -299,6 +317,16 @@
 | credits_500 | 500 | +100 | $149.99 |
 
 ## 最近の変更
+- 2026-01-09: Phase 13 ユーザーダッシュボード
+  - ユーザーダッシュボードページ（templates/dashboard.html）
+  - ダッシュボードCSS（static/css/dashboard.css）
+  - ダッシュボードJS（static/js/dashboard.js）
+  - ログイン/ログアウト機能（APIキー認証）
+  - サブスクリプション管理UI
+  - 使用量・レート制限表示UI
+  - APIキー管理UI（一覧・作成・無効化）
+  - クレジット管理UI（残高・購入・履歴）
+  - ダッシュボードテスト18件追加（319 passed, 1 skipped）
 - 2026-01-09: Phase 12 管理者ダッシュボード
   - 管理者ダッシュボード機能（src/api/admin/dashboard.py）
   - 管理者APIエンドポイント（src/api/admin/routes.py）
@@ -343,6 +371,7 @@ uvicorn src.api.app:app --reload --port 8000
 # http://localhost:8000/privacy (プライバシーポリシー)
 # http://localhost:8000/contact (お問い合わせ)
 # http://localhost:8000/admin (管理者ダッシュボード)
+# http://localhost:8000/dashboard (ユーザーダッシュボード)
 ```
 
 ## デプロイ手順

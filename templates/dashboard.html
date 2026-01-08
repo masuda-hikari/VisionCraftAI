@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>ダッシュボード - VisionCraftAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <!-- ナビゲーション -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">VisionCraftAI</a>
+            <ul class="nav-links">
+                <li><a href="/dashboard">ダッシュボード</a></li>
+                <li><a href="/docs">API Docs</a></li>
+                <li><a href="/contact">サポート</a></li>
+            </ul>
+            <button class="nav-logout" id="logoutBtn">ログアウト</button>
+        </div>
+    </nav>
+
+    <!-- ログインフォーム（未認証時） -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-modal">
+            <h2>ダッシュボードにログイン</h2>
+            <p>APIキーを入力してアカウント情報を確認</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="apiKeyInput">APIキー</label>
+                    <input type="text" id="apiKeyInput" placeholder="vca_xxxxxxxx.xxxxxxxx" required>
+                </div>
+                <button type="submit" class="btn-primary">ログイン</button>
+                <p class="login-help">
+                    APIキーをお持ちでない場合は<a href="/#demo">こちら</a>から無料キーを作成できます
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main class="dashboard-main" id="dashboardMain" style="display: none;">
+        <div class="container">
+            <!-- 概要カード -->
+            <section class="dashboard-header">
+                <h1>ダッシュボード</h1>
+                <div class="user-info">
+                    <span class="tier-badge" id="tierBadge">Free</span>
+                    <span class="user-id" id="userId">-</span>
+                </div>
+            </section>
+
+            <!-- KPIカード -->
+            <section class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon">🎨</div>
+                    <div class="kpi-content">
+                        <div class="kpi-value" id="monthlyUsed">-</div>
+                        <div class="kpi-label">今月の生成数</div>
+                        <div class="kpi-sublabel" id="monthlyLimit">/ - 枚</div>
+                    </div>
+                    <div class="kpi-progress">
+                        <div class="kpi-progress-bar" id="monthlyProgress" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon">📅</div>
+                    <div class="kpi-content">
+                        <div class="kpi-value" id="dailyUsed">-</div>
+                        <div class="kpi-label">今日の生成数</div>
+                        <div class="kpi-sublabel" id="dailyLimit">/ - 枚</div>
+                    </div>
+                    <div class="kpi-progress">
+                        <div class="kpi-progress-bar" id="dailyProgress" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon">💎</div>
+                    <div class="kpi-content">
+                        <div class="kpi-value" id="creditBalance">-</div>
+                        <div class="kpi-label">クレジット残高</div>
+                        <div class="kpi-sublabel" id="bonusCredits">ボーナス: -</div>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon">🔑</div>
+                    <div class="kpi-content">
+                        <div class="kpi-value" id="apiKeyCount">-</div>
+                        <div class="kpi-label">APIキー数</div>
+                        <div class="kpi-sublabel">アクティブ</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- タブナビゲーション -->
+            <section class="dashboard-tabs">
+                <button class="tab-btn active" data-tab="subscription">サブスクリプション</button>
+                <button class="tab-btn" data-tab="usage">使用量</button>
+                <button class="tab-btn" data-tab="apikeys">APIキー</button>
+                <button class="tab-btn" data-tab="credits">クレジット</button>
+            </section>
+
+            <!-- サブスクリプションタブ -->
+            <section class="tab-content active" id="tab-subscription">
+                <div class="section-card">
+                    <h2>現在のプラン</h2>
+                    <div class="current-plan" id="currentPlan">
+                        <div class="plan-info">
+                            <h3 id="planName">Free</h3>
+                            <p id="planStatus">アクティブ</p>
+                        </div>
+                        <div class="plan-details">
+                            <div class="plan-detail">
+                                <span class="detail-label">月間生成枚数</span>
+                                <span class="detail-value" id="planMonthlyLimit">5枚</span>
+                            </div>
+                            <div class="plan-detail">
+                                <span class="detail-label">最大解像度</span>
+                                <span class="detail-value" id="planResolution">512x512</span>
+                            </div>
+                            <div class="plan-detail">
+                                <span class="detail-label">次回更新日</span>
+                                <span class="detail-value" id="planRenewal">-</span>
+                            </div>
+                        </div>
+                        <div class="plan-actions">
+                            <a href="/#pricing" class="btn-primary">プランをアップグレード</a>
+                            <button class="btn-secondary" id="cancelSubscriptionBtn" style="display: none;">キャンセル</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- プラン比較 -->
+                <div class="section-card">
+                    <h2>プランの比較</h2>
+                    <div class="plan-comparison">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>機能</th>
+                                    <th>Free</th>
+                                    <th>Basic</th>
+                                    <th>Pro</th>
+                                    <th>Enterprise</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>月間生成枚数</td>
+                                    <td>5枚</td>
+                                    <td>100枚</td>
+                                    <td>500枚</td>
+                                    <td>無制限</td>
+                                </tr>
+                                <tr>
+                                    <td>最大解像度</td>
+                                    <td>512x512</td>
+                                    <td>1024x1024</td>
+                                    <td>2048x2048</td>
+                                    <td>4096x4096</td>
+                                </tr>
+                                <tr>
+                                    <td>バッチ処理</td>
+                                    <td>1枚</td>
+                                    <td>10枚</td>
+                                    <td>50枚</td>
+                                    <td>100枚</td>
+                                </tr>
+                                <tr>
+                                    <td>優先処理</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>あり</td>
+                                    <td>最優先</td>
+                                </tr>
+                                <tr>
+                                    <td>サポート</td>
+                                    <td>コミュニティ</td>
+                                    <td>メール</td>
+                                    <td>優先メール</td>
+                                    <td>専任担当</td>
+                                </tr>
+                                <tr>
+                                    <td>価格</td>
+                                    <td>無料</td>
+                                    <td>$9.99/月</td>
+                                    <td>$29.99/月</td>
+                                    <td>$99.99/月</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 使用量タブ -->
+            <section class="tab-content" id="tab-usage">
+                <div class="section-card">
+                    <h2>使用量サマリー</h2>
+                    <div class="usage-stats">
+                        <div class="usage-stat">
+                            <div class="stat-value" id="totalGenerations">-</div>
+                            <div class="stat-label">総生成数</div>
+                        </div>
+                        <div class="usage-stat">
+                            <div class="stat-value" id="successRate">-</div>
+                            <div class="stat-label">成功率</div>
+                        </div>
+                        <div class="usage-stat">
+                            <div class="stat-value" id="avgResponseTime">-</div>
+                            <div class="stat-label">平均応答時間</div>
+                        </div>
+                        <div class="usage-stat">
+                            <div class="stat-value" id="estimatedCost">-</div>
+                            <div class="stat-label">推定コスト</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h2>日別使用量</h2>
+                    <div class="usage-chart" id="usageChart">
+                        <p class="no-data">使用量データがありません</p>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h2>レート制限状況</h2>
+                    <div class="rate-limit-info" id="rateLimitInfo">
+                        <div class="rate-limit-item">
+                            <span class="rate-label">現在のリクエスト数</span>
+                            <span class="rate-value" id="currentRequests">-</span>
+                        </div>
+                        <div class="rate-limit-item">
+                            <span class="rate-label">残りリクエスト数</span>
+                            <span class="rate-value" id="remainingRequests">-</span>
+                        </div>
+                        <div class="rate-limit-item">
+                            <span class="rate-label">リセット時刻</span>
+                            <span class="rate-value" id="rateLimitReset">-</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- APIキータブ -->
+            <section class="tab-content" id="tab-apikeys">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>APIキー管理</h2>
+                        <button class="btn-primary" id="createApiKeyBtn">新しいキーを作成</button>
+                    </div>
+                    <div class="api-keys-list" id="apiKeysList">
+                        <p class="no-data">APIキーがありません</p>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h2>APIキーの使い方</h2>
+                    <div class="code-example">
+                        <h4>cURL</h4>
+                        <pre><code>curl -X POST https://api.visioncraftai.example.com/api/v1/generate \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: <span class="api-key-placeholder">YOUR_API_KEY</span>" \
+  -d '{"prompt": "A beautiful sunset over mountains"}'</code></pre>
+                    </div>
+                    <div class="code-example">
+                        <h4>Python</h4>
+                        <pre><code>import requests
+
+response = requests.post(
+    "https://api.visioncraftai.example.com/api/v1/generate",
+    headers={"X-API-Key": "<span class="api-key-placeholder">YOUR_API_KEY</span>"},
+    json={"prompt": "A beautiful sunset over mountains"}
+)
+image_data = response.json()</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- クレジットタブ -->
+            <section class="tab-content" id="tab-credits">
+                <div class="section-card">
+                    <h2>クレジット残高</h2>
+                    <div class="credit-balance-display">
+                        <div class="credit-main">
+                            <span class="credit-value" id="creditBalanceLarge">0</span>
+                            <span class="credit-label">クレジット</span>
+                        </div>
+                        <div class="credit-bonus">
+                            <span>ボーナス: </span>
+                            <span id="bonusBalanceLarge">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h2>クレジットパッケージ</h2>
+                    <div class="credit-packages" id="creditPackages">
+                        <div class="credit-package" data-package="credits_10">
+                            <div class="package-credits">10 クレジット</div>
+                            <div class="package-price">$4.99</div>
+                            <button class="btn-secondary">購入</button>
+                        </div>
+                        <div class="credit-package" data-package="credits_50">
+                            <div class="package-credits">50 + 5 クレジット</div>
+                            <div class="package-price">$19.99</div>
+                            <button class="btn-secondary">購入</button>
+                        </div>
+                        <div class="credit-package popular" data-package="credits_100">
+                            <div class="package-badge">人気</div>
+                            <div class="package-credits">100 + 15 クレジット</div>
+                            <div class="package-price">$34.99</div>
+                            <button class="btn-primary">購入</button>
+                        </div>
+                        <div class="credit-package" data-package="credits_500">
+                            <div class="package-credits">500 + 100 クレジット</div>
+                            <div class="package-price">$149.99</div>
+                            <button class="btn-secondary">購入</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h2>取引履歴</h2>
+                    <div class="transactions-list" id="transactionsList">
+                        <p class="no-data">取引履歴がありません</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer dashboard-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 VisionCraftAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 通知 -->
+    <div id="notification" class="notification"></div>
+
+    <!-- モーダル: APIキー作成 -->
+    <div class="modal-overlay" id="createKeyModal" style="display: none;">
+        <div class="modal">
+            <h2>新しいAPIキーを作成</h2>
+            <form id="createKeyForm">
+                <div class="form-group">
+                    <label for="keyName">キー名（オプション）</label>
+                    <input type="text" id="keyName" placeholder="例: 本番用、テスト用">
+                </div>
+                <div class="form-group">
+                    <label for="keyDescription">説明（オプション）</label>
+                    <textarea id="keyDescription" placeholder="このキーの用途を記載"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelCreateKey">キャンセル</button>
+                    <button type="submit" class="btn-primary">作成</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- モーダル: APIキー表示 -->
+    <div class="modal-overlay" id="showKeyModal" style="display: none;">
+        <div class="modal">
+            <h2>APIキーが作成されました</h2>
+            <p class="warning-text">このキーは一度だけ表示されます。必ずコピーして安全な場所に保存してください。</p>
+            <div class="key-display">
+                <code id="newApiKey">vca_xxxxxxxx.xxxxxxxx</code>
+                <button class="copy-btn" id="copyKeyBtn">コピー</button>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-primary" id="closeShowKeyModal">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
