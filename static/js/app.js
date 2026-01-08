@@ -4,6 +4,9 @@
 
 const API_BASE = '/api/v1';
 
+// デモモード設定
+let isDemoMode = true; // 初期状態はデモモード
+
 // 通知表示
 function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification');
@@ -52,12 +55,38 @@ async function apiRequest(endpoint, options = {}) {
     return response.json();
 }
 
+// デモモードで画像生成
+async function generateDemoImage(prompt, options = {}) {
+    const response = await fetch(`${API_BASE}/demo/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            prompt: prompt,
+            style: options.style || null
+        })
+    });
+
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({ message: 'エラーが発生しました' }));
+        throw new Error(error.message || error.detail || 'デモ生成に失敗しました');
+    }
+
+    return response.json();
+}
+
+// デモモードかどうかを判定
+function shouldUseDemoMode() {
+    const apiKey = getApiKey();
+    return !apiKey || isDemoMode;
+}
+
 // 画像生成
 async function generateImage(prompt, options = {}) {
     const btn = document.getElementById('generateBtn');
     const resultContainer = document.getElementById('resultContainer');
     const resultPlaceholder = document.getElementById('resultPlaceholder');
     const resultImage = document.getElementById('resultImage');
+    const demoIndicator = document.getElementById('demoIndicator');
 
     if (!prompt.trim()) {
         showNotification('プロンプトを入力してください', 'error');
@@ -69,36 +98,85 @@ async function generateImage(prompt, options = {}) {
     btn.innerHTML = '<span class="loading"></span>生成中...';
 
     try {
-        const requestBody = {
-            prompt: prompt,
-            width: parseInt(options.width) || 1024,
-            height: parseInt(options.height) || 1024,
-            style: options.style || null
-        };
+        let result;
+        const useDemo = shouldUseDemoMode();
 
-        const result = await apiRequest('/generate', {
-            method: 'POST',
-            body: JSON.stringify(requestBody)
-        });
+        if (useDemo) {
+            // デモモードで生成
+            result = await generateDemoImage(prompt, options);
 
-        // 結果表示
-        if (result.image_base64) {
-            resultImage.src = `data:image/png;base64,${result.image_base64}`;
-            resultImage.style.display = 'block';
-            resultPlaceholder.style.display = 'none';
-            showNotification('画像を生成しました！');
-        } else if (result.image_url) {
-            resultImage.src = result.image_url;
-            resultImage.style.display = 'block';
-            resultPlaceholder.style.display = 'none';
-            showNotification('画像を生成しました！');
+            // 結果表示（デモモード）
+            if (result.image_url) {
+                resultImage.src = result.image_url;
+                resultImage.style.display = 'block';
+                resultPlaceholder.style.display = 'none';
+
+                // デモインジケーター表示
+                if (demoIndicator) {
+                    demoIndicator.style.display = 'block';
+                }
+
+                showNotification(`デモ生成完了（${result.generation_time_ms}ms）- APIキーで本格的な画像を生成！`, 'info');
+
+                // マッチしたサンプル情報を表示
+                if (result.matched_sample) {
+                    console.log(`マッチしたサンプル: ${result.matched_sample}`, result.sample_info);
+                }
+            }
         } else {
-            // デモ用のプレースホルダー画像
-            resultPlaceholder.textContent = '生成完了（デモモード）';
-            showNotification('デモモード: 実際の画像生成にはAPIキーが必要です', 'info');
+            // 本番APIで生成
+            const requestBody = {
+                prompt: prompt,
+                width: parseInt(options.width) || 1024,
+                height: parseInt(options.height) || 1024,
+                style: options.style || null
+            };
+
+            result = await apiRequest('/generate', {
+                method: 'POST',
+                body: JSON.stringify(requestBody)
+            });
+
+            // 結果表示
+            if (result.image_base64) {
+                resultImage.src = `data:image/png;base64,${result.image_base64}`;
+                resultImage.style.display = 'block';
+                resultPlaceholder.style.display = 'none';
+                showNotification('画像を生成しました！');
+            } else if (result.image_url) {
+                resultImage.src = result.image_url;
+                resultImage.style.display = 'block';
+                resultPlaceholder.style.display = 'none';
+                showNotification('画像を生成しました！');
+            }
+
+            // デモインジケーター非表示
+            if (demoIndicator) {
+                demoIndicator.style.display = 'none';
+            }
         }
     } catch (error) {
         console.error('Generation error:', error);
+
+        // エラー時はデモモードにフォールバック
+        if (!shouldUseDemoMode()) {
+            console.log('本番APIエラー、デモモードにフォールバック');
+            isDemoMode = true;
+            try {
+                const demoResult = await generateDemoImage(prompt, options);
+                if (demoResult.image_url) {
+                    resultImage.src = demoResult.image_url;
+                    resultImage.style.display = 'block';
+                    resultPlaceholder.style.display = 'none';
+                    if (demoIndicator) demoIndicator.style.display = 'block';
+                    showNotification('API接続エラー: デモモードで表示しています', 'warning');
+                    return;
+                }
+            } catch (demoError) {
+                console.error('Demo fallback error:', demoError);
+            }
+        }
+
         showNotification(error.message, 'error');
     } finally {
         btn.disabled = false;
@@ -172,6 +250,26 @@ async function createSubscription(email, planId) {
     }
 }
 
+// デモモードUIの更新
+function updateDemoModeUI() {
+    const demoModeToggle = document.getElementById('demoModeToggle');
+    const demoModeLabel = document.getElementById('demoModeLabel');
+    const apiKey = getApiKey();
+
+    // APIキーがあればデモモードを自動的にオフに
+    if (apiKey && apiKey.startsWith('vca_')) {
+        isDemoMode = false;
+    }
+
+    if (demoModeToggle) {
+        demoModeToggle.checked = !isDemoMode;
+    }
+
+    if (demoModeLabel) {
+        demoModeLabel.textContent = isDemoMode ? 'デモモード' : '本番モード';
+    }
+}
+
 // ページ初期化
 document.addEventListener('DOMContentLoaded', () => {
     // APIキー入力フィールドの初期化
@@ -180,9 +278,27 @@ document.addEventListener('DOMContentLoaded', () => {
         apiKeyInput.value = getApiKey();
         apiKeyInput.addEventListener('change', (e) => {
             setApiKey(e.target.value);
+            // APIキーが設定されたらデモモードを解除
+            if (e.target.value && e.target.value.startsWith('vca_')) {
+                isDemoMode = false;
+                updateDemoModeUI();
+            }
             showNotification('APIキーを保存しました');
         });
     }
+
+    // デモモードトグルの初期化
+    const demoModeToggle = document.getElementById('demoModeToggle');
+    if (demoModeToggle) {
+        demoModeToggle.addEventListener('change', (e) => {
+            isDemoMode = !e.target.checked;
+            updateDemoModeUI();
+            showNotification(isDemoMode ? 'デモモードに切り替えました' : '本番モードに切り替えました', 'info');
+        });
+    }
+
+    // 初期UI更新
+    updateDemoModeUI();
 
     // 生成ボタンのイベント
     const generateBtn = document.getElementById('generateBtn');
@@ -235,9 +351,11 @@ document.addEventListener('DOMContentLoaded', () => {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         generateImage,
+        generateDemoImage,
         createApiKey,
         checkQuota,
         getPlans,
-        createSubscription
+        createSubscription,
+        updateDemoModeUI
     };
 }
