@@ -1,0 +1,89 @@
+# VisionCraftAI - Docker Compose設定
+# 開発/ステージング/本番環境用
+
+services:
+  # アプリケーション
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: visioncraftai-app
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    environment:
+      # Google Cloud設定
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
+      - GOOGLE_CLOUD_LOCATION=${GOOGLE_CLOUD_LOCATION:-us-central1}
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/service-account.json
+      - GEMINI_MODEL_NAME=${GEMINI_MODEL_NAME:-gemini-2.0-flash-exp}
+      - GEMINI_MAX_RPM=${GEMINI_MAX_RPM:-60}
+      # Stripe設定
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - STRIPE_TEST_MODE=${STRIPE_TEST_MODE:-true}
+      # 画像設定
+      - IMAGE_WIDTH=${IMAGE_WIDTH:-1024}
+      - IMAGE_HEIGHT=${IMAGE_HEIGHT:-1024}
+      - IMAGE_FORMAT=${IMAGE_FORMAT:-png}
+      - IMAGE_QUALITY=${IMAGE_QUALITY:-95}
+      - OUTPUT_DIR=/app/outputs
+      # アプリケーション設定
+      - DEBUG=${DEBUG:-false}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      # CORS設定（本番環境では適切なドメインに制限）
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-*}
+    volumes:
+      # 認証情報（読み取り専用）
+      - ${GOOGLE_CREDENTIALS_PATH:-./credentials}:/app/credentials:ro
+      # 出力ディレクトリ
+      - ./outputs:/app/outputs
+      # データ永続化
+      - visioncraftai-data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - visioncraftai-network
+
+  # 開発用（ホットリロード有効）
+  app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    container_name: visioncraftai-dev
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    environment:
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/service-account.json
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - STRIPE_TEST_MODE=true
+      - DEBUG=true
+      - LOG_LEVEL=DEBUG
+    volumes:
+      # ソースコードをマウント（ホットリロード用）
+      - .:/app
+      - ${GOOGLE_CREDENTIALS_PATH:-./credentials}:/app/credentials:ro
+    command: ["uvicorn", "src.api.app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    profiles:
+      - dev
+    networks:
+      - visioncraftai-network
+
+# ボリューム
+volumes:
+  visioncraftai-data:
+    name: visioncraftai-data
+
+# ネットワーク
+networks:
+  visioncraftai-network:
+    name: visioncraftai-network
+    driver: bridge
