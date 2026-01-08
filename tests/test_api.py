@@ -48,14 +48,22 @@ class TestRootEndpoint:
     """ルートエンドポイントのテスト"""
 
     def test_root_returns_api_info(self):
-        """ルートエンドポイントがAPI情報を返す"""
-        response = client.get("/")
+        """ルートエンドポイントがAPI情報を返す（JSON要求）"""
+        # application/json を要求してJSON応答を取得
+        response = client.get("/", headers={"Accept": "application/json"})
         assert response.status_code == 200
         data = response.json()
         assert data["name"] == "VisionCraftAI API"
         assert data["version"] == "0.1.0"
         assert "docs" in data
         assert "health" in data
+
+    def test_root_returns_html(self):
+        """ルートエンドポイントがHTML（ランディングページ）を返す"""
+        response = client.get("/", headers={"Accept": "text/html"})
+        assert response.status_code == 200
+        assert "text/html" in response.headers.get("content-type", "")
+        assert "VisionCraftAI" in response.text
 
 
 class TestHealthEndpoint:
