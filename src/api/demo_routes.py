@@ -166,8 +166,8 @@ def generate_placeholder_svg(prompt: str, width: int = 512, height: int = 512) -
     Returns:
         SVGデータのBase64エンコード
     """
-    # プロンプトからハッシュを生成して色を決定
-    hash_val = hashlib.md5(prompt.encode()).hexdigest()
+    # プロンプトからハッシュを生成して色を決定（セキュリティ目的ではない）
+    hash_val = hashlib.md5(prompt.encode(), usedforsecurity=False).hexdigest()  # noqa: S324
     color1 = f"#{hash_val[:6]}"
     color2 = f"#{hash_val[6:12]}"
 
