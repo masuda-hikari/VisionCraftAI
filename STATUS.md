@@ -1,10 +1,10 @@
-﻿﻿﻿# VisionCraftAI - ステータス
+# VisionCraftAI - ステータス
 
-最終更新: 2026-01-08
+最終更新: 2026-01-09
 
 ## 現在の状況
-- 状況: Phase 10+ デモモード実装・ユーザー獲得基盤強化
-- 進捗: テストスイート全パス（253 passed, 1 skipped）
+- 状況: Phase 11 ドキュメント・法的ページ・お問い合わせ機能完備
+- 進捗: テストスイート全パス（270 passed, 1 skipped）
 
 ## Phase 1 進捗（完了）
 | タスク | 状態 |
@@ -99,24 +99,28 @@
 | マーケティング戦略ドキュメント作成 | 完了 |
 | SEO最適化（meta tags, schema.org, Open Graph） | 完了 |
 | E2Eテスト15件追加 | 完了 |
-| Google Cloud認証情報設定 | 未実施（ブロッカー） |
-| Stripe本番環境設定 | 未実施（ブロッカー） |
-
-## Phase 10+ 進捗（進行中）
-| タスク | 状態 |
-|--------|------|
 | デモAPI実装（/api/v1/demo/*） | 完了 |
 | デモ画像生成（SVGプレースホルダー） | 完了 |
 | フロントエンドデモモード対応 | 完了 |
 | デモテスト21件追加 | 完了 |
-| Google Cloud認証情報設定 | 未実施（ブロッカー） |
-| Stripe本番環境設定 | 未実施（ブロッカー） |
+
+## Phase 11 進捗（完了）
+| タスク | 状態 |
+|--------|------|
+| ユーザーガイド作成（docs/USER_GUIDE.md） | 完了 |
+| APIクイックスタートガイド作成（docs/API_QUICKSTART.md） | 完了 |
+| 利用規約ページ（templates/terms.html） | 完了 |
+| プライバシーポリシーページ（templates/privacy.html） | 完了 |
+| お問い合わせページ（templates/contact.html） | 完了 |
+| お問い合わせAPI（src/api/contact_routes.py） | 完了 |
+| お問い合わせテスト17件追加 | 完了 |
+| フッターリンク更新 | 完了 |
 
 ## 次のアクション
-1. **Google Cloud認証情報の設定**
+1. **Google Cloud認証情報の設定**（ブロッカー）
    - `python scripts/setup_gcloud.py --project YOUR_PROJECT_ID`
    - サービスアカウント認証情報をcredentials/に配置
-2. **Stripe本番環境設定**
+2. **Stripe本番環境設定**（ブロッカー）
    - `python scripts/setup_stripe.py --api-key sk_live_xxx --webhook-url https://your-domain.com`
 3. **本番デプロイ実行**
    - `python scripts/deploy_cloudrun.py --project YOUR_PROJECT_ID`
@@ -126,9 +130,6 @@
 ## ブロッカー
 - Google Cloud サービスアカウント認証情報が必要
 - Stripe本番APIキー・Webhookシークレットが必要
-
-### デモ
-- `src/api/demo_routes.py` - デモAPIエンドポイント
 
 ## 実装済みモジュール
 ### コア
@@ -144,6 +145,8 @@
 - `src/api/app.py` - FastAPIアプリケーション
 - `src/api/routes.py` - APIルーター・エンドポイント
 - `src/api/schemas.py` - Pydanticスキーマ定義
+- `src/api/demo_routes.py` - デモAPIエンドポイント
+- `src/api/contact_routes.py` - お問い合わせAPIエンドポイント
 
 ### 認証
 - `src/api/auth/models.py` - APIKey, UsageQuota モデル
@@ -163,13 +166,21 @@
 
 ### フロントエンド
 - `templates/index.html` - ランディングページ
+- `templates/terms.html` - 利用規約ページ
+- `templates/privacy.html` - プライバシーポリシーページ
+- `templates/contact.html` - お問い合わせページ
 - `static/css/style.css` - スタイルシート
 - `static/js/app.js` - フロントエンドJavaScript
+
+### ドキュメント
+- `docs/USER_GUIDE.md` - ユーザーガイド
+- `docs/API_QUICKSTART.md` - APIクイックスタートガイド
+- `docs/DEPLOY_GUIDE.md` - デプロイ手順書
+- `docs/MARKETING_STRATEGY.md` - マーケティング戦略
 
 ### デプロイ
 - `Dockerfile` - 本番用Dockerイメージ（マルチステージビルド）
 - `docker-compose.yml` - Docker Compose設定（開発/本番）
-- `docs/DEPLOY_GUIDE.md` - デプロイ手順書
 
 ### 自動化スクリプト
 - `scripts/setup_gcloud.py` - Google Cloud環境セットアップ
@@ -184,6 +195,9 @@
 | エンドポイント | メソッド | 認証 | 説明 |
 |---------------|---------|------|------|
 | `/` | GET | 不要 | ランディングページ / API情報 |
+| `/terms` | GET | 不要 | 利用規約ページ |
+| `/privacy` | GET | 不要 | プライバシーポリシーページ |
+| `/contact` | GET | 不要 | お問い合わせページ |
 | `/api/v1/health` | GET | 不要 | ヘルスチェック |
 | `/api/v1/generate` | POST | **必須** | 画像生成 |
 | `/api/v1/batch/generate` | POST | **必須** | バッチ画像生成 |
@@ -228,6 +242,12 @@
 | `/api/v1/payment/credits/transactions` | GET | **必須** | 取引履歴 |
 | `/api/v1/payment/webhook` | POST | 不要 | Stripe Webhook |
 
+### お問い合わせエンドポイント
+| エンドポイント | メソッド | 認証 | 説明 |
+|---------------|---------|------|------|
+| `/api/v1/contact` | POST | 不要 | お問い合わせ送信 |
+| `/api/v1/contact/categories` | GET | 不要 | カテゴリ一覧 |
+
 ## プラン階層
 | プラン | 月間制限 | 日間制限 | 最大解像度 | バッチ上限 | 価格 |
 |--------|---------|---------|-----------|----------|------|
@@ -245,21 +265,16 @@
 | credits_500 | 500 | +100 | $149.99 |
 
 ## 最近の変更
+- 2026-01-09: Phase 11 ドキュメント・法的ページ・お問い合わせ機能
+  - ユーザーガイド作成（docs/USER_GUIDE.md）
+  - APIクイックスタートガイド作成（docs/API_QUICKSTART.md）
+  - 利用規約ページ作成（templates/terms.html）
+  - プライバシーポリシーページ作成（templates/privacy.html）
+  - お問い合わせページ・API実装（templates/contact.html, src/api/contact_routes.py）
+  - お問い合わせテスト17件追加（270 passed, 1 skipped）
 - 2026-01-08: Phase 10+ デモモード実装
-  - デモAPI実装（/api/v1/demo/samples, /api/v1/demo/generate, /api/v1/demo/info）
-  - SVGプレースホルダー画像生成（プロンプトベースのグラデーション）
-  - フロントエンドデモモード対応（APIキーなしでも体験可能）
-  - デモテスト21件追加（253 passed, 1 skipped）
 - 2026-01-08: Phase 10 マーケティング準備・E2Eテスト追加
-  - マーケティング戦略ドキュメント（docs/MARKETING_STRATEGY.md）作成
-  - ランディングページSEO最適化（schema.org, Open Graph, Twitter Cards）
-  - E2Eテスト15件追加（232 passed, 1 skipped）
 - 2026-01-08: Phase 9 CI/CD・セキュリティ強化
-  - GitHub Actions CI/CDパイプライン追加
-  - Dependabot設定（依存関係自動更新）
-  - セキュリティスキャン（Bandit）通過
-  - CORS設定の環境変数化
-  - ServerConfig追加
 - 2026-01-08: Phase 8 デプロイ自動化スクリプト作成
 - 2026-01-08: Phase 7 デプロイ準備完了
 - 2026-01-08: Phase 6 Webインターフェース実装完了
@@ -281,6 +296,9 @@ uvicorn src.api.app:app --reload --port 8000
 # http://localhost:8000 (ランディングページ)
 # http://localhost:8000/docs (Swagger UI)
 # http://localhost:8000/redoc (ReDoc)
+# http://localhost:8000/terms (利用規約)
+# http://localhost:8000/privacy (プライバシーポリシー)
+# http://localhost:8000/contact (お問い合わせ)
 ```
 
 ## デプロイ手順

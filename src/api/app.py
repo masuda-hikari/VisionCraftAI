@@ -19,6 +19,7 @@ from src.api.routes import router
 from src.api.auth.routes import router as auth_router
 from src.api.payment.routes import router as payment_router
 from src.api.demo_routes import router as demo_router
+from src.api.contact_routes import router as contact_router
 from src.utils.config import Config
 
 # プロジェクトルートディレクトリ
@@ -127,6 +128,7 @@ app.include_router(router, prefix="/api/v1")
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(payment_router)
 app.include_router(demo_router, prefix="/api/v1")
+app.include_router(contact_router, prefix="/api/v1")
 
 
 # ルートエンドポイント（HTMLまたはJSON）
@@ -151,6 +153,33 @@ async def root(request: Request):
         "health": "/api/v1/health",
         "web_ui": "/",
     })
+
+
+# 利用規約ページ
+@app.get("/terms", tags=["Pages"], response_class=HTMLResponse)
+async def terms_page(request: Request):
+    """利用規約ページ"""
+    if templates:
+        return templates.TemplateResponse(request, "terms.html")
+    return HTMLResponse("<h1>利用規約</h1><p>ページが見つかりません</p>", status_code=404)
+
+
+# プライバシーポリシーページ
+@app.get("/privacy", tags=["Pages"], response_class=HTMLResponse)
+async def privacy_page(request: Request):
+    """プライバシーポリシーページ"""
+    if templates:
+        return templates.TemplateResponse(request, "privacy.html")
+    return HTMLResponse("<h1>プライバシーポリシー</h1><p>ページが見つかりません</p>", status_code=404)
+
+
+# お問い合わせページ
+@app.get("/contact", tags=["Pages"], response_class=HTMLResponse)
+async def contact_page(request: Request):
+    """お問い合わせページ"""
+    if templates:
+        return templates.TemplateResponse(request, "contact.html")
+    return HTMLResponse("<h1>お問い合わせ</h1><p>ページが見つかりません</p>", status_code=404)
 
 
 def run_server(host: str = "0.0.0.0", port: int = 8000, reload: bool = False):
