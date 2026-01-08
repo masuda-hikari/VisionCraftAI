@@ -13,6 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from src.api.routes import router
+from src.api.auth.routes import router as auth_router
 from src.utils.config import Config
 
 # ログ設定
@@ -56,7 +57,13 @@ app = FastAPI(
     - **使用量管理**: API使用量とコストを追跡
 
     ### 認証
-    現在は認証なし（開発版）。本番環境ではAPIキー認証を実装予定。
+    X-API-Key ヘッダーまたは Authorization: Bearer でAPIキーを送信してください。
+
+    ### プラン
+    - **Free**: 月5生成、512x512まで
+    - **Basic**: 月100枚、1024x1024まで ($9.99/月)
+    - **Pro**: 月500枚、2048x2048まで、優先処理 ($29.99/月)
+    - **Enterprise**: 無制限、4096x4096まで (要見積)
 
     ### レート制限
     - 1分あたり60リクエスト
@@ -96,6 +103,7 @@ async def global_exception_handler(request, exc):
 
 # ルーター登録
 app.include_router(router, prefix="/api/v1")
+app.include_router(auth_router, prefix="/api/v1")
 
 
 # ルートエンドポイント
