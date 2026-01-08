@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-01-08T20:53:38.324011",
-  "record_count": 10,
+  "last_updated": "2026-01-08T21:33:27.016593",
+  "record_count": 13,
   "records": [
     {
       "timestamp": "2026-01-08T18:00:59.438811",
@@ -98,6 +98,36 @@
       "prompt_length": 56,
       "success": false,
       "generation_time_ms": 3158,
+      "model": "gemini-2.0-flash-exp",
+      "error_message": "Gemini APIへの接続に失敗しました: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.",
+      "estimated_cost_usd": 5.600000000000001e-06
+    },
+    {
+      "timestamp": "2026-01-08T21:30:59.994156",
+      "operation": "generate_image",
+      "prompt_length": 56,
+      "success": false,
+      "generation_time_ms": 3207,
+      "model": "gemini-2.0-flash-exp",
+      "error_message": "Gemini APIへの接続に失敗しました: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.",
+      "estimated_cost_usd": 5.600000000000001e-06
+    },
+    {
+      "timestamp": "2026-01-08T21:31:10.637986",
+      "operation": "generate_image",
+      "prompt_length": 56,
+      "success": false,
+      "generation_time_ms": 3050,
+      "model": "gemini-2.0-flash-exp",
+      "error_message": "Gemini APIへの接続に失敗しました: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.",
+      "estimated_cost_usd": 5.600000000000001e-06
+    },
+    {
+      "timestamp": "2026-01-08T21:33:27.016022",
+      "operation": "generate_image",
+      "prompt_length": 56,
+      "success": false,
+      "generation_time_ms": 3077,
       "model": "gemini-2.0-flash-exp",
       "error_message": "Gemini APIへの接続に失敗しました: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.",
       "estimated_cost_usd": 5.600000000000001e-06
