@@ -18,6 +18,7 @@ from fastapi.templating import Jinja2Templates
 from src.api.routes import router
 from src.api.auth.routes import router as auth_router
 from src.api.payment.routes import router as payment_router
+from src.api.demo_routes import router as demo_router
 from src.utils.config import Config
 
 # プロジェクトルートディレクトリ
@@ -125,6 +126,7 @@ templates = Jinja2Templates(directory=str(templates_dir)) if templates_dir.exist
 app.include_router(router, prefix="/api/v1")
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(payment_router)
+app.include_router(demo_router, prefix="/api/v1")
 
 
 # ルートエンドポイント（HTMLまたはJSON）
