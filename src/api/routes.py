@@ -12,7 +12,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Query, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks
 from fastapi.responses import FileResponse
 
 from src.api.schemas import (
@@ -29,6 +29,15 @@ from src.api.schemas import (
     EstimateRequest,
     EstimateResponse,
 )
+from src.api.auth.models import APIKey, APIKeyTier
+from src.api.auth.dependencies import (
+    get_api_key,
+    get_optional_api_key,
+    check_rate_limit,
+    check_quota,
+    QuotaEnforcer,
+)
+from src.api.auth.key_manager import get_key_manager, APIKeyManager
 from src.generator.gemini_client import GeminiClient
 from src.generator.prompt_handler import PromptHandler
 from src.generator.batch_processor import BatchProcessor, BatchJob
@@ -135,22 +144,51 @@ async def health_check(
     response_model=GenerateResponse,
     responses={
         400: {"model": ErrorResponse, "description": "リクエストエラー"},
+        401: {"model": ErrorResponse, "description": "認証エラー"},
+        429: {"model": ErrorResponse, "description": "レート制限/クォータ超過"},
         500: {"model": ErrorResponse, "description": "サーバーエラー"},
     },
     tags=["Generation"],
     summary="画像生成",
-    description="プロンプトから画像を生成します。",
+    description="プロンプトから画像を生成します。APIキー認証が必要です。",
 )
-async def generate_image(request: GenerateRequest) -> GenerateResponse:
+async def generate_image(
+    request: GenerateRequest,
+    api_key: APIKey = Depends(get_api_key),
+    rate_limit_status: dict = Depends(check_rate_limit),
+    quota_status: dict = Depends(check_quota),
+    key_manager: APIKeyManager = Depends(get_key_manager),
+) -> GenerateResponse:
     """
     プロンプトから画像を生成
 
     - プロンプトは安全性フィルタリングを通過する必要があります
     - スタイルと品質向上オプションが利用可能です
+    - 解像度はプランの制限に従います
     """
     handler = get_prompt_handler()
     client = get_client()
     tracker = get_usage_tracker()
+
+    # 解像度制限チェック
+    max_width = api_key.quota.max_width
+    max_height = api_key.quota.max_height
+    if request.width and request.width > max_width:
+        raise HTTPException(
+            status_code=400,
+            detail=ErrorResponse(
+                error="RESOLUTION_EXCEEDED",
+                message=f"幅が制限を超えています（最大: {max_width}px）",
+            ).model_dump(),
+        )
+    if request.height and request.height > max_height:
+        raise HTTPException(
+            status_code=400,
+            detail=ErrorResponse(
+                error="RESOLUTION_EXCEEDED",
+                message=f"高さが制限を超えています（最大: {max_height}px）",
+            ).model_dump(),
+        )
 
     # プロンプト検証
     validation = handler.validate_and_sanitize(request.prompt)
@@ -190,6 +228,10 @@ async def generate_image(request: GenerateRequest) -> GenerateResponse:
             model=result.model_used,
             error_message=result.error_message,
         )
+
+        # クォータ消費（成功時のみ）
+        if result.success:
+            key_manager.record_usage(api_key.key_id, 1)
 
         if result.success:
             # 画像データをBase64エンコード
@@ -241,23 +283,53 @@ async def generate_image(request: GenerateRequest) -> GenerateResponse:
     response_model=BatchResponse,
     responses={
         400: {"model": ErrorResponse, "description": "リクエストエラー"},
+        401: {"model": ErrorResponse, "description": "認証エラー"},
+        429: {"model": ErrorResponse, "description": "レート制限/クォータ超過"},
         500: {"model": ErrorResponse, "description": "サーバーエラー"},
     },
     tags=["Batch"],
     summary="バッチ画像生成",
-    description="複数のプロンプトから画像を一括生成します。",
+    description="複数のプロンプトから画像を一括生成します。APIキー認証が必要です。",
 )
-async def batch_generate(request: BatchRequest) -> BatchResponse:
+async def batch_generate(
+    request: BatchRequest,
+    api_key: APIKey = Depends(get_api_key),
+    rate_limit_status: dict = Depends(check_rate_limit),
+    key_manager: APIKeyManager = Depends(get_key_manager),
+) -> BatchResponse:
     """
     バッチ画像生成
 
     - 最大100件のプロンプトを一括処理
     - レート制限を自動管理
     - 処理進捗を追跡
+    - プランに応じたバッチサイズ制限あり
     """
     handler = get_prompt_handler()
     processor = get_batch_processor()
     tracker = get_usage_tracker()
+
+    # バッチサイズ制限チェック
+    max_batch_size = api_key.quota.max_batch_size
+    if len(request.prompts) > max_batch_size:
+        raise HTTPException(
+            status_code=400,
+            detail=ErrorResponse(
+                error="BATCH_SIZE_EXCEEDED",
+                message=f"バッチサイズが制限を超えています（最大: {max_batch_size}件）",
+            ).model_dump(),
+        )
+
+    # クォータ事前チェック
+    can_generate, reason = api_key.quota.can_generate(len(request.prompts))
+    if not can_generate:
+        raise HTTPException(
+            status_code=429,
+            detail=ErrorResponse(
+                error="QUOTA_EXCEEDED",
+                message=reason,
+            ).model_dump(),
+        )
 
     # プロンプトの検証と拡張
     processed_prompts: list[str] = []
@@ -320,6 +392,10 @@ async def batch_generate(request: BatchRequest) -> BatchResponse:
                 model=result.model_used,
                 error_message=result.error_message,
             )
+
+        # クォータ消費（成功数分）
+        if batch_result.success_count > 0:
+            key_manager.record_usage(api_key.key_id, batch_result.success_count)
 
         return BatchResponse(
             job_id=batch_result.job_id,

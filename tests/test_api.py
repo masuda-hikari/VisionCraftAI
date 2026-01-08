@@ -27,6 +27,23 @@ from src.generator.batch_processor import BatchResult
 client = TestClient(app)
 
 
+# テスト用APIキー取得ヘルパー
+def get_test_api_key(tier: str = "enterprise") -> str:
+    """テスト用APIキーを作成して取得"""
+    response = client.post(
+        "/api/v1/auth/keys",
+        json={"tier": tier, "name": "Test Key"},
+    )
+    return response.json()["api_key"]
+
+
+@pytest.fixture
+def auth_headers():
+    """認証ヘッダーを提供するフィクスチャ"""
+    api_key = get_test_api_key()
+    return {"X-API-Key": api_key}
+
+
 class TestRootEndpoint:
     """ルートエンドポイントのテスト"""
 
@@ -125,7 +142,7 @@ class TestGenerateEndpoint:
 
     @patch("src.api.routes.get_client")
     @patch("src.api.routes.get_usage_tracker")
-    def test_generate_success(self, mock_tracker, mock_client):
+    def test_generate_success(self, mock_tracker, mock_client, auth_headers):
         """画像生成成功"""
         # モックの設定
         mock_result = GenerationResult(
@@ -141,7 +158,8 @@ class TestGenerateEndpoint:
 
         response = client.post(
             "/api/v1/generate",
-            json={"prompt": "A beautiful sunset", "quality_boost": True}
+            json={"prompt": "A beautiful sunset", "quality_boost": True},
+            headers=auth_headers,
         )
         assert response.status_code == 200
         data = response.json()
@@ -150,7 +168,7 @@ class TestGenerateEndpoint:
 
     @patch("src.api.routes.get_client")
     @patch("src.api.routes.get_usage_tracker")
-    def test_generate_failure(self, mock_tracker, mock_client):
+    def test_generate_failure(self, mock_tracker, mock_client, auth_headers):
         """画像生成失敗"""
         mock_result = GenerationResult(
             success=False,
@@ -164,36 +182,48 @@ class TestGenerateEndpoint:
 
         response = client.post(
             "/api/v1/generate",
-            json={"prompt": "A beautiful sunset"}
+            json={"prompt": "A beautiful sunset"},
+            headers=auth_headers,
         )
         assert response.status_code == 200
         data = response.json()
         assert data["success"] is False
         assert data["error_message"] == "API error"
 
-    def test_generate_blocked_prompt(self):
+    def test_generate_blocked_prompt(self, auth_headers):
         """禁止プロンプトでの生成"""
         response = client.post(
             "/api/v1/generate",
-            json={"prompt": "Violence scene"}
+            json={"prompt": "Violence scene"},
+            headers=auth_headers,
         )
         assert response.status_code == 400
 
-    def test_generate_empty_prompt(self):
+    def test_generate_empty_prompt(self, auth_headers):
         """空プロンプトでの生成"""
         response = client.post(
             "/api/v1/generate",
-            json={"prompt": ""}
+            json={"prompt": ""},
+            headers=auth_headers,
         )
         assert response.status_code == 422  # バリデーションエラー
 
-    def test_generate_invalid_style(self):
+    def test_generate_invalid_style(self, auth_headers):
         """無効なスタイル指定"""
         response = client.post(
             "/api/v1/generate",
-            json={"prompt": "A cat", "style": "invalid_style"}
+            json={"prompt": "A cat", "style": "invalid_style"},
+            headers=auth_headers,
         )
         assert response.status_code == 422
+
+    def test_generate_requires_auth(self):
+        """画像生成に認証が必要"""
+        response = client.post(
+            "/api/v1/generate",
+            json={"prompt": "A beautiful sunset"},
+        )
+        assert response.status_code == 401
 
 
 class TestBatchEndpoints:
@@ -229,7 +259,7 @@ class TestBatchEndpoints:
 
     @patch("src.api.routes.get_batch_processor")
     @patch("src.api.routes.get_usage_tracker")
-    def test_batch_generate_success(self, mock_tracker, mock_processor):
+    def test_batch_generate_success(self, mock_tracker, mock_processor, auth_headers):
         """バッチ生成成功"""
         # モック設定
         mock_result = BatchResult(
@@ -266,14 +296,15 @@ class TestBatchEndpoints:
                     {"prompt": "A cat"},
                     {"prompt": "A dog"}
                 ]
-            }
+            },
+            headers=auth_headers,
         )
         assert response.status_code == 200
         data = response.json()
         assert data["total_count"] == 2
         assert data["success_count"] == 2
 
-    def test_batch_generate_all_invalid(self):
+    def test_batch_generate_all_invalid(self, auth_headers):
         """全プロンプト無効のバッチ生成"""
         response = client.post(
             "/api/v1/batch/generate",
@@ -282,19 +313,36 @@ class TestBatchEndpoints:
                     {"prompt": "violence"},
                     {"prompt": "murder"}
                 ]
-            }
+            },
+            headers=auth_headers,
         )
         assert response.status_code == 400
 
-    def test_batch_generate_too_many_prompts(self):
-        """プロンプト数上限超過"""
+    def test_batch_generate_too_many_prompts(self, auth_headers):
+        """プロンプト数上限超過（プランの制限）"""
+        # EnterpriseはバッチサイズMAX100なので101でエラー
         response = client.post(
             "/api/v1/batch/generate",
             json={
                 "prompts": [{"prompt": f"Test {i}"} for i in range(101)]
-            }
+            },
+            headers=auth_headers,
         )
+        # スキーマレベルで100が上限なので422
         assert response.status_code == 422
+
+    def test_batch_generate_requires_auth(self):
+        """バッチ生成に認証が必要"""
+        response = client.post(
+            "/api/v1/batch/generate",
+            json={
+                "prompts": [
+                    {"prompt": "A cat"},
+                    {"prompt": "A dog"}
+                ]
+            },
+        )
+        assert response.status_code == 401
 
 
 class TestUsageEndpoints:
