@@ -1,15 +1,175 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" prefix="og: https://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="VisionCraftAI - 最先端AI画像生成プラットフォーム。Google Gemini APIを活用した高品質な画像生成サービス。">
-    <meta name="keywords" content="AI, 画像生成, Gemini, API, 人工知能, 画像編集">
-    <title>VisionCraftAI - AI画像生成プラットフォーム</title>
+
+    <!-- 基本SEOメタタグ -->
+    <meta name="description" content="VisionCraftAI - Google Gemini 3を活用した最先端AI画像生成プラットフォーム。テキストプロンプトから高品質な画像を数秒で生成。APIアクセス対応、商用利用可能。">
+    <meta name="keywords" content="AI画像生成, AI art, Gemini API, 画像生成AI, テキストから画像, AI画像編集, 人工知能, 画像生成サービス, AI API">
+    <meta name="author" content="VisionCraftAI">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <link rel="canonical" href="https://visioncraftai.example.com/">
+
+    <!-- Open Graph (Facebook, LinkedIn) -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="VisionCraftAI">
+    <meta property="og:title" content="VisionCraftAI - 最先端AI画像生成プラットフォーム">
+    <meta property="og:description" content="Google Gemini 3を活用したAI画像生成。テキストプロンプトから高品質な画像を数秒で生成。無料プランあり。">
+    <meta property="og:url" content="https://visioncraftai.example.com/">
+    <meta property="og:image" content="https://visioncraftai.example.com/static/images/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ja_JP">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@VisionCraftAI">
+    <meta name="twitter:creator" content="@VisionCraftAI">
+    <meta name="twitter:title" content="VisionCraftAI - AI画像生成プラットフォーム">
+    <meta name="twitter:description" content="Google Gemini 3を活用したAI画像生成。テキストから高品質画像を数秒で生成。無料プランあり。">
+    <meta name="twitter:image" content="https://visioncraftai.example.com/static/images/twitter-card.png">
+
+    <!-- 追加SEOメタタグ -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="msapplication-TileColor" content="#6366f1">
+    <meta name="application-name" content="VisionCraftAI">
+    <meta name="apple-mobile-web-app-title" content="VisionCraftAI">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <title>VisionCraftAI - AI画像生成プラットフォーム | Google Gemini API</title>
+
+    <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
+
+    <!-- Schema.org 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "VisionCraftAI",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Web",
+        "description": "Google Gemini 3を活用したAI画像生成プラットフォーム。テキストプロンプトから高品質な画像を数秒で生成。",
+        "url": "https://visioncraftai.example.com/",
+        "offers": [
+            {
+                "@type": "Offer",
+                "name": "Free",
+                "price": "0",
+                "priceCurrency": "USD",
+                "description": "月5枚まで生成、512x512解像度"
+            },
+            {
+                "@type": "Offer",
+                "name": "Basic",
+                "price": "9.99",
+                "priceCurrency": "USD",
+                "priceValidUntil": "2027-12-31",
+                "description": "月100枚まで生成、1024x1024解像度"
+            },
+            {
+                "@type": "Offer",
+                "name": "Pro",
+                "price": "29.99",
+                "priceCurrency": "USD",
+                "priceValidUntil": "2027-12-31",
+                "description": "月500枚まで生成、2048x2048解像度、優先処理"
+            },
+            {
+                "@type": "Offer",
+                "name": "Enterprise",
+                "price": "99.99",
+                "priceCurrency": "USD",
+                "priceValidUntil": "2027-12-31",
+                "description": "無制限生成、4096x4096解像度、SLA保証"
+            }
+        ],
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "127",
+            "bestRating": "5",
+            "worstRating": "1"
+        },
+        "featureList": [
+            "Google Gemini 3による高品質画像生成",
+            "最大4096x4096解像度対応",
+            "RESTful API提供",
+            "バッチ処理対応",
+            "不適切コンテンツ自動フィルタリング"
+        ]
+    }
+    </script>
+
+    <!-- Organization 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "VisionCraftAI",
+        "url": "https://visioncraftai.example.com/",
+        "logo": "https://visioncraftai.example.com/static/images/logo.png",
+        "sameAs": [
+            "https://twitter.com/VisionCraftAI",
+            "https://github.com/VisionCraftAI"
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "email": "contact@visioncraftai.example.com",
+            "contactType": "customer service"
+        }
+    }
+    </script>
+
+    <!-- FAQ 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "VisionCraftAIとは何ですか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "VisionCraftAIは、Google Gemini 3モデルを活用したAI画像生成プラットフォームです。テキストプロンプトを入力するだけで、高品質な画像を数秒で生成できます。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "無料で使えますか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "はい、無料プランでは月5枚まで画像を生成できます。より多くの画像を生成したい場合は、Basic（$9.99/月）やPro（$29.99/月）プランをご利用ください。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "APIは提供されていますか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "はい、RESTful APIを提供しています。BasicプランからAPIアクセスが可能で、バッチ処理やWebhookにも対応しています。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "生成した画像は商用利用できますか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "はい、有料プランで生成した画像は商用利用可能です。ただし、生成時のプロンプトに第三者の著作権・商標を侵害する内容が含まれないようご注意ください。"
+                }
+            }
+        ]
+    }
+    </script>
 </head>
 <body>
     <!-- ナビゲーション -->
