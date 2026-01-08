@@ -2,23 +2,23 @@
 
 ## セッション情報
 - 日時: 2026-01-08
-- タスク: Phase 7 デプロイ準備
+- タスク: Phase 8 デプロイ自動化スクリプト作成
 
 ## 収益化進捗
 
 ### 今回の作業
 | 作業内容 | 収益貢献度 | 完了状況 |
 |----------|-----------|----------|
-| Dockerfile作成 | 高（本番展開必須） | 完了 |
-| docker-compose.yml作成 | 高（環境構築効率化） | 完了 |
-| .env.example更新 | 中（設定容易化） | 完了 |
-| デプロイガイド作成 | 高（本番展開指南） | 完了 |
-| テスト実行（217パス） | 中（品質保証） | 完了 |
+| テスト実行（217パス確認） | 中（品質保証） | 完了 |
+| setup_gcloud.py作成 | 高（本番展開必須） | 完了 |
+| deploy_cloudrun.py作成 | 高（ワンクリックデプロイ） | 完了 |
+| setup_stripe.py作成 | 高（決済自動設定） | 完了 |
+| STATUS.md更新 | 低（状態管理） | 完了 |
 
 ### 収益化への貢献
-- **直接貢献**: 本番環境へのデプロイを可能にするインフラ準備
-- **Docker化**: Cloud Run / Fly.io / Railway 等へのワンクリックデプロイ対応
-- **デプロイガイド**: Google Cloud・Stripe設定から本番運用まで網羅
+- **直接貢献**: 本番デプロイをコマンド1つで実行可能に
+- **自動化**: Google Cloud、Stripe、Cloud Run全てを自動セットアップ
+- **時間短縮**: 手動設定を自動化し、本番稼働までの時間を大幅短縮
 
 ### 実装済み収益機能
 | 機能 | ステータス | 収益影響 |
@@ -27,33 +27,53 @@
 | API認証・認可 | 完了 | 利用制限・課金基盤 |
 | Stripe決済連携 | 完了 | 収益回収 |
 | Webインターフェース | 完了 | ユーザー獲得 |
-| Docker化・デプロイ設定 | **完了** | 本番展開可能 |
+| Docker化・デプロイ設定 | 完了 | 本番展開可能 |
+| デプロイ自動化スクリプト | **完了** | 即座に本番展開可能 |
+
+## 作成したスクリプト
+
+### scripts/setup_gcloud.py
+- Google Cloud環境のフルセットアップ
+- サービスアカウント作成・ロール付与
+- 必要API有効化（Vertex AI, Gemini等）
+- 認証情報ファイル生成
+
+### scripts/deploy_cloudrun.py
+- Dockerイメージビルド・プッシュ
+- Cloud Runへのデプロイ
+- 環境変数設定
+- ヘルスチェック・スケーリング設定
+
+### scripts/setup_stripe.py
+- Stripe商品・価格の自動作成
+- Webhookエンドポイント設定
+- 設定ファイル出力
 
 ## 次回推奨アクション
 1. **優先度1（ブロッカー解消）**: Google Cloud認証情報の設定
-   - サービスアカウント作成
-   - credentials/service-account.json 配置
-   - Gemini API有効化
+   ```bash
+   python scripts/setup_gcloud.py --project YOUR_PROJECT_ID
+   ```
 2. **優先度2（ブロッカー解消）**: Stripe本番環境設定
-   - 本番APIキー取得
-   - 価格ID設定
-   - Webhook設定
+   ```bash
+   python scripts/setup_stripe.py --api-key sk_live_xxx --webhook-url https://your-domain.com
+   ```
 3. **優先度3**: 本番デプロイ実行
-   - Cloud Run / Fly.io / Railway 選定
-   - ドメイン設定・SSL証明書
-4. **優先度4**: 初期ユーザー獲得
-   - マーケティング開始
-   - SNS告知
+   ```bash
+   python scripts/deploy_cloudrun.py --project YOUR_PROJECT_ID
+   ```
+4. **優先度4**: ドメイン設定・SSL証明書
+5. **優先度5**: 初期ユーザー獲得・マーケティング
 
 ## 自己評価
 
 ### 品質チェック
 | 観点 | 評価 | コメント |
 |------|------|---------|
-| 収益価値 | OK | 本番デプロイ可能状態を構築 |
-| 品質 | OK | マルチステージビルド、ヘルスチェック完備 |
+| 収益価値 | OK | 本番デプロイ自動化で即座に収益化可能 |
+| 品質 | OK | エラーハンドリング・既存確認実装済み |
 | 誠実さ | OK | 認証情報待ちブロッカーを明記 |
-| 完全性 | OK | Phase 7要件を満たす |
+| 完全性 | OK | Phase 8要件を満たす |
 | 継続性 | OK | STATUS.md更新済み、次アクション明記 |
 
 ### ブロッカー（未解消）
@@ -63,32 +83,24 @@
 ## 成果物一覧
 | ファイル | 内容 |
 |----------|------|
-| `Dockerfile` | 本番用Dockerイメージ（マルチステージ） |
-| `docker-compose.yml` | Docker Compose設定（開発/本番） |
-| `.env.example` | 環境変数テンプレート（Stripe追加） |
-| `docs/DEPLOY_GUIDE.md` | デプロイ手順書 |
+| `scripts/setup_gcloud.py` | Google Cloud環境セットアップ自動化 |
+| `scripts/deploy_cloudrun.py` | Cloud Runデプロイ自動化 |
+| `scripts/setup_stripe.py` | Stripe本番環境セットアップ |
 | `STATUS.md` | ステータス更新 |
-
-## 技術的詳細
-
-### Dockerfile特徴
-- マルチステージビルド（ビルド/本番分離）
-- 非rootユーザー実行（セキュリティ）
-- ヘルスチェック設定済み
-- Python 3.12-slim ベース（軽量）
-
-### docker-compose.yml特徴
-- 本番モード（app）と開発モード（app-dev）
-- ボリュームマウントによる永続化
-- 環境変数による設定注入
-- ヘルスチェック・再起動ポリシー
 
 ## 収益化ロードマップ
 | Phase | 内容 | 状態 | 予想収益 |
 |-------|------|------|---------|
 | Phase 1-6 | 基盤・認証・決済・UI | 完了 | - |
-| Phase 7 | デプロイ準備 | **完了** | - |
-| Phase 8 | 本番デプロイ | 未着手（ブロッカー待ち） | - |
-| Phase 9 | 初期ユーザー獲得 | 未着手 | $500/月 |
-| Phase 10 | マーケティング | 未着手 | $2,500/月 |
+| Phase 7 | デプロイ準備 | 完了 | - |
+| Phase 8 | デプロイ自動化 | **完了** | - |
+| Phase 9 | 本番デプロイ | 未着手（認証情報待ち） | - |
+| Phase 10 | 初期ユーザー獲得 | 未着手 | $500/月 |
+| Phase 11 | マーケティング | 未着手 | $2,500/月 |
 | 目標 | 1000万円達成 | 進行中 | - |
+
+## テスト結果
+- 総テスト数: 218件
+- パス: 217件
+- スキップ: 1件
+- 警告: 1件（google-genai deprecation warning、影響なし）
