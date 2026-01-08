@@ -3,7 +3,7 @@
 最終更新: 2026-01-08
 
 ## 現在の状況
-- 状況: Phase 6 Webインターフェース実装完了
+- 状況: Phase 7 デプロイ準備完了
 - 進捗: テストスイート全パス（217 passed, 1 skipped）
 
 ## Phase 1 進捗（完了）
@@ -69,6 +69,14 @@
 | デモ機能（画像生成UI） | 完了 |
 | 料金プラン表示 | 完了 |
 
+## Phase 7 進捗（完了）
+| タスク | 状態 |
+|--------|------|
+| Dockerfile作成（マルチステージビルド） | 完了 |
+| docker-compose.yml作成 | 完了 |
+| .env.example更新（Stripe設定追加） | 完了 |
+| デプロイガイド作成 | 完了 |
+
 ## 次のアクション
 1. Google Cloud認証情報の設定・API接続テスト
 2. Stripe本番環境設定（APIキー、価格ID登録）
@@ -111,10 +119,15 @@
 - `src/api/payment/schemas.py` - 決済スキーマ
 - `src/api/payment/routes.py` - 決済エンドポイント
 
-### フロントエンド（新規）
+### フロントエンド
 - `templates/index.html` - ランディングページ
 - `static/css/style.css` - スタイルシート
 - `static/js/app.js` - フロントエンドJavaScript
+
+### デプロイ
+- `Dockerfile` - 本番用Dockerイメージ（マルチステージビルド）
+- `docker-compose.yml` - Docker Compose設定（開発/本番）
+- `docs/DEPLOY_GUIDE.md` - デプロイ手順書
 
 ## APIエンドポイント一覧
 | エンドポイント | メソッド | 認証 | 説明 |
@@ -174,6 +187,11 @@
 | credits_500 | 500 | +100 | $149.99 |
 
 ## 最近の変更
+- 2026-01-08: Phase 7 デプロイ準備完了
+  - Dockerfile作成（マルチステージビルド）
+  - docker-compose.yml作成（開発/本番モード対応）
+  - デプロイガイド作成（docs/DEPLOY_GUIDE.md）
+  - 環境変数テンプレート更新
 - 2026-01-08: Phase 6 Webインターフェース実装完了
   - ランディングページ作成（HTML/CSS/JS）
   - 料金プラン表示・デモ機能実装
