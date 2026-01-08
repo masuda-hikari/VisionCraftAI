@@ -20,6 +20,7 @@ from src.api.auth.routes import router as auth_router
 from src.api.payment.routes import router as payment_router
 from src.api.demo_routes import router as demo_router
 from src.api.contact_routes import router as contact_router
+from src.api.admin.routes import router as admin_router
 from src.utils.config import Config
 
 # プロジェクトルートディレクトリ
@@ -129,6 +130,7 @@ app.include_router(auth_router, prefix="/api/v1")
 app.include_router(payment_router)
 app.include_router(demo_router, prefix="/api/v1")
 app.include_router(contact_router, prefix="/api/v1")
+app.include_router(admin_router, prefix="/api/v1")
 
 
 # ルートエンドポイント（HTMLまたはJSON）
@@ -180,6 +182,15 @@ async def contact_page(request: Request):
     if templates:
         return templates.TemplateResponse(request, "contact.html")
     return HTMLResponse("<h1>お問い合わせ</h1><p>ページが見つかりません</p>", status_code=404)
+
+
+# 管理者ダッシュボードページ
+@app.get("/admin", tags=["Admin"], response_class=HTMLResponse)
+async def admin_page(request: Request):
+    """管理者ダッシュボードページ"""
+    if templates:
+        return templates.TemplateResponse(request, "admin.html")
+    return HTMLResponse("<h1>管理者ダッシュボード</h1><p>ページが見つかりません</p>", status_code=404)
 
 
 def run_server(host: str = "0.0.0.0", port: int = 8000, reload: bool = False):

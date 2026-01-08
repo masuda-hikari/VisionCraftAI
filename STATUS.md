@@ -3,8 +3,8 @@
 最終更新: 2026-01-09
 
 ## 現在の状況
-- 状況: Phase 11 ドキュメント・法的ページ・お問い合わせ機能完備
-- 進捗: テストスイート全パス（270 passed, 1 skipped）
+- 状況: Phase 12 管理者ダッシュボード完備
+- 進捗: テストスイート全パス（301 passed, 1 skipped）
 
 ## Phase 1 進捗（完了）
 | タスク | 状態 |
@@ -116,6 +116,18 @@
 | お問い合わせテスト17件追加 | 完了 |
 | フッターリンク更新 | 完了 |
 
+## Phase 12 進捗（完了）
+| タスク | 状態 |
+|--------|------|
+| 管理者ダッシュボード機能（AdminDashboard） | 完了 |
+| 管理者APIエンドポイント（/api/v1/admin/*） | 完了 |
+| 管理者ダッシュボードページ（templates/admin.html） | 完了 |
+| 収益・ユーザー・使用量メトリクス | 完了 |
+| チャートデータAPI（収益・使用量推移） | 完了 |
+| システムヘルス監視 | 完了 |
+| お問い合わせ統計 | 完了 |
+| 管理者テスト31件追加 | 完了 |
+
 ## 次のアクション
 1. **Google Cloud認証情報の設定**（ブロッカー）
    - `python scripts/setup_gcloud.py --project YOUR_PROJECT_ID`
@@ -148,6 +160,11 @@
 - `src/api/demo_routes.py` - デモAPIエンドポイント
 - `src/api/contact_routes.py` - お問い合わせAPIエンドポイント
 
+### 管理者
+- `src/api/admin/dashboard.py` - 管理者ダッシュボード機能
+- `src/api/admin/routes.py` - 管理者APIエンドポイント
+- `src/api/admin/schemas.py` - 管理者スキーマ定義
+
 ### 認証
 - `src/api/auth/models.py` - APIKey, UsageQuota モデル
 - `src/api/auth/key_manager.py` - APIキー管理（CRUD・永続化）
@@ -169,6 +186,7 @@
 - `templates/terms.html` - 利用規約ページ
 - `templates/privacy.html` - プライバシーポリシーページ
 - `templates/contact.html` - お問い合わせページ
+- `templates/admin.html` - 管理者ダッシュボードページ
 - `static/css/style.css` - スタイルシート
 - `static/js/app.js` - フロントエンドJavaScript
 
@@ -248,6 +266,22 @@
 | `/api/v1/contact` | POST | 不要 | お問い合わせ送信 |
 | `/api/v1/contact/categories` | GET | 不要 | カテゴリ一覧 |
 
+### 管理者エンドポイント
+| エンドポイント | メソッド | 認証 | 説明 |
+|---------------|---------|------|------|
+| `/admin` | GET | 不要 | 管理者ダッシュボードページ |
+| `/api/v1/admin/dashboard` | GET | **管理者** | ダッシュボード概要 |
+| `/api/v1/admin/revenue` | GET | **管理者** | 収益メトリクス |
+| `/api/v1/admin/users` | GET | **管理者** | ユーザーメトリクス |
+| `/api/v1/admin/usage` | GET | **管理者** | 使用量メトリクス |
+| `/api/v1/admin/plans` | GET | **管理者** | プラン分布 |
+| `/api/v1/admin/users/list` | GET | **管理者** | ユーザー一覧 |
+| `/api/v1/admin/charts/revenue` | GET | **管理者** | 収益チャートデータ |
+| `/api/v1/admin/charts/usage` | GET | **管理者** | 使用量チャートデータ |
+| `/api/v1/admin/health` | GET | **管理者** | システムヘルス |
+| `/api/v1/admin/contacts/stats` | GET | **管理者** | お問い合わせ統計 |
+| `/api/v1/admin/export` | GET | **管理者** | データエクスポート |
+
 ## プラン階層
 | プラン | 月間制限 | 日間制限 | 最大解像度 | バッチ上限 | 価格 |
 |--------|---------|---------|-----------|----------|------|
@@ -265,6 +299,15 @@
 | credits_500 | 500 | +100 | $149.99 |
 
 ## 最近の変更
+- 2026-01-09: Phase 12 管理者ダッシュボード
+  - 管理者ダッシュボード機能（src/api/admin/dashboard.py）
+  - 管理者APIエンドポイント（src/api/admin/routes.py）
+  - 管理者ダッシュボードページ（templates/admin.html）
+  - 収益・ユーザー・使用量メトリクス機能
+  - チャートデータAPI（30日間の推移）
+  - システムヘルス監視機能
+  - お問い合わせ統計機能
+  - 管理者テスト31件追加（301 passed, 1 skipped）
 - 2026-01-09: Phase 11 ドキュメント・法的ページ・お問い合わせ機能
   - ユーザーガイド作成（docs/USER_GUIDE.md）
   - APIクイックスタートガイド作成（docs/API_QUICKSTART.md）
@@ -299,6 +342,7 @@ uvicorn src.api.app:app --reload --port 8000
 # http://localhost:8000/terms (利用規約)
 # http://localhost:8000/privacy (プライバシーポリシー)
 # http://localhost:8000/contact (お問い合わせ)
+# http://localhost:8000/admin (管理者ダッシュボード)
 ```
 
 ## デプロイ手順

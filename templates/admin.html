@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>管理者ダッシュボード - VisionCraftAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #0f172a;
+            --bg-card: #1e293b;
+            --bg-hover: #334155;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: 250px;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: var(--bg-hover);
+            color: var(--text);
+        }
+
+        .sidebar-nav a.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* 認証フォーム */
+        .auth-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .auth-form {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-form h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-hover);
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        /* KPIカード */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .kpi-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-card-title {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .kpi-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .kpi-card-icon.revenue { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
+        .kpi-card-icon.users { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .kpi-card-icon.usage { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .kpi-card-icon.health { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+
+        .kpi-card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .kpi-card-change {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .kpi-card-change.positive { color: var(--success); }
+        .kpi-card-change.negative { color: var(--danger); }
+
+        /* チャート */
+        .chart-container {
+            background: var(--bg-card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .chart-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .chart-canvas {
+            height: 300px;
+        }
+
+        /* テーブル */
+        .table-container {
+            background: var(--bg-card);
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+        }
+
+        th {
+            background: var(--bg);
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: var(--bg-hover);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-free { background: rgba(148, 163, 184, 0.2); color: var(--text-muted); }
+        .badge-basic { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
+        .badge-pro { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .badge-enterprise { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+
+        /* ステータス */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-dot.healthy { background: var(--success); }
+        .status-dot.degraded { background: var(--warning); }
+        .status-dot.down { background: var(--danger); }
+        .status-dot.unknown { background: var(--text-muted); }
+
+        /* グリッド */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        /* ローディング */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* エラー */
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            color: var(--danger);
+            margin-bottom: 1rem;
+        }
+
+        /* プラン分布 */
+        .plan-distribution {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .plan-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg);
+            border-radius: 0.5rem;
+        }
+
+        .plan-item-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .plan-item-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 200px;
+            }
+            .main-content {
+                margin-left: 200px;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .plan-distribution {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- 認証オーバーレイ -->
+    <div id="authOverlay" class="auth-overlay">
+        <div class="auth-form">
+            <h2>🔐 管理者ログイン</h2>
+            <div id="authError" class="error-message hidden"></div>
+            <div class="form-group">
+                <label for="adminSecret">管理者シークレット</label>
+                <input type="password" id="adminSecret" placeholder="シークレットを入力">
+            </div>
+            <button id="loginBtn" class="btn btn-primary btn-block">ログイン</button>
+        </div>
+    </div>
+
+    <div class="admin-container">
+        <!-- サイドバー -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <span>⚡</span>
+                VisionCraftAI
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="#" class="active" data-section="dashboard">📊 ダッシュボード</a></li>
+                <li><a href="#" data-section="revenue">💰 収益</a></li>
+                <li><a href="#" data-section="users">👥 ユーザー</a></li>
+                <li><a href="#" data-section="usage">📈 使用量</a></li>
+                <li><a href="#" data-section="health">🏥 システム状態</a></li>
+                <li><a href="#" data-section="contacts">📧 お問い合わせ</a></li>
+            </ul>
+            <div style="margin-top: auto; padding-top: 2rem;">
+                <a href="/" class="btn btn-outline btn-block">← サイトに戻る</a>
+            </div>
+        </aside>
+
+        <!-- メインコンテンツ -->
+        <main class="main-content">
+            <div class="header">
+                <h1 id="pageTitle">ダッシュボード</h1>
+                <div class="header-actions">
+                    <button id="refreshBtn" class="btn btn-outline">🔄 更新</button>
+                    <button id="exportBtn" class="btn btn-primary">📥 エクスポート</button>
+                </div>
+            </div>
+
+            <!-- ダッシュボードセクション -->
+            <section id="dashboardSection">
+                <!-- KPIカード -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-card-title">月間収益</span>
+                            <span class="kpi-card-icon revenue">💰</span>
+                        </div>
+                        <div class="kpi-card-value" id="monthlyRevenue">$0.00</div>
+                        <div class="kpi-card-change" id="revenueChange">MRR: $0.00</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-card-title">総ユーザー数</span>
+                            <span class="kpi-card-icon users">👥</span>
+                        </div>
+                        <div class="kpi-card-value" id="totalUsers">0</div>
+                        <div class="kpi-card-change" id="usersChange">アクティブ: 0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-card-title">月間生成数</span>
+                            <span class="kpi-card-icon usage">🖼️</span>
+                        </div>
+                        <div class="kpi-card-value" id="monthlyGenerations">0</div>
+                        <div class="kpi-card-change" id="generationsChange">今日: 0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-card-title">課金ユーザー</span>
+                            <span class="kpi-card-icon health">💳</span>
+                        </div>
+                        <div class="kpi-card-value" id="payingUsers">0</div>
+                        <div class="kpi-card-change" id="payingChange">解約率: 0%</div>
+                    </div>
+                </div>
+
+                <!-- チャート -->
+                <div class="grid-2">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>収益推移（30日間）</h3>
+                        </div>
+                        <canvas id="revenueChart" class="chart-canvas"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>使用量推移（30日間）</h3>
+                        </div>
+                        <canvas id="usageChart" class="chart-canvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- プラン分布 -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>プラン分布</h3>
+                    </div>
+                    <div class="plan-distribution" id="planDistribution">
+                        <div class="plan-item">
+                            <div class="plan-item-value" id="planFree">0</div>
+                            <div class="plan-item-label">Free</div>
+                        </div>
+                        <div class="plan-item">
+                            <div class="plan-item-value" id="planBasic">0</div>
+                            <div class="plan-item-label">Basic</div>
+                        </div>
+                        <div class="plan-item">
+                            <div class="plan-item-value" id="planPro">0</div>
+                            <div class="plan-item-label">Pro</div>
+                        </div>
+                        <div class="plan-item">
+                            <div class="plan-item-value" id="planEnterprise">0</div>
+                            <div class="plan-item-label">Enterprise</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- システム状態セクション -->
+            <section id="healthSection" class="hidden">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-card-title">API状態</span>
+                        </div>
+                        <div class="status">
+                            <span class="status-dot" id="apiStatusDot"></span>
+                            <span id="apiStatus">-</span>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-card-title">Gemini API</span>
+                        </div>
+                        <div class="status">
+                            <span class="status-dot" id="geminiStatusDot"></span>
+                            <span id="geminiStatus">-</span>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-card-title">Stripe</span>
+                        </div>
+                        <div class="status">
+                            <span class="status-dot" id="stripeStatusDot"></span>
+                            <span id="stripeStatus">-</span>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-card-title">24hエラー数</span>
+                        </div>
+                        <div class="kpi-card-value" id="errorCount24h">0</div>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-card-header">
+                        <span class="kpi-card-title">平均レスポンス時間</span>
+                    </div>
+                    <div class="kpi-card-value" id="avgResponseTime">0 ms</div>
+                </div>
+            </section>
+
+            <!-- お問い合わせセクション -->
+            <section id="contactsSection" class="hidden">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-card-title">総お問い合わせ</span>
+                        </div>
+                        <div class="kpi-card-value" id="contactsTotal">0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-card-title">今日</span>
+                        </div>
+                        <div class="kpi-card-value" id="contactsToday">0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-card-title">今週</span>
+                        </div>
+                        <div class="kpi-card-value" id="contactsWeek">0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-card-title">未読</span>
+                        </div>
+                        <div class="kpi-card-value" id="contactsUnread">0</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>カテゴリ別</h3>
+                    </div>
+                    <div id="contactsByCategory"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // グローバル変数
+        let adminSecret = '';
+        let revenueChart = null;
+        let usageChart = null;
+
+        // DOM要素
+        const authOverlay = document.getElementById('authOverlay');
+        const authError = document.getElementById('authError');
+        const adminSecretInput = document.getElementById('adminSecret');
+        const loginBtn = document.getElementById('loginBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const exportBtn = document.getElementById('exportBtn');
+
+        // ログイン処理
+        loginBtn.addEventListener('click', async () => {
+            adminSecret = adminSecretInput.value.trim();
+            if (!adminSecret) {
+                showAuthError('シークレットを入力してください');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/v1/admin/dashboard', {
+                    headers: { 'X-Admin-Secret': adminSecret }
+                });
+
+                if (response.ok) {
+                    authOverlay.classList.add('hidden');
+                    loadDashboard();
+                } else {
+                    showAuthError('認証に失敗しました');
+                }
+            } catch (error) {
+                showAuthError('通信エラーが発生しました');
+            }
+        });
+
+        // Enterキーでログイン
+        adminSecretInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') loginBtn.click();
+        });
+
+        // エラー表示
+        function showAuthError(message) {
+            authError.textContent = message;
+            authError.classList.remove('hidden');
+        }
+
+        // ダッシュボードデータ読み込み
+        async function loadDashboard() {
+            try {
+                const [summaryRes, revenueChartRes, usageChartRes] = await Promise.all([
+                    fetch('/api/v1/admin/dashboard', { headers: { 'X-Admin-Secret': adminSecret } }),
+                    fetch('/api/v1/admin/charts/revenue?days=30', { headers: { 'X-Admin-Secret': adminSecret } }),
+                    fetch('/api/v1/admin/charts/usage?days=30', { headers: { 'X-Admin-Secret': adminSecret } })
+                ]);
+
+                if (summaryRes.ok) {
+                    const summary = await summaryRes.json();
+                    updateSummary(summary);
+                }
+
+                if (revenueChartRes.ok) {
+                    const chartData = await revenueChartRes.json();
+                    updateRevenueChart(chartData);
+                }
+
+                if (usageChartRes.ok) {
+                    const chartData = await usageChartRes.json();
+                    updateUsageChart(chartData);
+                }
+
+            } catch (error) {
+                console.error('ダッシュボード読み込みエラー:', error);
+            }
+        }
+
+        // サマリー更新
+        function updateSummary(data) {
+            document.getElementById('monthlyRevenue').textContent = `$${data.revenue.monthly_revenue.toFixed(2)}`;
+            document.getElementById('revenueChange').textContent = `MRR: $${data.revenue.mrr.toFixed(2)}`;
+            document.getElementById('totalUsers').textContent = data.users.total_users.toLocaleString();
+            document.getElementById('usersChange').textContent = `アクティブ: ${data.users.active_users}`;
+            document.getElementById('monthlyGenerations').textContent = data.usage.monthly_generations.toLocaleString();
+            document.getElementById('generationsChange').textContent = `今日: ${data.usage.daily_generations}`;
+            document.getElementById('payingUsers').textContent = data.users.paying_users.toLocaleString();
+            document.getElementById('payingChange').textContent = `解約率: ${data.users.churn_rate.toFixed(1)}%`;
+
+            // プラン分布
+            document.getElementById('planFree').textContent = data.plan_distribution.free;
+            document.getElementById('planBasic').textContent = data.plan_distribution.basic;
+            document.getElementById('planPro').textContent = data.plan_distribution.pro;
+            document.getElementById('planEnterprise').textContent = data.plan_distribution.enterprise;
+        }
+
+        // 収益チャート更新
+        function updateRevenueChart(data) {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+
+            if (revenueChart) revenueChart.destroy();
+
+            revenueChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(d => d.date.slice(5)),
+                    datasets: [{
+                        label: '収益',
+                        data: data.map(d => d.revenue),
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        y: {
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94a3b8' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 使用量チャート更新
+        function updateUsageChart(data) {
+            const ctx = document.getElementById('usageChart').getContext('2d');
+
+            if (usageChart) usageChart.destroy();
+
+            usageChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(d => d.date.slice(5)),
+                    datasets: [{
+                        label: '生成数',
+                        data: data.map(d => d.generations),
+                        backgroundColor: '#10b981'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        y: {
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94a3b8' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ヘルス情報読み込み
+        async function loadHealth() {
+            try {
+                const response = await fetch('/api/v1/admin/health', {
+                    headers: { 'X-Admin-Secret': adminSecret }
+                });
+
+                if (response.ok) {
+                    const health = await response.json();
+                    updateHealth(health);
+                }
+            } catch (error) {
+                console.error('ヘルス情報読み込みエラー:', error);
+            }
+        }
+
+        function updateHealth(data) {
+            const setStatus = (dotId, textId, status) => {
+                const dot = document.getElementById(dotId);
+                const text = document.getElementById(textId);
+                dot.className = `status-dot ${status}`;
+                text.textContent = status;
+            };
+
+            setStatus('apiStatusDot', 'apiStatus', data.api_status);
+            setStatus('geminiStatusDot', 'geminiStatus', data.gemini_api_status);
+            setStatus('stripeStatusDot', 'stripeStatus', data.stripe_status);
+            document.getElementById('errorCount24h').textContent = data.error_count_24h;
+            document.getElementById('avgResponseTime').textContent = `${data.avg_response_time_ms.toFixed(0)} ms`;
+        }
+
+        // お問い合わせ統計読み込み
+        async function loadContacts() {
+            try {
+                const response = await fetch('/api/v1/admin/contacts/stats', {
+                    headers: { 'X-Admin-Secret': adminSecret }
+                });
+
+                if (response.ok) {
+                    const stats = await response.json();
+                    updateContacts(stats);
+                }
+            } catch (error) {
+                console.error('お問い合わせ統計読み込みエラー:', error);
+            }
+        }
+
+        function updateContacts(data) {
+            document.getElementById('contactsTotal').textContent = data.total;
+            document.getElementById('contactsToday').textContent = data.today;
+            document.getElementById('contactsWeek').textContent = data.this_week;
+            document.getElementById('contactsUnread').textContent = data.unread;
+
+            // カテゴリ別
+            const container = document.getElementById('contactsByCategory');
+            container.innerHTML = Object.entries(data.by_category || {})
+                .map(([cat, count]) => `<div class="plan-item"><div class="plan-item-value">${count}</div><div class="plan-item-label">${cat}</div></div>`)
+                .join('');
+        }
+
+        // セクション切り替え
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = link.dataset.section;
+
+                // アクティブ状態更新
+                document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                // セクション表示切り替え
+                document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+
+                switch (section) {
+                    case 'dashboard':
+                        document.getElementById('dashboardSection').classList.remove('hidden');
+                        document.getElementById('pageTitle').textContent = 'ダッシュボード';
+                        loadDashboard();
+                        break;
+                    case 'health':
+                        document.getElementById('healthSection').classList.remove('hidden');
+                        document.getElementById('pageTitle').textContent = 'システム状態';
+                        loadHealth();
+                        break;
+                    case 'contacts':
+                        document.getElementById('contactsSection').classList.remove('hidden');
+                        document.getElementById('pageTitle').textContent = 'お問い合わせ';
+                        loadContacts();
+                        break;
+                    default:
+                        document.getElementById('dashboardSection').classList.remove('hidden');
+                        document.getElementById('pageTitle').textContent = 'ダッシュボード';
+                }
+            });
+        });
+
+        // 更新ボタン
+        refreshBtn.addEventListener('click', () => {
+            loadDashboard();
+        });
+
+        // エクスポートボタン
+        exportBtn.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/v1/admin/export', {
+                    headers: { 'X-Admin-Secret': adminSecret }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `visioncraft_export_${new Date().toISOString().slice(0, 10)}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                }
+            } catch (error) {
+                console.error('エクスポートエラー:', error);
+            }
+        });
+    </script>
+</body>
+</html>
