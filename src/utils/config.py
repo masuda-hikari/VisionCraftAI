@@ -39,16 +39,29 @@ class ImageConfig:
 
 
 @dataclass
+class ServerConfig:
+    """サーバー設定"""
+    host: str = "0.0.0.0"  # noqa: S104
+    port: int = 8000
+    cors_origins: list[str] = field(default_factory=list)  # 空=全許可（開発用）
+    trusted_hosts: list[str] = field(default_factory=lambda: ["*"])
+
+
+@dataclass
 class Config:
     """アプリケーション全体設定"""
     gemini: GeminiConfig = field(default_factory=GeminiConfig)
     image: ImageConfig = field(default_factory=ImageConfig)
+    server: ServerConfig = field(default_factory=ServerConfig)
 
     # デバッグモード
     debug: bool = False
 
     # ログ設定
     log_level: str = "INFO"
+
+    # 環境（development, staging, production）
+    environment: str = "development"
 
     @classmethod
     def from_env(cls, env_file: Optional[str] = None) -> "Config":
@@ -86,11 +99,28 @@ class Config:
             output_dir=output_dir,
         )
 
+        # サーバー設定
+        cors_origins_str = os.getenv("CORS_ORIGINS", "")
+        cors_origins = [o.strip() for o in cors_origins_str.split(",") if o.strip()]
+        trusted_hosts_str = os.getenv("TRUSTED_HOSTS", "*")
+        trusted_hosts = [h.strip() for h in trusted_hosts_str.split(",") if h.strip()]
+
+        server_config = ServerConfig(
+            host=os.getenv("SERVER_HOST", "0.0.0.0"),
+            port=int(os.getenv("SERVER_PORT", "8000")),
+            cors_origins=cors_origins,
+            trusted_hosts=trusted_hosts,
+        )
+
+        environment = os.getenv("ENVIRONMENT", "development")
+
         return cls(
             gemini=gemini_config,
             image=image_config,
+            server=server_config,
             debug=os.getenv("DEBUG", "false").lower() == "true",
             log_level=os.getenv("LOG_LEVEL", "INFO"),
+            environment=environment,
         )
 
     def validate(self) -> tuple[bool, list[str]]:
