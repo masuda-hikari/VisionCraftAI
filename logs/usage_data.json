@@ -1,0 +1,36 @@
+{
+  "last_updated": "2026-01-08T18:03:11.450045",
+  "record_count": 3,
+  "records": [
+    {
+      "timestamp": "2026-01-08T18:00:59.438811",
+      "operation": "generate_image",
+      "prompt_length": 56,
+      "success": false,
+      "generation_time_ms": 3173,
+      "model": "gemini-2.0-flash-exp",
+      "error_message": "Gemini APIへの接続に失敗しました: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.",
+      "estimated_cost_usd": 5.600000000000001e-06
+    },
+    {
+      "timestamp": "2026-01-08T18:01:10.310587",
+      "operation": "generate_image",
+      "prompt_length": 56,
+      "success": false,
+      "generation_time_ms": 2948,
+      "model": "gemini-2.0-flash-exp",
+      "error_message": "Gemini APIへの接続に失敗しました: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.",
+      "estimated_cost_usd": 5.600000000000001e-06
+    },
+    {
+      "timestamp": "2026-01-08T18:03:11.449711",
+      "operation": "generate_image",
+      "prompt_length": 56,
+      "success": false,
+      "generation_time_ms": 2978,
+      "model": "gemini-2.0-flash-exp",
+      "error_message": "Gemini APIへの接続に失敗しました: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.",
+      "estimated_cost_usd": 5.600000000000001e-06
+    }
+  ]
+}
