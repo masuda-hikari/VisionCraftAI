@@ -83,12 +83,14 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS設定（開発用）
+# CORS設定（環境変数で制御）
+_config = Config.from_env()
+_cors_origins = _config.server.cors_origins if _config.server.cors_origins else ["*"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 本番環境では適切に制限
+    allow_origins=_cors_origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 

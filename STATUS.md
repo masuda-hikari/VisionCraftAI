@@ -1,9 +1,9 @@
-﻿# VisionCraftAI - ステータス
+# VisionCraftAI - ステータス
 
 最終更新: 2026-01-08
 
 ## 現在の状況
-- 状況: Phase 8 デプロイ自動化完了
+- 状況: Phase 9 本番準備完了（CI/CD・セキュリティ強化）
 - 進捗: テストスイート全パス（217 passed, 1 skipped）
 
 ## Phase 1 進捗（完了）
@@ -84,6 +84,15 @@
 | Cloud Run デプロイスクリプト（deploy_cloudrun.py） | 完了 |
 | Stripe セットアップスクリプト（setup_stripe.py） | 完了 |
 
+## Phase 9 進捗（完了）
+| タスク | 状態 |
+|--------|------|
+| GitHub Actions CI/CDワークフロー | 完了 |
+| Dependabot設定（依存関係自動更新） | 完了 |
+| セキュリティスキャン（Bandit） | 完了 |
+| CORS設定の環境変数化 | 完了 |
+| ServerConfig追加 | 完了 |
+
 ## 次のアクション
 1. **Google Cloud認証情報の設定**
    - `python scripts/setup_gcloud.py --project YOUR_PROJECT_ID`
@@ -145,6 +154,10 @@
 - `scripts/deploy_cloudrun.py` - Cloud Runデプロイ自動化
 - `scripts/setup_stripe.py` - Stripe本番環境セットアップ
 
+### CI/CD
+- `.github/workflows/ci.yml` - GitHub Actions CI/CDパイプライン
+- `.github/dependabot.yml` - 依存関係自動更新設定
+
 ## APIエンドポイント一覧
 | エンドポイント | メソッド | 認証 | 説明 |
 |---------------|---------|------|------|
@@ -203,10 +216,13 @@
 | credits_500 | 500 | +100 | $149.99 |
 
 ## 最近の変更
+- 2026-01-08: Phase 9 CI/CD・セキュリティ強化
+  - GitHub Actions CI/CDパイプライン追加
+  - Dependabot設定（依存関係自動更新）
+  - セキュリティスキャン（Bandit）通過
+  - CORS設定の環境変数化
+  - ServerConfig追加
 - 2026-01-08: Phase 8 デプロイ自動化スクリプト作成
-  - setup_gcloud.py: Google Cloud環境セットアップ自動化
-  - deploy_cloudrun.py: Cloud Runデプロイ自動化
-  - setup_stripe.py: Stripe本番環境セットアップ自動化
 - 2026-01-08: Phase 7 デプロイ準備完了
 - 2026-01-08: Phase 6 Webインターフェース実装完了
 - 2026-01-08: Phase 5 Stripe決済統合完了
