@@ -1,10 +1,10 @@
-﻿# VisionCraftAI - ステータス
+# VisionCraftAI - ステータス
 
 最終更新: 2026-01-08
 
 ## 現在の状況
-- 状況: Phase 4 認証・認可システム完了
-- 進捗: テストスイート全パス（164 passed, 1 skipped）
+- 状況: Phase 5 Stripe決済統合・クレジットシステム完了
+- 進捗: テストスイート全パス（216 passed, 1 skipped）
 
 ## Phase 1 進捗（完了）
 | タスク | 状態 |
@@ -24,7 +24,7 @@
 | バッチ処理機能実装 | 完了 |
 | リトライ機能実装 | 完了 |
 | 使用量トラッキング機能実装 | 完了 |
-| テストスイート拡充 | 完了（86テスト全パス） |
+| テストスイート拡充 | 完了 |
 | API接続テスト | 未実施（認証情報待ち） |
 
 ## Phase 3 進捗（完了）
@@ -36,7 +36,7 @@
 | バッチ処理エンドポイント | 完了 |
 | 使用量・コスト管理エンドポイント | 完了 |
 | プロンプト検証・拡張エンドポイント | 完了 |
-| APIテスト作成・実行 | 完了（30テスト追加） |
+| APIテスト作成・実行 | 完了 |
 
 ## Phase 4 進捗（完了）
 | タスク | 状態 |
@@ -46,17 +46,29 @@
 | レート制限（スライディングウィンドウ方式） | 完了 |
 | FastAPI依存性注入・ミドルウェア | 完了 |
 | プラン階層別クォータ管理 | 完了 |
-| 認証テスト（46テスト） | 完了 |
-| 既存APIテスト更新 | 完了 |
+| 認証テスト | 完了 |
+
+## Phase 5 進捗（完了）
+| タスク | 状態 |
+|--------|------|
+| 決済モデル定義（Subscription, CreditBalance） | 完了 |
+| Stripeクライアント実装（テストモード対応） | 完了 |
+| サブスクリプション管理モジュール | 完了 |
+| クレジット管理モジュール | 完了 |
+| 決済エンドポイント実装 | 完了 |
+| Webhook処理実装 | 完了 |
+| 決済テスト52件 | 完了 |
 
 ## 次のアクション
 1. Google Cloud認証情報の設定・API接続テスト
-2. Phase 5: Stripe決済統合・クレジットシステム
-3. Phase 5: 簡易Webインターフェースの作成
+2. Stripe本番環境設定（APIキー、価格ID登録）
+3. 簡易Webインターフェースの作成
 4. ユーザー登録・アカウント管理機能
+5. 本番デプロイ準備
 
 ## ブロッカー
 - Google Cloud サービスアカウント認証情報が必要
+- Stripe本番APIキー・Webhookシークレットが必要
 
 ## 実装済みモジュール
 ### コア
@@ -73,13 +85,21 @@
 - `src/api/routes.py` - APIルーター・エンドポイント
 - `src/api/schemas.py` - Pydanticスキーマ定義
 
-### 認証（新規）
+### 認証
 - `src/api/auth/models.py` - APIKey, UsageQuota モデル
 - `src/api/auth/key_manager.py` - APIキー管理（CRUD・永続化）
 - `src/api/auth/rate_limiter.py` - レート制限（スライディングウィンドウ）
 - `src/api/auth/dependencies.py` - FastAPI依存性注入
 - `src/api/auth/schemas.py` - 認証スキーマ
 - `src/api/auth/routes.py` - 認証エンドポイント
+
+### 決済（新規）
+- `src/api/payment/models.py` - Subscription, CreditBalance, CreditTransaction モデル
+- `src/api/payment/stripe_client.py` - Stripe APIクライアント（テストモード対応）
+- `src/api/payment/subscription_manager.py` - サブスクリプション管理
+- `src/api/payment/credit_manager.py` - クレジット管理
+- `src/api/payment/schemas.py` - 決済スキーマ
+- `src/api/payment/routes.py` - 決済エンドポイント
 
 ## APIエンドポイント一覧
 | エンドポイント | メソッド | 認証 | 説明 |
@@ -95,7 +115,7 @@
 | `/api/v1/prompt/validate` | POST | 不要 | プロンプト検証 |
 | `/api/v1/prompt/enhance` | POST | 不要 | プロンプト拡張 |
 
-### 認証エンドポイント（新規）
+### 認証エンドポイント
 | エンドポイント | メソッド | 認証 | 説明 |
 |---------------|---------|------|------|
 | `/api/v1/auth/keys` | POST | 不要 | APIキー作成 |
@@ -108,29 +128,50 @@
 | `/api/v1/auth/rate-limit` | GET | **必須** | レート制限状況 |
 | `/api/v1/auth/verify` | GET | **必須** | 認証確認 |
 
+### 決済エンドポイント（新規）
+| エンドポイント | メソッド | 認証 | 説明 |
+|---------------|---------|------|------|
+| `/api/v1/payment/plans` | GET | 不要 | プラン一覧 |
+| `/api/v1/payment/subscriptions` | POST | **必須** | サブスクリプション作成 |
+| `/api/v1/payment/subscriptions/me` | GET | **必須** | サブスクリプション状況 |
+| `/api/v1/payment/subscriptions/me` | PATCH | **必須** | プラン変更 |
+| `/api/v1/payment/subscriptions/me/cancel` | POST | **必須** | サブスクリプションキャンセル |
+| `/api/v1/payment/credits/packages` | GET | 不要 | クレジットパッケージ一覧 |
+| `/api/v1/payment/credits/balance` | GET | **必須** | クレジット残高 |
+| `/api/v1/payment/credits/purchase` | POST | **必須** | クレジット購入 |
+| `/api/v1/payment/credits/transactions` | GET | **必須** | 取引履歴 |
+| `/api/v1/payment/webhook` | POST | 不要 | Stripe Webhook |
+
 ## プラン階層
 | プラン | 月間制限 | 日間制限 | 最大解像度 | バッチ上限 | 価格 |
 |--------|---------|---------|-----------|----------|------|
 | Free | 5枚 | 3枚 | 512x512 | 1 | 無料 |
 | Basic | 100枚 | 20枚 | 1024x1024 | 10 | $9.99/月 |
 | Pro | 500枚 | 50枚 | 2048x2048 | 50 | $29.99/月 |
-| Enterprise | 無制限 | 無制限 | 4096x4096 | 100 | 要見積 |
+| Enterprise | 無制限 | 無制限 | 4096x4096 | 100 | $99.99/月 |
+
+## クレジットパッケージ（新規）
+| パッケージ | クレジット | ボーナス | 価格 |
+|-----------|-----------|---------|------|
+| credits_10 | 10 | 0 | $4.99 |
+| credits_50 | 50 | +5 | $19.99 |
+| credits_100 | 100 | +15 | $34.99 |
+| credits_500 | 500 | +100 | $149.99 |
 
 ## 最近の変更
+- 2026-01-08: Phase 5 Stripe決済統合完了
+  - 決済モデル定義（Subscription, CreditBalance, CreditTransaction）
+  - Stripeクライアント実装（テストモード・本番モード対応）
+  - サブスクリプション管理（作成・更新・キャンセル）
+  - クレジットシステム（購入・使用・ボーナス・履歴）
+  - 決済エンドポイント実装
+  - Webhook処理（checkout.session.completed, subscription.updated等）
+  - 決済テスト52件追加
+  - 全216テストパス
 - 2026-01-08: Phase 4 認証・認可システム実装
-  - APIキーモデル・クォータ管理（models.py）
-  - キー生成・検証・CRUD（key_manager.py）
-  - スライディングウィンドウレート制限（rate_limiter.py）
-  - FastAPI依存性注入（dependencies.py）
-  - 認証エンドポイント（routes.py）
-  - 認証テスト46件追加（test_auth.py）
-  - 既存APIテスト更新（認証ヘッダー対応）
-  - 全164テストパス
 - 2026-01-08: Phase 3 FastAPI RESTful API実装
 - 2026-01-08: Phase 2 コア機能拡充
-- 2026-01-08: パッケージ構造修正、pyproject.toml作成
 - 2026-01-08: Phase 1 コアモジュール実装
-- 2026-01-07: オーケストレーター統合
 
 ## 起動方法
 ```bash
@@ -157,9 +198,30 @@ curl -X POST http://localhost:8000/api/v1/generate \
   -H "Content-Type: application/json" \
   -H "X-API-Key: vca_xxxxxxxx.xxxxxxxx" \
   -d '{"prompt": "A beautiful sunset"}'
+```
 
-# または Authorization ヘッダー
-curl -X POST http://localhost:8000/api/v1/generate \
-  -H "Authorization: Bearer vca_xxxxxxxx.xxxxxxxx" \
-  -d '{"prompt": "A beautiful sunset"}'
+## サブスクリプション作成
+```bash
+# サブスクリプション作成（Freeプラン）
+curl -X POST http://localhost:8000/api/v1/payment/subscriptions \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: vca_xxxxxxxx.xxxxxxxx" \
+  -d '{"email": "user@example.com", "plan_id": "free"}'
+
+# サブスクリプション作成（有料プラン）
+curl -X POST http://localhost:8000/api/v1/payment/subscriptions \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: vca_xxxxxxxx.xxxxxxxx" \
+  -d '{"email": "user@example.com", "plan_id": "basic"}'
+# → checkout_url にリダイレクトして決済完了
+```
+
+## クレジット購入
+```bash
+# クレジット購入Intent作成
+curl -X POST http://localhost:8000/api/v1/payment/credits/purchase \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: vca_xxxxxxxx.xxxxxxxx" \
+  -d '{"package_id": "credits_50"}'
+# → client_secret を使用してStripe.jsで決済完了
 ```

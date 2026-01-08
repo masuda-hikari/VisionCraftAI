@@ -14,6 +14,7 @@ from fastapi.responses import JSONResponse
 
 from src.api.routes import router
 from src.api.auth.routes import router as auth_router
+from src.api.payment.routes import router as payment_router
 from src.utils.config import Config
 
 # ログ設定
@@ -104,6 +105,7 @@ async def global_exception_handler(request, exc):
 # ルーター登録
 app.include_router(router, prefix="/api/v1")
 app.include_router(auth_router, prefix="/api/v1")
+app.include_router(payment_router)
 
 
 # ルートエンドポイント
