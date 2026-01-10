@@ -1,0 +1,129 @@
+{
+    "name": "VisionCraftAI - AI画像生成プラットフォーム",
+    "short_name": "VisionCraftAI",
+    "description": "Google Gemini 3を活用した最先端AI画像生成。テキストプロンプトから高品質な画像を数秒で生成。",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0f172a",
+    "theme_color": "#6366f1",
+    "orientation": "portrait-primary",
+    "scope": "/",
+    "lang": "ja",
+    "categories": ["multimedia", "productivity", "utilities"],
+    "icons": [
+        {
+            "src": "/static/images/icon-72.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/static/images/icon-96.png",
+            "sizes": "96x96",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/static/images/icon-128.png",
+            "sizes": "128x128",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/static/images/icon-144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/static/images/icon-152.png",
+            "sizes": "152x152",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/static/images/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/static/images/icon-384.png",
+            "sizes": "384x384",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/static/images/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/static/images/screenshot-desktop.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "VisionCraftAI デスクトップ版"
+        },
+        {
+            "src": "/static/images/screenshot-mobile.png",
+            "sizes": "750x1334",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "VisionCraftAI モバイル版"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "画像を生成",
+            "short_name": "生成",
+            "description": "新しいAI画像を生成",
+            "url": "/#demo",
+            "icons": [
+                {
+                    "src": "/static/images/shortcut-generate.png",
+                    "sizes": "96x96"
+                }
+            ]
+        },
+        {
+            "name": "ダッシュボード",
+            "short_name": "Dashboard",
+            "description": "ダッシュボードを開く",
+            "url": "/dashboard",
+            "icons": [
+                {
+                    "src": "/static/images/shortcut-dashboard.png",
+                    "sizes": "96x96"
+                }
+            ]
+        },
+        {
+            "name": "料金プラン",
+            "short_name": "料金",
+            "description": "料金プランを確認",
+            "url": "/#pricing",
+            "icons": [
+                {
+                    "src": "/static/images/shortcut-pricing.png",
+                    "sizes": "96x96"
+                }
+            ]
+        }
+    ],
+    "related_applications": [],
+    "prefer_related_applications": false,
+    "share_target": {
+        "action": "/share-target/",
+        "method": "POST",
+        "enctype": "multipart/form-data",
+        "params": {
+            "title": "title",
+            "text": "text",
+            "url": "url"
+        }
+    }
+}

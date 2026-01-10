@@ -80,12 +80,16 @@ function shouldUseDemoMode() {
     return !apiKey || isDemoMode;
 }
 
+// 現在生成中の画像データ（ライトボックス連携用）
+let currentGeneratedImage = null;
+
 // 画像生成
 async function generateImage(prompt, options = {}) {
     const btn = document.getElementById('generateBtn');
     const resultContainer = document.getElementById('resultContainer');
     const resultPlaceholder = document.getElementById('resultPlaceholder');
     const resultImage = document.getElementById('resultImage');
+    const resultActions = document.getElementById('resultActions');
     const demoIndicator = document.getElementById('demoIndicator');
 
     if (!prompt.trim()) {
@@ -100,6 +104,8 @@ async function generateImage(prompt, options = {}) {
     try {
         let result;
         const useDemo = shouldUseDemoMode();
+        const width = parseInt(options.width) || 1024;
+        const height = parseInt(options.height) || 1024;
 
         if (useDemo) {
             // デモモードで生成
@@ -110,6 +116,21 @@ async function generateImage(prompt, options = {}) {
                 resultImage.src = result.image_url;
                 resultImage.style.display = 'block';
                 resultPlaceholder.style.display = 'none';
+                if (resultActions) resultActions.style.display = 'flex';
+
+                // 画像データを保存
+                currentGeneratedImage = {
+                    src: result.image_url,
+                    prompt: prompt,
+                    size: `${width}x${height}`,
+                    time: result.generation_time_ms,
+                    style: options.style
+                };
+
+                // ギャラリーに追加
+                if (typeof imageGallery !== 'undefined' && imageGallery) {
+                    imageGallery.addImage(currentGeneratedImage);
+                }
 
                 // デモインジケーター表示
                 if (demoIndicator) {
@@ -127,8 +148,8 @@ async function generateImage(prompt, options = {}) {
             // 本番APIで生成
             const requestBody = {
                 prompt: prompt,
-                width: parseInt(options.width) || 1024,
-                height: parseInt(options.height) || 1024,
+                width: width,
+                height: height,
                 style: options.style || null
             };
 
@@ -138,15 +159,33 @@ async function generateImage(prompt, options = {}) {
             });
 
             // 結果表示
+            let imageSrc = null;
             if (result.image_base64) {
-                resultImage.src = `data:image/png;base64,${result.image_base64}`;
-                resultImage.style.display = 'block';
-                resultPlaceholder.style.display = 'none';
-                showNotification('画像を生成しました！');
+                imageSrc = `data:image/png;base64,${result.image_base64}`;
             } else if (result.image_url) {
-                resultImage.src = result.image_url;
+                imageSrc = result.image_url;
+            }
+
+            if (imageSrc) {
+                resultImage.src = imageSrc;
                 resultImage.style.display = 'block';
                 resultPlaceholder.style.display = 'none';
+                if (resultActions) resultActions.style.display = 'flex';
+
+                // 画像データを保存
+                currentGeneratedImage = {
+                    src: imageSrc,
+                    prompt: prompt,
+                    size: `${width}x${height}`,
+                    time: result.generation_time_ms,
+                    style: options.style
+                };
+
+                // ギャラリーに追加
+                if (typeof imageGallery !== 'undefined' && imageGallery) {
+                    imageGallery.addImage(currentGeneratedImage);
+                }
+
                 showNotification('画像を生成しました！');
             }
 
@@ -168,7 +207,17 @@ async function generateImage(prompt, options = {}) {
                     resultImage.src = demoResult.image_url;
                     resultImage.style.display = 'block';
                     resultPlaceholder.style.display = 'none';
+                    if (resultActions) resultActions.style.display = 'flex';
                     if (demoIndicator) demoIndicator.style.display = 'block';
+
+                    currentGeneratedImage = {
+                        src: demoResult.image_url,
+                        prompt: prompt,
+                        size: `${options.width || 1024}x${options.height || 1024}`,
+                        time: demoResult.generation_time_ms,
+                        style: options.style
+                    };
+
                     showNotification('API接続エラー: デモモードで表示しています', 'warning');
                     return;
                 }
@@ -181,6 +230,43 @@ async function generateImage(prompt, options = {}) {
     } finally {
         btn.disabled = false;
         btn.innerHTML = '画像を生成';
+    }
+}
+
+// 画像をダウンロード
+async function downloadCurrentImage() {
+    if (!currentGeneratedImage || !currentGeneratedImage.src) {
+        showNotification('ダウンロードする画像がありません', 'error');
+        return;
+    }
+
+    try {
+        const response = await fetch(currentGeneratedImage.src);
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `visioncraftai_${Date.now()}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showNotification('画像をダウンロードしました');
+    } catch (error) {
+        console.error('Download error:', error);
+        showNotification('ダウンロードに失敗しました', 'error');
+    }
+}
+
+// ライトボックスで表示
+function viewImageInLightbox() {
+    if (!currentGeneratedImage) {
+        showNotification('表示する画像がありません', 'error');
+        return;
+    }
+
+    if (typeof imageGallery !== 'undefined' && imageGallery && imageGallery.lightbox) {
+        imageGallery.lightbox.open(currentGeneratedImage);
     }
 }
 
@@ -407,6 +493,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 apiKeyInput.value = key;
             }
         });
+    }
+
+    // 拡大表示ボタン
+    const viewFullBtn = document.getElementById('viewFullBtn');
+    if (viewFullBtn) {
+        viewFullBtn.addEventListener('click', viewImageInLightbox);
+    }
+
+    // ダウンロードボタン
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', downloadCurrentImage);
+    }
+
+    // 生成画像クリックでも拡大
+    const resultImage = document.getElementById('resultImage');
+    if (resultImage) {
+        resultImage.addEventListener('click', viewImageInLightbox);
+        resultImage.style.cursor = 'pointer';
     }
 
     // プランボタンのイベント
