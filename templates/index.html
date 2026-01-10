@@ -46,8 +46,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Critical CSS (above-the-fold) -->
+    <style>
+        :root{--primary:#6366f1;--primary-dark:#4f46e5;--bg-dark:#0f172a;--text-primary:#f8fafc;--text-secondary:#94a3b8;--border:#334155}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg-dark);color:var(--text-primary);line-height:1.6}
+        .container{max-width:1200px;margin:0 auto;padding:0 20px}
+        .navbar{position:fixed;top:0;left:0;right:0;background:rgba(15,23,42,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:1000}
+        .navbar .container{display:flex;justify-content:space-between;align-items:center;height:64px}
+        .logo{font-size:1.5rem;font-weight:700;background:linear-gradient(135deg,var(--primary) 0%,#8b5cf6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:100px 0}
+        .hero h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:800;line-height:1.1;margin-bottom:24px}
+    </style>
+
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+    <link rel="stylesheet" href="/static/css/style.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/static/css/style.css"></noscript>
 
     <!-- Schema.org 構造化データ -->
     <script type="application/ld+json">
@@ -129,6 +144,40 @@
     }
     </script>
 
+    <!-- WebSite 構造化データ（サイト検索対応） -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "VisionCraftAI",
+        "url": "https://visioncraftai.example.com/",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://visioncraftai.example.com/search?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
+    <!-- BreadcrumbList 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "ホーム",
+                "item": "https://visioncraftai.example.com/"
+            }
+        ]
+    }
+    </script>
+
     <!-- FAQ 構造化データ -->
     <script type="application/ld+json">
     {
@@ -172,8 +221,11 @@
     </script>
 </head>
 <body>
+    <!-- アクセシビリティ: スキップリンク -->
+    <a href="#main-content" class="skip-link">メインコンテンツにスキップ</a>
+
     <!-- ナビゲーション -->
-    <nav class="navbar">
+    <nav class="navbar" role="navigation" aria-label="メインナビゲーション">
         <div class="container">
             <a href="/" class="logo">VisionCraftAI</a>
             <ul class="nav-links" id="navLinks">
@@ -193,9 +245,10 @@
     </nav>
 
     <!-- ヒーローセクション -->
-    <section class="hero">
+    <main id="main-content">
+    <section class="hero" aria-labelledby="hero-title">
         <div class="container">
-            <h1>
+            <h1 id="hero-title">
                 AIで<span>想像</span>を<span>創造</span>する
             </h1>
             <p>
@@ -210,9 +263,9 @@
     </section>
 
     <!-- 特徴セクション -->
-    <section class="features" id="features">
+    <section class="features" id="features" aria-labelledby="features-title">
         <div class="container">
-            <h2 class="section-title">なぜVisionCraftAI?</h2>
+            <h2 class="section-title" id="features-title">なぜVisionCraftAI?</h2>
             <p class="section-subtitle">プロフェッショナルからホビーストまで、あらゆるニーズに応える機能</p>
 
             <div class="features-grid">
@@ -256,9 +309,9 @@
     </section>
 
     <!-- 料金セクション -->
-    <section class="pricing" id="pricing">
+    <section class="pricing" id="pricing" aria-labelledby="pricing-title">
         <div class="container">
-            <h2 class="section-title">シンプルな料金プラン</h2>
+            <h2 class="section-title" id="pricing-title">シンプルな料金プラン</h2>
             <p class="section-subtitle">無料で始めて、必要に応じてアップグレード</p>
 
             <!-- 月額/年額切り替えトグル -->
@@ -332,9 +385,9 @@
     </section>
 
     <!-- デモセクション -->
-    <section class="demo-section" id="demo">
+    <section class="demo-section" id="demo" aria-labelledby="demo-title">
         <div class="container">
-            <h2 class="section-title">今すぐ試してみよう</h2>
+            <h2 class="section-title" id="demo-title">今すぐ試してみよう</h2>
             <p class="section-subtitle">プロンプトを入力して、AIが生成する画像を体験</p>
 
             <div class="demo-container">
@@ -384,9 +437,10 @@
             </div>
         </div>
     </section>
+    </main>
 
     <!-- フッター -->
-    <footer class="footer">
+    <footer class="footer" role="contentinfo">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
@@ -437,6 +491,31 @@
     <!-- 通知 -->
     <div id="notification" class="notification"></div>
 
-    <script src="/static/js/app.js"></script>
+    <!-- パフォーマンス最適化: defer/asyncでJS読み込み -->
+    <script src="/static/js/app.js" defer></script>
+
+    <!-- Core Web Vitals最適化: LCP計測 -->
+    <script>
+    // パフォーマンス計測（分析用）
+    if ('PerformanceObserver' in window) {
+        // LCP計測
+        new PerformanceObserver((list) => {
+            const entries = list.getEntries();
+            const lastEntry = entries[entries.length - 1];
+            console.log('LCP:', lastEntry.startTime);
+        }).observe({type: 'largest-contentful-paint', buffered: true});
+
+        // CLS計測
+        let clsValue = 0;
+        new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+                if (!entry.hadRecentInput) {
+                    clsValue += entry.value;
+                }
+            }
+            console.log('CLS:', clsValue);
+        }).observe({type: 'layout-shift', buffered: true});
+    }
+    </script>
 </body>
 </html>
