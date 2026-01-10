@@ -1,6 +1,26 @@
 # VisionCraftAI - 開発ログ
 
-## 2026-01-10
+## 2026-01-10 (セッション2)
+
+### セッション作業
+- **Phase 20 本番デプロイ準備**
+  - README.md更新（420テスト・カバレッジバッジ追加）
+  - DEVELOPMENT_LOG.md作成
+  - STATUS.md次アクション明確化
+  - Banditセキュリティスキャン確認（High: 0）
+  - テスト420件全パス確認
+
+### 技術課題
+- ブロッカー: Google Cloud認証情報・Stripe本番APIキー未設定
+
+### 次回作業（ブロッカー解消後）
+1. `gcloud auth login` → `python scripts/setup_gcloud.py`
+2. `python scripts/setup_stripe.py`
+3. `python scripts/deploy_cloudrun.py`
+
+---
+
+## 2026-01-10 (セッション1)
 
 ### セッション作業
 - **Phase 19 PWA化・UX機能強化** - 完了
@@ -9,14 +29,6 @@
   - サービスワーカー（オフライン・キャッシュ）
   - PWAマニフェスト作成
   - テスト420件全パス維持
-
-### 技術課題
-- ブロッカー: Google Cloud認証情報・Stripe本番APIキー未設定
-
-### 次回作業
-1. Google Cloud認証情報設定（ブロッカー解消）
-2. Stripe本番環境設定（ブロッカー解消）
-3. Cloud Runデプロイ実行
 
 ---
 

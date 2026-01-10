@@ -214,15 +214,34 @@
 | テスト420件全パス確認 | 完了 |
 
 ## 次のアクション
-1. **Google Cloud認証情報の設定**（ブロッカー）
-   - `python scripts/setup_gcloud.py --project YOUR_PROJECT_ID`
-   - サービスアカウント認証情報をcredentials/に配置
-2. **Stripe本番環境設定**（ブロッカー）
-   - `python scripts/setup_stripe.py --api-key sk_live_xxx --webhook-url https://your-domain.com`
+
+### 🔴 ブロッカー解消（人間対応必要）
+1. **Google Cloud認証情報の設定**
+   ```bash
+   # gcloud CLIでログイン
+   gcloud auth login
+
+   # セットアップスクリプト実行
+   python scripts/setup_gcloud.py --project YOUR_PROJECT_ID
+   ```
+   - サービスアカウントが自動作成され、credentials/に保存される
+
+2. **Stripe本番環境設定**
+   ```bash
+   python scripts/setup_stripe.py --api-key sk_live_xxx --webhook-url https://your-domain.com
+   ```
+   - Stripeダッシュボード: https://dashboard.stripe.com/apikeys
+
+### ✅ ブロッカー解消後の自動実行
 3. **本番デプロイ実行**
-   - `python scripts/deploy_cloudrun.py --project YOUR_PROJECT_ID`
-4. ドメイン設定・SSL証明書
-5. マーケティング・初期ユーザー獲得
+   ```bash
+   python scripts/deploy_cloudrun.py --project YOUR_PROJECT_ID
+   ```
+
+### 📋 デプロイ後の作業
+4. カスタムドメイン設定・SSL証明書
+5. Product Huntローンチ
+6. マーケティング・初期ユーザー獲得
 
 ## ブロッカー
 - Google Cloud サービスアカウント認証情報が必要
