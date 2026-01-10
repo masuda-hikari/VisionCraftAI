@@ -2,23 +2,24 @@
 
 ## セッション情報
 - 日時: 2026-01-10
-- タスク: Phase 16 テストカバレッジ80%達成
+- タスク: Phase 17 年額プラン・モバイル対応強化
 
 ## 収益化進捗
 
 ### 今回の作業
 | 作業内容 | 収益貢献度 | 完了状況 |
 |----------|-----------|----------|
-| payment/routes.pyテスト追加 | 高（決済品質保証） | 完了 |
-| subscription_manager.pyテスト追加 | 高（サブスクリプション品質保証） | 完了 |
-| auth/dependencies.pyテスト追加 | 高（認証品質保証） | 完了 |
-| テストカバレッジ80%達成 | 高（本番品質保証） | 完了 |
+| 年額/月額切り替えUI実装 | 高（キャッシュフロー改善） | 完了 |
+| 年額価格表示（割引%OFF） | 高（コンバージョン向上） | 完了 |
+| モバイルレスポンシブ最適化 | 高（ユーザー獲得拡大） | 完了 |
+| ハンバーガーメニュー実装 | 中（UX向上） | 完了 |
+| 年額プランテスト10件追加 | 高（品質保証） | 完了 |
 
 ### 収益化への貢献
-- **決済品質保証**: payment/routes.pyカバレッジ84%達成（+40%）
-- **サブスクリプション品質保証**: subscription_manager.pyカバレッジ79%達成（+15%）
-- **認証品質保証**: auth/dependencies.pyカバレッジ56%達成（+4%）
-- **本番品質基準達成**: テストカバレッジ80%は業界標準の品質基準
+- **キャッシュフロー改善**: 年額プラン（約17%割引）でユーザーの早期課金を促進
+- **コンバージョン向上**: 「2ヶ月分お得」バッジと%OFF表示でプラン選択を誘導
+- **ユーザー獲得拡大**: モバイル対応強化でiPhone/Androidユーザーにリーチ
+- **品質保証**: テスト420件全パス、80%+カバレッジ維持
 
 ### 実装済み収益機能
 | 機能 | ステータス | 収益影響 |
@@ -27,69 +28,50 @@
 | API認証・認可 | 完了 | 利用制限・課金基盤 |
 | Stripe決済連携 | 完了 | 収益回収 |
 | Webインターフェース | 完了 | ユーザー獲得 |
-| Docker化・デプロイ設定 | 完了 | 本番展開可能 |
-| デプロイ自動化スクリプト | 完了 | 即座に本番展開可能 |
-| CI/CD・セキュリティ | 完了 | 本番品質保証 |
-| マーケティング戦略 | 完了 | ユーザー獲得計画 |
-| SEO最適化 | 完了 | オーガニック流入 |
-| E2Eテスト | 完了 | 品質保証強化 |
-| デモモード | 完了 | ユーザー獲得・コンバージョン促進 |
-| ユーザーガイド | 完了 | オンボーディング向上 |
-| APIクイックスタート | 完了 | 開発者獲得 |
-| 利用規約・プライバシーポリシー | 完了 | 法的基盤（必須） |
-| お問い合わせ機能 | 完了 | Enterprise顧客獲得 |
+| **年額プラン切り替えUI** | **完了** | **キャッシュフロー改善** |
+| **モバイル対応強化** | **完了** | **ユーザー獲得拡大** |
+| デモモード | 完了 | コンバージョン促進 |
 | 管理者ダッシュボード | 完了 | 収益監視・運用管理 |
 | ユーザーダッシュボード | 完了 | 顧客セルフサービス |
 | 本番運用監視 | 完了 | 安定運用・SLA達成 |
-| ローンチ準備 | 完了 | マーケティング・品質保証 |
-| 品質強化（Phase 15+） | 完了 | 本番品質保証・テスト拡充 |
-| **テストカバレッジ80%** | **完了** | **本番品質基準達成** |
 
 ## 作成・更新したファイル
 
-### tests/test_payment.py（更新）
-- 決済ルートAPIテスト追加（TestPaymentRoutesAPI）
-  - `test_create_subscription_free` - Freeサブスクリプション作成
-  - `test_create_subscription_paid` - 有料サブスクリプション作成
-  - `test_create_subscription_invalid_plan` - 無効プランエラー
-  - `test_get_my_subscription_no_subscription` - サブスクリプションなし状態
-  - `test_get_my_subscription_with_subscription` - サブスクリプションあり状態
-  - `test_get_credit_balance` - クレジット残高取得
-  - `test_purchase_credits` - クレジット購入Intent作成
-  - `test_purchase_credits_invalid_package` - 無効パッケージエラー
-  - `test_get_credit_transactions` - 取引履歴取得
-  - `test_get_credit_transactions_with_filter` - フィルタ付き取引履歴
-  - `test_webhook_checkout_completed` - Webhook処理
-  - `test_webhook_subscription_updated` - サブスクリプション更新Webhook
-  - `test_webhook_subscription_deleted` - サブスクリプション削除Webhook
-  - `test_webhook_payment_succeeded` - 支払い成功Webhook
-  - `test_webhook_payment_failed` - 支払い失敗Webhook
-- サブスクリプションマネージャーテスト追加
-  - `test_get_subscription_by_api_key` - APIキーでサブスクリプション取得
-  - `test_list_subscriptions_all` - 一覧取得
-  - `test_list_subscriptions_by_user` - ユーザーフィルタ
-  - `test_list_subscriptions_by_status` - ステータスフィルタ
-  - `test_activate_subscription_not_found` - 存在しないサブスクリプションアクティベート
-  - `test_update_subscription_plan_not_found` - 存在しないサブスクリプション更新
-  - `test_cancel_subscription_not_found` - 存在しないサブスクリプションキャンセル
-  - `test_handle_subscription_updated_not_found` - 存在しないWebhook更新
+### templates/index.html（更新）
+- 年額/月額切り替えトグルUI追加
+- data-monthly/data-yearly属性追加
+- ハンバーガーメニューボタン追加
 
-### tests/test_auth.py（更新）
-- 認証依存性テスト追加（TestAuthDependencies）
-  - `test_bearer_auth` - Bearerトークン認証
-  - `test_authorization_without_bearer` - Bearerなし認証
-  - `test_forwarded_for_header` - X-Forwarded-Forヘッダー処理
-  - `test_rate_limit_no_auth` - 認証なしレート制限
-  - `test_quota_check_endpoint` - クォータチェック
-  - `test_usage_endpoint` - 使用量エンドポイント
-  - `test_rate_limit_status` - レート制限状況
-  - `test_key_list_with_auth` - 認証付きキー一覧
-  - `test_get_current_key_info` - 現在のキー情報
+### static/css/style.css（更新）
+- 月額/年額切り替えトグルスタイル追加
+- 節約額バッジスタイル追加
+- モバイルレスポンシブ（タブレット/モバイル/小型）
+- ハンバーガーメニューアニメーション
+
+### static/js/app.js（更新）
+- updatePricingDisplay()関数追加
+- currentBillingInterval状態管理
+- billingToggleイベントリスナー
+- モバイルメニュートグル機能
+
+### tests/test_payment.py（更新）
+- TestYearlyBillingクラス（7件）
+  - test_yearly_price_exists
+  - test_yearly_discount_applied
+  - test_free_plan_yearly_is_free
+  - test_subscription_with_yearly_billing
+  - test_subscription_serialization_with_yearly
+  - test_subscription_manager_yearly_free
+  - test_subscription_manager_yearly_paid
+- TestYearlyBillingAPIクラス（3件）
+  - test_plans_endpoint_includes_yearly_price
+  - test_create_subscription_with_yearly_billing
+  - test_create_subscription_default_monthly
 
 ### STATUS.md（更新）
-- Phase 16進捗追加
+- Phase 17進捗追加
 - 最近の変更に追記
-- テスト数・カバレッジ更新
+- テスト数更新（420件）
 
 ## 次回推奨アクション
 1. **優先度1（ブロッカー解消）**: Google Cloud認証情報の設定
@@ -112,10 +94,10 @@
 ### 品質チェック
 | 観点 | 評価 | コメント |
 |------|------|---------|
-| 収益価値 | OK | 決済・サブスクリプション・認証の品質保証、本番品質基準達成 |
-| 品質 | OK | テスト410件全パス、カバレッジ80%達成 |
+| 収益価値 | OK | 年額プランで前払い収益獲得、モバイル対応でユーザー拡大 |
+| 品質 | OK | テスト420件全パス、80%+カバレッジ維持 |
 | 誠実さ | OK | ブロッカー（認証情報待ち）を明記 |
-| 完全性 | OK | テスト追加・ドキュメント更新完了 |
+| 完全性 | OK | UI・テスト・ドキュメント更新完了 |
 | 継続性 | OK | STATUS.md更新済み、次アクション明記 |
 
 ### ブロッカー（未解消）
@@ -125,44 +107,35 @@
 ## 成果物一覧
 | ファイル | 内容 |
 |----------|------|
-| `tests/test_payment.py` | 決済・サブスクリプションテスト追加（更新） |
-| `tests/test_auth.py` | 認証テスト追加（更新） |
-| `STATUS.md` | ステータス更新 |
+| `templates/index.html` | 年額トグル・ハンバーガーメニュー追加 |
+| `static/css/style.css` | モバイルレスポンシブ・トグルスタイル追加 |
+| `static/js/app.js` | 年額切り替え機能・モバイルメニュー追加 |
+| `tests/test_payment.py` | 年額プランテスト10件追加 |
+| `STATUS.md` | Phase 17進捗更新 |
 
 ## 収益化ロードマップ
 | Phase | 内容 | 状態 | 予想収益 |
 |-------|------|------|---------|
 | Phase 1-6 | 基盤・認証・決済・UI | 完了 | - |
-| Phase 7 | デプロイ準備 | 完了 | - |
-| Phase 8 | デプロイ自動化 | 完了 | - |
-| Phase 9 | CI/CD・セキュリティ | 完了 | - |
-| Phase 10 | マーケティング準備 | 完了 | - |
-| Phase 10+ | デモモード | 完了 | - |
-| Phase 11 | ドキュメント・法的・お問い合わせ | 完了 | - |
-| Phase 12 | 管理者ダッシュボード | 完了 | - |
-| Phase 13 | ユーザーダッシュボード | 完了 | - |
-| Phase 14 | 本番運用監視 | 完了 | - |
-| Phase 15 | ローンチ最終準備 | 完了 | - |
-| Phase 15+ | 品質強化 | 完了 | - |
-| Phase 16 | **テストカバレッジ80%** | **完了** | - |
-| Phase 17 | 本番デプロイ | 未着手（認証情報待ち） | - |
-| Phase 18 | 初期ユーザー獲得 | 未着手 | $500/月 |
-| Phase 19 | マーケティング拡大 | 未着手 | $2,500/月 |
+| Phase 7-15 | デプロイ・CI/CD・マーケティング | 完了 | - |
+| Phase 16 | テストカバレッジ80% | 完了 | - |
+| Phase 17 | **年額プラン・モバイル対応** | **完了** | - |
+| Phase 18 | 本番デプロイ | 未着手（認証情報待ち） | - |
+| Phase 19 | 初期ユーザー獲得 | 未着手 | $500/月 |
+| Phase 20 | マーケティング拡大 | 未着手 | $2,500/月 |
 | 目標 | 1000万円達成 | 進行中 | - |
 
 ## テスト結果
-- 総テスト数: 411件
-- パス: 410件
+- 総テスト数: 421件
+- パス: 420件
 - スキップ: 1件
 - 警告: 1件（google-genai deprecation warning、影響なし）
-- カバレッジ: 80%
+- カバレッジ: 80%+
 
-## Phase 16 成果サマリー
+## Phase 17 成果サマリー
 | 項目 | 内容 |
 |------|------|
-| テスト追加 | 39件追加（371→410件） |
-| カバレッジ | 77%→80%（+3%） |
-| payment/routes.py | 44%→84%（+40%） |
-| subscription_manager.py | 64%→79%（+15%） |
-| auth/dependencies.py | 52%→56%（+4%） |
-| 品質基準 | 80%カバレッジ達成（業界標準） |
+| 新機能 | 年額/月額切り替えUI、モバイル対応強化 |
+| テスト追加 | 10件追加（410→420件） |
+| 収益化寄与 | 年額プラン前払い促進、モバイルユーザー獲得 |
+| 品質維持 | テスト全パス、80%+カバレッジ |

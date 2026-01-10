@@ -1291,3 +1291,180 @@ class TestPaymentEdgeCases:
         loaded = new_manager.get_balance("user_credit_persist_001")
         assert loaded is not None
         assert loaded.balance == 100
+
+
+# ========== 年額プランテスト ==========
+
+
+class TestYearlyBilling:
+    """年額プランのテスト"""
+
+    def test_yearly_price_exists(self):
+        """年額価格が定義されていること"""
+        plans = PlanPrice.get_plans()
+        for plan_id, plan in plans.items():
+            assert hasattr(plan, "price_yearly")
+            assert plan.price_yearly is not None
+            assert isinstance(plan.price_yearly, Decimal)
+
+    def test_yearly_discount_applied(self):
+        """年額プランに割引が適用されていること"""
+        plans = PlanPrice.get_plans()
+
+        # Basic: 月額9.99 × 12 = 119.88、年額99.99（約16%割引）
+        basic = plans["basic"]
+        monthly_total = basic.price_monthly * 12
+        assert basic.price_yearly < monthly_total
+        discount = (1 - basic.price_yearly / monthly_total) * 100
+        assert discount > 10  # 10%以上の割引
+
+        # Pro: 月額29.99 × 12 = 359.88、年額299.99（約17%割引）
+        pro = plans["pro"]
+        monthly_total = pro.price_monthly * 12
+        assert pro.price_yearly < monthly_total
+        discount = (1 - pro.price_yearly / monthly_total) * 100
+        assert discount > 10
+
+    def test_free_plan_yearly_is_free(self):
+        """Freeプランの年額も無料であること"""
+        plans = PlanPrice.get_plans()
+        free = plans["free"]
+        assert free.price_monthly == Decimal("0")
+        assert free.price_yearly == Decimal("0")
+
+    def test_subscription_with_yearly_billing(self):
+        """年額課金間隔でサブスクリプション作成"""
+        sub = Subscription(
+            subscription_id="sub_yearly_001",
+            user_id="user_yearly_001",
+            plan_id="pro",
+            billing_interval="yearly",
+        )
+        assert sub.billing_interval == "yearly"
+        assert sub.plan_id == "pro"
+        assert sub.is_active()
+
+    def test_subscription_serialization_with_yearly(self):
+        """年額サブスクリプションのシリアライズ"""
+        sub = Subscription(
+            subscription_id="sub_yearly_002",
+            user_id="user_yearly_002",
+            plan_id="basic",
+            billing_interval="yearly",
+        )
+        data = sub.to_dict()
+        assert data["billing_interval"] == "yearly"
+
+        restored = Subscription.from_dict(data)
+        assert restored.billing_interval == "yearly"
+
+    def test_subscription_manager_yearly_free(self, subscription_manager):
+        """SubscriptionManager: Freeプラン年額（即時アクティベート）"""
+        sub, checkout_url = subscription_manager.create_subscription(
+            user_id="user_yearly_free",
+            email="yearly_free@example.com",
+            plan_id="free",
+            billing_interval="yearly",
+        )
+        # Freeプランは即時アクティベート、チェックアウト不要
+        assert checkout_url is None
+        assert sub.status == SubscriptionStatus.ACTIVE
+        assert sub.billing_interval == "yearly"
+
+    def test_subscription_manager_yearly_paid(self, subscription_manager):
+        """SubscriptionManager: 有料プラン年額（Checkoutセッション）"""
+        sub, checkout_url = subscription_manager.create_subscription(
+            user_id="user_yearly_paid",
+            email="yearly_paid@example.com",
+            plan_id="pro",
+            billing_interval="yearly",
+        )
+        # 有料プランはCheckoutセッションが必要
+        # テストモードではチェックアウトURLは生成されない場合がある
+        assert sub.plan_id == "pro"
+        assert sub.billing_interval == "yearly"
+        assert sub.status == SubscriptionStatus.INCOMPLETE
+
+
+class TestYearlyBillingAPI:
+    """年額プランAPIテスト"""
+
+    def test_plans_endpoint_includes_yearly_price(self):
+        """プラン一覧エンドポイントに年額価格が含まれること"""
+        response = client.get("/api/v1/payment/plans")
+        assert response.status_code == 200
+        data = response.json()
+
+        for plan in data["plans"]:
+            assert "price_yearly" in plan
+            assert plan["price_yearly"] is not None
+            # 数値として解析可能であること
+            yearly_price = float(plan["price_yearly"])
+            assert yearly_price >= 0
+
+    def test_create_subscription_with_yearly_billing(self, tmp_path):
+        """年額課金でサブスクリプション作成"""
+        import uuid
+        from src.api.auth.models import APIKey
+        from src.api.auth.dependencies import get_api_key
+
+        # ユニークなIDを生成
+        unique_id = str(uuid.uuid4())[:8]
+
+        # モック用のAPIキーオブジェクト
+        mock_api_key = APIKey(
+            key_id=f"test_yearly_key_{unique_id}",
+            key_hash="mock_hash_yearly",
+            tier=APIKeyTier.BASIC,
+            owner_id=f"yearly_test_user_{unique_id}",
+        )
+
+        # FastAPIの依存関係オーバーライド
+        app.dependency_overrides[get_api_key] = lambda: mock_api_key
+        try:
+            response = client.post(
+                "/api/v1/payment/subscriptions",
+                json={
+                    "email": f"test_yearly_api_{unique_id}@example.com",
+                    "plan_id": "free",
+                    "billing_interval": "yearly",
+                },
+            )
+            assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.json()}"
+            data = response.json()
+            assert data["billing_interval"] == "yearly"
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_create_subscription_default_monthly(self, tmp_path):
+        """デフォルトは月額課金"""
+        import uuid
+        from src.api.auth.models import APIKey
+        from src.api.auth.dependencies import get_api_key
+
+        # ユニークなIDを生成
+        unique_id = str(uuid.uuid4())[:8]
+
+        # モック用のAPIキーオブジェクト
+        mock_api_key = APIKey(
+            key_id=f"test_monthly_key_{unique_id}",
+            key_hash="mock_hash_monthly",
+            tier=APIKeyTier.BASIC,
+            owner_id=f"monthly_test_user_{unique_id}",
+        )
+
+        # FastAPIの依存関係オーバーライド
+        app.dependency_overrides[get_api_key] = lambda: mock_api_key
+        try:
+            response = client.post(
+                "/api/v1/payment/subscriptions",
+                json={
+                    "email": f"test_monthly_default_{unique_id}@example.com",
+                    "plan_id": "free",
+                },
+            )
+            assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.json()}"
+            data = response.json()
+            assert data["billing_interval"] == "monthly"
+        finally:
+            app.dependency_overrides.clear()

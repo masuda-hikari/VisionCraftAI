@@ -227,12 +227,19 @@ async function getPlans() {
     }
 }
 
+// 現在の課金間隔（グローバル状態）
+let currentBillingInterval = 'monthly';
+
 // サブスクリプション作成
 async function createSubscription(email, planId) {
     try {
         const result = await apiRequest('/payment/subscriptions', {
             method: 'POST',
-            body: JSON.stringify({ email, plan_id: planId })
+            body: JSON.stringify({
+                email,
+                plan_id: planId,
+                billing_interval: currentBillingInterval
+            })
         });
 
         if (result.checkout_url) {
@@ -248,6 +255,70 @@ async function createSubscription(email, planId) {
         showNotification(error.message, 'error');
         return null;
     }
+}
+
+// 価格表示を更新
+function updatePricingDisplay(isYearly) {
+    const priceElements = document.querySelectorAll('.pricing-card .price');
+    const monthlyLabel = document.getElementById('monthlyLabel');
+    const yearlyLabel = document.getElementById('yearlyLabel');
+    const billingBadge = document.querySelector('.billing-badge');
+
+    // ラベルのアクティブ状態を更新
+    if (monthlyLabel) {
+        monthlyLabel.classList.toggle('active', !isYearly);
+    }
+    if (yearlyLabel) {
+        yearlyLabel.classList.toggle('active', isYearly);
+    }
+
+    // 「2ヶ月分お得」バッジの表示切替
+    if (billingBadge) {
+        billingBadge.classList.toggle('visible', isYearly);
+    }
+
+    // 価格を更新
+    priceElements.forEach(priceEl => {
+        const monthly = parseFloat(priceEl.dataset.monthly);
+        const yearly = parseFloat(priceEl.dataset.yearly);
+
+        // アニメーション効果
+        priceEl.classList.add('updating');
+        setTimeout(() => {
+            if (isYearly) {
+                if (yearly === 0) {
+                    priceEl.innerHTML = '$0<span>/月</span>';
+                } else {
+                    // 年額を月あたりで表示
+                    const monthlyEquivalent = (yearly / 12).toFixed(2);
+                    const savings = Math.round((1 - (yearly / (monthly * 12))) * 100);
+                    priceEl.innerHTML = `$${monthlyEquivalent}<span>/月</span>`;
+
+                    // 節約額バッジを追加または更新
+                    let savingsBadge = priceEl.parentElement.querySelector('.savings-badge');
+                    if (!savingsBadge) {
+                        savingsBadge = document.createElement('span');
+                        savingsBadge.className = 'savings-badge';
+                        priceEl.parentElement.insertBefore(savingsBadge, priceEl.nextSibling);
+                    }
+                    savingsBadge.textContent = `${savings}% OFF`;
+                    savingsBadge.classList.add('visible');
+                }
+            } else {
+                priceEl.innerHTML = `$${monthly}<span>/月</span>`;
+
+                // 節約額バッジを非表示
+                const savingsBadge = priceEl.parentElement.querySelector('.savings-badge');
+                if (savingsBadge) {
+                    savingsBadge.classList.remove('visible');
+                }
+            }
+            priceEl.classList.remove('updating');
+        }, 150);
+    });
+
+    // 課金間隔を更新
+    currentBillingInterval = isYearly ? 'yearly' : 'monthly';
 }
 
 // デモモードUIの更新
@@ -300,6 +371,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // 初期UI更新
     updateDemoModeUI();
 
+    // 月額/年額切り替えトグルの初期化
+    const billingToggle = document.getElementById('billingToggle');
+    if (billingToggle) {
+        // 初期状態を設定（月額）
+        const monthlyLabel = document.getElementById('monthlyLabel');
+        if (monthlyLabel) {
+            monthlyLabel.classList.add('active');
+        }
+
+        billingToggle.addEventListener('change', (e) => {
+            updatePricingDisplay(e.target.checked);
+        });
+    }
+
     // 生成ボタンのイベント
     const generateBtn = document.getElementById('generateBtn');
     if (generateBtn) {
@@ -343,8 +428,35 @@ document.addEventListener('DOMContentLoaded', () => {
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth' });
             }
+
+            // モバイルメニューを閉じる
+            const navLinks = document.getElementById('navLinks');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            if (navLinks && mobileMenuBtn) {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+            }
         });
     });
+
+    // モバイルメニュートグル
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+
+    if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuBtn.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        // メニュー外クリックで閉じる
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.navbar')) {
+                mobileMenuBtn.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+    }
 });
 
 // エクスポート（モジュールとして使う場合）
