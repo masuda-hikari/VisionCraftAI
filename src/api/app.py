@@ -22,6 +22,8 @@ from src.api.demo_routes import router as demo_router
 from src.api.contact_routes import router as contact_router
 from src.api.admin.routes import router as admin_router
 from src.api.monitoring_routes import router as monitoring_router
+from src.api.referral.routes import router as referral_router
+from src.api.onboarding.routes import router as onboarding_router
 from src.utils.config import Config
 
 # プロジェクトルートディレクトリ
@@ -133,6 +135,8 @@ app.include_router(demo_router, prefix="/api/v1")
 app.include_router(contact_router, prefix="/api/v1")
 app.include_router(admin_router, prefix="/api/v1")
 app.include_router(monitoring_router, prefix="/api/v1")
+app.include_router(referral_router, prefix="/api/v1")
+app.include_router(onboarding_router, prefix="/api/v1")
 
 
 # ルートエンドポイント（HTMLまたはJSON）
