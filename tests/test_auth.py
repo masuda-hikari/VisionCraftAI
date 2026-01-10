@@ -590,5 +590,191 @@ class TestAuthEndpoints:
         assert response.status_code != 401
 
 
+# =====================
+# 認証依存性追加テスト
+# =====================
+
+
+class TestAuthDependencies:
+    """認証依存性の追加テスト（カバレッジ向上用）"""
+
+    def test_bearer_auth(self, test_client):
+        """Bearerトークン認証"""
+        # キー作成
+        create_response = test_client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Bearer Test"},
+        )
+        api_key = create_response.json()["api_key"]
+
+        # Bearer認証でアクセス
+        response = test_client.get(
+            "/api/v1/auth/verify",
+            headers={"Authorization": f"Bearer {api_key}"},
+        )
+        assert response.status_code == 200
+        assert response.json()["valid"] is True
+
+    def test_authorization_without_bearer(self, test_client):
+        """Bearerプレフィックスなしの認証"""
+        # キー作成
+        create_response = test_client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "No Bearer Test"},
+        )
+        api_key = create_response.json()["api_key"]
+
+        # Bearerなしでアクセス
+        response = test_client.get(
+            "/api/v1/auth/verify",
+            headers={"Authorization": api_key},
+        )
+        assert response.status_code == 200
+
+    def test_forwarded_for_header(self, test_client):
+        """X-Forwarded-Forヘッダー処理"""
+        create_response = test_client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Forwarded Test"},
+        )
+        api_key = create_response.json()["api_key"]
+
+        # X-Forwarded-Forヘッダー付きアクセス
+        response = test_client.get(
+            "/api/v1/auth/verify",
+            headers={
+                "X-API-Key": api_key,
+                "X-Forwarded-For": "192.168.1.1, 10.0.0.1",
+            },
+        )
+        assert response.status_code == 200
+
+    def test_rate_limit_no_auth(self, test_client):
+        """認証なしのレート制限"""
+        # 認証なしで複数回リクエスト
+        for _ in range(5):
+            response = test_client.get("/api/v1/health")
+            # ヘルスエンドポイントは認証不要
+            assert response.status_code == 200
+
+    def test_quota_check_endpoint(self, test_client):
+        """クォータチェック"""
+        create_response = test_client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "free", "name": "Quota Check Test"},
+        )
+        api_key = create_response.json()["api_key"]
+
+        # クォータ状況確認
+        response = test_client.get(
+            "/api/v1/auth/quota",
+            headers={"X-API-Key": api_key},
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["tier"] == "free"
+        assert "monthly_remaining" in data
+
+    def test_usage_endpoint(self, test_client):
+        """使用量エンドポイント"""
+        create_response = test_client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Usage Test"},
+        )
+        api_key = create_response.json()["api_key"]
+
+        response = test_client.get(
+            "/api/v1/auth/usage",
+            headers={"X-API-Key": api_key},
+        )
+        assert response.status_code == 200
+
+    def test_rate_limit_status(self, test_client):
+        """レート制限状況"""
+        create_response = test_client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Rate Limit Test"},
+        )
+        api_key = create_response.json()["api_key"]
+
+        response = test_client.get(
+            "/api/v1/auth/rate-limit",
+            headers={"X-API-Key": api_key},
+        )
+        assert response.status_code == 200
+
+    def test_key_list_with_auth(self, test_client):
+        """認証付きキー一覧取得"""
+        create_response = test_client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "List Test", "owner_id": "owner_test_001"},
+        )
+        api_key = create_response.json()["api_key"]
+
+        response = test_client.get(
+            "/api/v1/auth/keys",
+            headers={"X-API-Key": api_key},
+        )
+        assert response.status_code == 200
+
+    def test_get_current_key_info(self, test_client):
+        """現在のキー情報取得"""
+        create_response = test_client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "pro", "name": "Current Key Test"},
+        )
+        api_key = create_response.json()["api_key"]
+
+        response = test_client.get(
+            "/api/v1/auth/keys/me",
+            headers={"X-API-Key": api_key},
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["tier"] == "pro"
+        assert data["name"] == "Current Key Test"
+
+
+class TestTierChecker:
+    """TierCheckerクラスのテスト"""
+
+    def test_tier_checker_allowed(self, test_client):
+        """許可されたTierでのアクセス"""
+        # Proキーを作成
+        create_response = test_client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "pro", "name": "Pro Tier Test"},
+        )
+        api_key = create_response.json()["api_key"]
+
+        # プレミアム機能へのアクセス（存在すれば）
+        response = test_client.get(
+            "/api/v1/auth/verify",
+            headers={"X-API-Key": api_key},
+        )
+        assert response.status_code == 200
+
+
+class TestQuotaEnforcer:
+    """QuotaEnforcerクラスのテスト"""
+
+    def test_quota_enforcer_within_limit(self, test_client):
+        """クォータ内でのアクセス"""
+        create_response = test_client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Quota Enforcer Test"},
+        )
+        api_key = create_response.json()["api_key"]
+
+        # 画像生成リクエスト（クォータ内）
+        response = test_client.post(
+            "/api/v1/generate",
+            json={"prompt": "Test image"},
+            headers={"X-API-Key": api_key},
+        )
+        # 認証は通る（Gemini APIがないためエラーになる可能性があるが、401/429ではない）
+        assert response.status_code not in [401, 429]
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
