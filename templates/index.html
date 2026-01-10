@@ -176,7 +176,7 @@
     <nav class="navbar">
         <div class="container">
             <a href="/" class="logo">VisionCraftAI</a>
-            <ul class="nav-links">
+            <ul class="nav-links" id="navLinks">
                 <li><a href="#features">特徴</a></li>
                 <li><a href="#pricing">料金</a></li>
                 <li><a href="#demo">デモ</a></li>
@@ -184,6 +184,11 @@
                 <li><a href="/dashboard">ダッシュボード</a></li>
             </ul>
             <a href="#demo" class="nav-cta">無料で試す</a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="メニュー">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
@@ -256,10 +261,21 @@
             <h2 class="section-title">シンプルな料金プラン</h2>
             <p class="section-subtitle">無料で始めて、必要に応じてアップグレード</p>
 
+            <!-- 月額/年額切り替えトグル -->
+            <div class="billing-toggle">
+                <span class="billing-label" id="monthlyLabel">月額</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="billingToggle">
+                    <span class="toggle-slider"></span>
+                </label>
+                <span class="billing-label" id="yearlyLabel">年額</span>
+                <span class="billing-badge">2ヶ月分お得！</span>
+            </div>
+
             <div class="pricing-grid">
-                <div class="pricing-card">
+                <div class="pricing-card" data-plan-card="free">
                     <h3>Free</h3>
-                    <div class="price">$0<span>/月</span></div>
+                    <div class="price" data-monthly="0" data-yearly="0">$0<span>/月</span></div>
                     <p class="price-desc">個人利用・お試しに最適</p>
                     <ul class="pricing-features">
                         <li>月5枚まで生成</li>
@@ -270,9 +286,9 @@
                     <a href="#demo" class="pricing-btn pricing-btn-secondary" data-plan="free">無料で始める</a>
                 </div>
 
-                <div class="pricing-card">
+                <div class="pricing-card" data-plan-card="basic">
                     <h3>Basic</h3>
-                    <div class="price">$9.99<span>/月</span></div>
+                    <div class="price" data-monthly="9.99" data-yearly="99.99">$9.99<span>/月</span></div>
                     <p class="price-desc">個人クリエイター向け</p>
                     <ul class="pricing-features">
                         <li>月100枚まで生成</li>
@@ -284,9 +300,9 @@
                     <a href="#" class="pricing-btn pricing-btn-primary" data-plan="basic">Basic を選択</a>
                 </div>
 
-                <div class="pricing-card popular">
+                <div class="pricing-card popular" data-plan-card="pro">
                     <h3>Pro</h3>
-                    <div class="price">$29.99<span>/月</span></div>
+                    <div class="price" data-monthly="29.99" data-yearly="299.99">$29.99<span>/月</span></div>
                     <p class="price-desc">プロフェッショナル向け</p>
                     <ul class="pricing-features">
                         <li>月500枚まで生成</li>
@@ -298,9 +314,9 @@
                     <a href="#" class="pricing-btn pricing-btn-primary" data-plan="pro">Pro を選択</a>
                 </div>
 
-                <div class="pricing-card">
+                <div class="pricing-card" data-plan-card="enterprise">
                     <h3>Enterprise</h3>
-                    <div class="price">$99.99<span>/月</span></div>
+                    <div class="price" data-monthly="99.99" data-yearly="999.99">$99.99<span>/月</span></div>
                     <p class="price-desc">ビジネス・大規模利用</p>
                     <ul class="pricing-features">
                         <li>無制限生成</li>

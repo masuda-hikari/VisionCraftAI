@@ -92,6 +92,11 @@ body {
     background: var(--primary-dark);
 }
 
+/* ハンバーガーメニュー（デスクトップでは非表示） */
+.mobile-menu-btn {
+    display: none;
+}
+
 /* ヒーローセクション */
 .hero {
     padding: 160px 0 100px;
@@ -331,6 +336,119 @@ body {
     border-color: var(--primary);
 }
 
+/* 月額/年額切り替えトグル */
+.billing-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.billing-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: color 0.3s;
+}
+
+.billing-label.active {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 56px;
+    height: 28px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    transition: 0.3s;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    bottom: 2px;
+    background: var(--text-secondary);
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border-color: var(--primary);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+    background: white;
+}
+
+.billing-badge {
+    background: var(--success);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.billing-badge.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* 年額表示時の価格アニメーション */
+.price {
+    transition: transform 0.3s;
+}
+
+.price.updating {
+    transform: scale(0.95);
+}
+
+/* 年額の節約額バッジ */
+.savings-badge {
+    display: inline-block;
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--success);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 8px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.savings-badge.visible {
+    opacity: 1;
+}
+
 /* デモセクション */
 .demo-section {
     padding: 100px 0;
@@ -490,28 +608,265 @@ body {
     color: var(--text-secondary);
 }
 
-/* レスポンシブ */
+/* レスポンシブ - タブレット */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* レスポンシブ - モバイル */
 @media (max-width: 768px) {
+    /* ナビゲーション */
+    .navbar .container {
+        position: relative;
+    }
+
     .nav-links {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: rgba(15, 23, 42, 0.98);
+        flex-direction: column;
+        padding: 16px;
+        gap: 16px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-cta {
         display: none;
     }
 
+    /* ハンバーガーメニュー */
+    .mobile-menu-btn {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+    }
+
+    .mobile-menu-btn span {
+        display: block;
+        width: 24px;
+        height: 2px;
+        background: var(--text-primary);
+        transition: 0.3s;
+    }
+
+    .mobile-menu-btn.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .mobile-menu-btn.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-menu-btn.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* ヒーロー */
+    .hero {
+        padding: 120px 0 60px;
+    }
+
     .hero h1 {
-        font-size: 2.5rem;
+        font-size: 2rem;
+        padding: 0 16px;
+    }
+
+    .hero p {
+        font-size: 1rem;
+        padding: 0 16px;
     }
 
     .hero-buttons {
         flex-direction: column;
         padding: 0 20px;
+        gap: 12px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        text-align: center;
+        padding: 14px 24px;
+    }
+
+    /* 特徴セクション */
+    .features {
+        padding: 60px 0;
+    }
+
+    .section-title {
+        font-size: 1.75rem;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+        padding: 0 16px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .feature-card {
+        padding: 24px;
+    }
+
+    /* 料金セクション */
+    .pricing {
+        padding: 60px 0;
+    }
+
+    .billing-toggle {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .billing-badge {
+        width: 100%;
+        text-align: center;
+        margin-top: 8px;
+    }
+
+    .pricing-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .pricing-card {
+        padding: 24px;
     }
 
     .pricing-card.popular {
         transform: none;
+        order: -1;
+    }
+
+    .price {
+        font-size: 2.5rem;
+    }
+
+    /* デモセクション */
+    .demo-section {
+        padding: 60px 0;
+    }
+
+    .demo-container {
+        padding: 24px;
+        border-radius: 16px;
+    }
+
+    .demo-form textarea {
+        height: 100px;
+    }
+
+    .demo-options {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .demo-options select {
+        width: 100%;
+    }
+
+    .demo-options span {
+        display: none;
+    }
+
+    .result-placeholder {
+        height: 280px;
+    }
+
+    /* フッター */
+    .footer {
+        padding: 40px 0 20px;
     }
 
     .footer-grid {
         grid-template-columns: 1fr;
         gap: 32px;
+        text-align: center;
+    }
+
+    .footer-brand {
+        order: -1;
+    }
+
+    .footer-links ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px 24px;
+    }
+
+    .footer-links li {
+        margin-bottom: 0;
+    }
+
+    /* 通知 */
+    .notification {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+    }
+
+    /* APIキー入力 */
+    .api-key-section {
+        padding: 12px;
+    }
+
+    .api-key-section input {
+        font-size: 0.875rem;
+    }
+}
+
+/* レスポンシブ - 小型モバイル */
+@media (max-width: 375px) {
+    .hero h1 {
+        font-size: 1.75rem;
+    }
+
+    .price {
+        font-size: 2rem;
+    }
+
+    .billing-toggle {
+        gap: 8px;
+    }
+
+    .toggle-switch {
+        width: 48px;
+        height: 24px;
+    }
+
+    .toggle-slider:before {
+        height: 18px;
+        width: 18px;
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(22px);
     }
 }
 
