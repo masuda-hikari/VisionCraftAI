@@ -113,6 +113,15 @@ const i18n = {
             'demo.result.placeholder': '生成された画像がここに表示されます',
             'demo.result.expand': '拡大',
             'demo.result.download': '保存',
+            'demo.result.share': '共有',
+
+            // 共有機能
+            'share.modal.title': '画像を共有',
+            'share.copy.link': 'リンクをコピー',
+            'share.copy.success': 'リンクをコピーしました',
+            'share.copy.image': '画像をクリップボードにコピーしました',
+            'share.other': 'その他の方法で共有',
+            'share.text': 'VisionCraftAIで画像を生成しました！',
 
             // フッター
             'footer.brand.desc': '最先端のAI技術で、あなたの創造性を解放します。テキストから画像へ、想像を現実に。',
@@ -251,6 +260,15 @@ const i18n = {
             'demo.result.placeholder': 'Generated image will appear here',
             'demo.result.expand': 'Expand',
             'demo.result.download': 'Download',
+            'demo.result.share': 'Share',
+
+            // 共有機能
+            'share.modal.title': 'Share Image',
+            'share.copy.link': 'Copy Link',
+            'share.copy.success': 'Link copied',
+            'share.copy.image': 'Image copied to clipboard',
+            'share.other': 'More sharing options',
+            'share.text': 'Generated with VisionCraftAI!',
 
             // フッター
             'footer.brand.desc': 'Unleash your creativity with cutting-edge AI technology. From text to image, imagination to reality.',

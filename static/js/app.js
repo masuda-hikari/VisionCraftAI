@@ -507,6 +507,18 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadBtn.addEventListener('click', downloadCurrentImage);
     }
 
+    // 共有ボタン
+    const shareBtn = document.getElementById('shareBtn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', () => {
+            if (currentGeneratedImage && typeof shareManager !== 'undefined') {
+                shareManager.showShareModal(currentGeneratedImage);
+            } else {
+                showNotification('共有する画像がありません', 'error');
+            }
+        });
+    }
+
     // 生成画像クリックでも拡大
     const resultImage = document.getElementById('resultImage');
     if (resultImage) {
