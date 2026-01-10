@@ -215,11 +215,18 @@ class ImageLightbox {
     }
 
     /**
-     * 画像を共有
+     * 画像を共有（共有モーダルを表示）
      */
     async share() {
         if (!this.currentImage) return;
 
+        // shareManagerが利用可能な場合はモーダルを表示
+        if (typeof shareManager !== 'undefined' && shareManager) {
+            shareManager.showShareModal(this.currentImage);
+            return;
+        }
+
+        // フォールバック: Web Share API
         const shareData = {
             title: 'VisionCraftAI - AI生成画像',
             text: this.currentImage.prompt || 'VisionCraftAIで生成した画像',
