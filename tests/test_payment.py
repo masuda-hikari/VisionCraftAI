@@ -651,6 +651,116 @@ class TestSubscriptionManager:
                 plan_id="invalid_plan",
             )
 
+    def test_get_subscription_by_api_key(self, subscription_manager):
+        """APIキーIDでサブスクリプション取得"""
+        sub, _ = subscription_manager.create_subscription(
+            user_id="user_apikey_001",
+            email="apikey@example.com",
+            plan_id="free",
+            api_key_id="vca_test_key_001",
+        )
+        retrieved = subscription_manager.get_subscription_by_api_key("vca_test_key_001")
+        assert retrieved is not None
+        assert retrieved.api_key_id == "vca_test_key_001"
+
+    def test_get_subscription_by_api_key_not_found(self, subscription_manager):
+        """存在しないAPIキーIDでサブスクリプション取得"""
+        retrieved = subscription_manager.get_subscription_by_api_key("nonexistent_key")
+        assert retrieved is None
+
+    def test_list_subscriptions_all(self, subscription_manager):
+        """サブスクリプション一覧取得"""
+        subscription_manager.create_subscription(
+            user_id="user_list_001",
+            email="list1@example.com",
+            plan_id="free",
+        )
+        subscription_manager.create_subscription(
+            user_id="user_list_002",
+            email="list2@example.com",
+            plan_id="free",
+        )
+        subscriptions = subscription_manager.list_subscriptions()
+        assert len(subscriptions) >= 2
+
+    def test_list_subscriptions_by_user(self, subscription_manager):
+        """ユーザーIDでサブスクリプション一覧フィルタ"""
+        subscription_manager.create_subscription(
+            user_id="user_filter_001",
+            email="filter@example.com",
+            plan_id="free",
+        )
+        subscriptions = subscription_manager.list_subscriptions(user_id="user_filter_001")
+        assert len(subscriptions) == 1
+        assert subscriptions[0].user_id == "user_filter_001"
+
+    def test_list_subscriptions_by_status(self, subscription_manager):
+        """ステータスでサブスクリプション一覧フィルタ"""
+        subscription_manager.create_subscription(
+            user_id="user_status_001",
+            email="status@example.com",
+            plan_id="free",
+        )
+        active_subs = subscription_manager.list_subscriptions(status=SubscriptionStatus.ACTIVE)
+        assert len(active_subs) >= 1
+
+    def test_activate_subscription_not_found(self, subscription_manager):
+        """存在しないサブスクリプションのアクティベート"""
+        result = subscription_manager.activate_subscription(
+            "nonexistent_sub_id",
+            "stripe_sub_123",
+        )
+        assert result is None
+
+    def test_update_subscription_plan_not_found(self, subscription_manager):
+        """存在しないサブスクリプションのプラン変更"""
+        result = subscription_manager.update_subscription_plan(
+            "nonexistent_sub_id",
+            "basic",
+        )
+        assert result is None
+
+    def test_update_subscription_plan_invalid_plan(self, subscription_manager):
+        """無効プランへのプラン変更"""
+        sub, _ = subscription_manager.create_subscription(
+            user_id="user_invalid_upgrade",
+            email="invalid_upgrade@example.com",
+            plan_id="free",
+        )
+        with pytest.raises(ValueError):
+            subscription_manager.update_subscription_plan(
+                sub.subscription_id,
+                "invalid_plan",
+            )
+
+    def test_cancel_subscription_not_found(self, subscription_manager):
+        """存在しないサブスクリプションのキャンセル"""
+        result = subscription_manager.cancel_subscription("nonexistent_sub_id")
+        assert result is None
+
+    def test_cancel_subscription_at_period_end(self, subscription_manager):
+        """期間終了時キャンセル"""
+        sub, _ = subscription_manager.create_subscription(
+            user_id="user_cancel_end",
+            email="cancel_end@example.com",
+            plan_id="free",
+        )
+        canceled = subscription_manager.cancel_subscription(
+            sub.subscription_id,
+            immediately=False,
+        )
+        assert canceled.cancel_at_period_end is True
+        assert canceled.status == SubscriptionStatus.ACTIVE  # まだアクティブ
+
+    def test_handle_subscription_updated_not_found(self, subscription_manager):
+        """存在しないStripeサブスクリプションの更新イベント"""
+        result = subscription_manager.handle_subscription_updated(
+            "nonexistent_stripe_sub",
+            "active",
+            1735689600,
+        )
+        assert result is None
+
 
 # ========== クレジットマネージャーテスト ==========
 
@@ -876,6 +986,262 @@ class TestPaymentIntegration:
         # 6. 取引履歴確認
         transactions = credit_manager.get_transactions(user_id)
         assert len(transactions) >= 2
+
+
+# ========== 決済ルートAPIテスト ==========
+
+
+class TestPaymentRoutesAPI:
+    """決済ルートAPIの追加テスト（カバレッジ向上用）"""
+
+    @pytest.fixture
+    def api_key_header(self):
+        """テスト用APIキーとヘッダーを作成"""
+        response = client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Payment Test Key"},
+        )
+        raw_key = response.json()["api_key"]
+        return {"X-API-Key": raw_key}
+
+    def test_create_subscription_free(self, api_key_header):
+        """Freeサブスクリプション作成"""
+        response = client.post(
+            "/api/v1/payment/subscriptions",
+            json={
+                "email": "free@example.com",
+                "plan_id": "free",
+            },
+            headers=api_key_header,
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["plan_id"] == "free"
+        assert data["status"] == "active"
+        assert data["checkout_url"] is None
+
+    def test_create_subscription_paid(self, api_key_header):
+        """有料サブスクリプション作成"""
+        response = client.post(
+            "/api/v1/payment/subscriptions",
+            json={
+                "email": "paid@example.com",
+                "plan_id": "basic",
+                "billing_interval": "monthly",
+            },
+            headers=api_key_header,
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["plan_id"] == "basic"
+        assert data["checkout_url"] is not None
+
+    def test_create_subscription_invalid_plan(self, api_key_header):
+        """無効なプランでサブスクリプション作成"""
+        response = client.post(
+            "/api/v1/payment/subscriptions",
+            json={
+                "email": "invalid@example.com",
+                "plan_id": "nonexistent",
+            },
+            headers=api_key_header,
+        )
+        assert response.status_code == 400
+
+    def test_get_my_subscription_no_subscription(self, api_key_header):
+        """サブスクリプションなしの状態取得"""
+        # 新しいキーを作成（サブスクリプションなし）
+        response = client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "free", "name": "No Sub Key"},
+        )
+        new_key = response.json()["api_key"]
+
+        response = client.get(
+            "/api/v1/payment/subscriptions/me",
+            headers={"X-API-Key": new_key},
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["plan_id"] == "free"
+        assert data["status"] == "none"
+        assert data["is_active"] is True
+
+    def test_get_my_subscription_with_subscription(self, api_key_header):
+        """サブスクリプションありの状態取得"""
+        # サブスクリプション作成
+        client.post(
+            "/api/v1/payment/subscriptions",
+            json={"email": "sub@example.com", "plan_id": "free"},
+            headers=api_key_header,
+        )
+
+        response = client.get(
+            "/api/v1/payment/subscriptions/me",
+            headers=api_key_header,
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["plan_id"] == "free"
+        assert data["is_active"] is True
+
+    def test_get_credit_balance(self, api_key_header):
+        """クレジット残高取得"""
+        response = client.get(
+            "/api/v1/payment/credits/balance",
+            headers=api_key_header,
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "balance" in data
+        assert "bonus_balance" in data
+        assert "total_balance" in data
+
+    def test_purchase_credits(self, api_key_header):
+        """クレジット購入Intent作成"""
+        response = client.post(
+            "/api/v1/payment/credits/purchase",
+            json={"package_id": "credits_50"},
+            headers=api_key_header,
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "payment_intent_id" in data
+        assert "client_secret" in data
+        assert data["credits"] == 50
+
+    def test_purchase_credits_invalid_package(self, api_key_header):
+        """無効なパッケージでクレジット購入"""
+        response = client.post(
+            "/api/v1/payment/credits/purchase",
+            json={"package_id": "invalid_package"},
+            headers=api_key_header,
+        )
+        assert response.status_code == 400
+
+    def test_get_credit_transactions(self, api_key_header):
+        """クレジット取引履歴取得"""
+        response = client.get(
+            "/api/v1/payment/credits/transactions",
+            headers=api_key_header,
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "transactions" in data
+        assert "total" in data
+
+    def test_get_credit_transactions_with_filter(self, api_key_header):
+        """フィルタ付きクレジット取引履歴取得"""
+        response = client.get(
+            "/api/v1/payment/credits/transactions?transaction_type=credit_purchase&limit=10&offset=0",
+            headers=api_key_header,
+        )
+        assert response.status_code == 200
+
+    def test_get_credit_transactions_invalid_filter(self, api_key_header):
+        """無効なフィルタでも動作"""
+        response = client.get(
+            "/api/v1/payment/credits/transactions?transaction_type=invalid_type",
+            headers=api_key_header,
+        )
+        assert response.status_code == 200
+
+    def test_webhook_checkout_completed(self):
+        """Webhook: checkout.session.completed"""
+        event = {
+            "type": "checkout.session.completed",
+            "data": {
+                "object": {
+                    "id": "cs_test_123",
+                    "subscription": "sub_stripe_123",
+                    "metadata": {"subscription_id": "sub_internal_123"},
+                }
+            },
+        }
+        response = client.post(
+            "/api/v1/payment/webhook",
+            content=json.dumps(event),
+        )
+        assert response.status_code == 200
+        assert response.json()["received"] is True
+
+    def test_webhook_subscription_updated(self):
+        """Webhook: customer.subscription.updated"""
+        event = {
+            "type": "customer.subscription.updated",
+            "data": {
+                "object": {
+                    "id": "sub_stripe_123",
+                    "status": "active",
+                    "current_period_end": 1735689600,
+                }
+            },
+        }
+        response = client.post(
+            "/api/v1/payment/webhook",
+            content=json.dumps(event),
+        )
+        assert response.status_code == 200
+
+    def test_webhook_subscription_deleted(self):
+        """Webhook: customer.subscription.deleted"""
+        event = {
+            "type": "customer.subscription.deleted",
+            "data": {
+                "object": {
+                    "id": "sub_stripe_deleted",
+                }
+            },
+        }
+        response = client.post(
+            "/api/v1/payment/webhook",
+            content=json.dumps(event),
+        )
+        assert response.status_code == 200
+
+    def test_webhook_payment_succeeded(self):
+        """Webhook: payment_intent.succeeded"""
+        event = {
+            "type": "payment_intent.succeeded",
+            "data": {
+                "object": {
+                    "id": "pi_test_123",
+                    "metadata": {"package_id": "credits_50"},
+                }
+            },
+        }
+        response = client.post(
+            "/api/v1/payment/webhook",
+            content=json.dumps(event),
+        )
+        assert response.status_code == 200
+
+    def test_webhook_payment_failed(self):
+        """Webhook: invoice.payment_failed"""
+        event = {
+            "type": "invoice.payment_failed",
+            "data": {
+                "object": {
+                    "subscription": "sub_failed_123",
+                }
+            },
+        }
+        response = client.post(
+            "/api/v1/payment/webhook",
+            content=json.dumps(event),
+        )
+        assert response.status_code == 200
+
+    def test_webhook_invalid_signature(self):
+        """Webhook署名検証（テストモードでは常にパス）"""
+        event = {"type": "test.event", "data": {"object": {}}}
+        response = client.post(
+            "/api/v1/payment/webhook",
+            content=json.dumps(event),
+            headers={"Stripe-Signature": "invalid_sig"},
+        )
+        # テストモードでは署名検証をスキップするため200
+        assert response.status_code == 200
 
 
 # ========== エッジケーステスト ==========
