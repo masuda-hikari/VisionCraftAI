@@ -2,12 +2,13 @@
 
 [![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)](https://fastapi.tiangolo.com/)
-[![Tests](https://img.shields.io/badge/Tests-347%20passed-brightgreen.svg)](#テスト)
+[![Tests](https://img.shields.io/badge/Tests-420%20passed-brightgreen.svg)](#テスト)
+[![Coverage](https://img.shields.io/badge/Coverage-80%25-brightgreen.svg)](#テスト)
 [![License](https://img.shields.io/badge/License-Proprietary-red.svg)](#ライセンス)
 
 **最先端AI技術を活用した高品質画像生成プラットフォーム**
 
-Google Gemini 3モデルによるプロフェッショナル品質のAI画像生成サービス。RESTful API、Webインターフェース、Stripe決済統合を完備。
+最先端AIモデルによるプロフェッショナル品質のAI画像生成サービス。RESTful API、Webインターフェース、Stripe決済統合を完備。
 
 ---
 
@@ -24,6 +25,10 @@ Google Gemini 3モデルによるプロフェッショナル品質のAI画像生
 | **管理者ダッシュボード** | 収益・使用量のリアルタイム監視 |
 | **ユーザーダッシュボード** | セルフサービスでの利用管理 |
 | **本番運用監視** | Prometheus対応メトリクス・ヘルスチェック |
+| **年額プラン** | 20%割引の年間サブスクリプション |
+| **PWA対応** | オフライン対応・ホーム画面追加対応 |
+| **画像ギャラリー** | 生成履歴保存・ライトボックス表示 |
+| **モバイル対応** | レスポンシブUI・ハンバーガーメニュー |
 
 ---
 
@@ -191,7 +196,7 @@ VisionCraftAI/
 │       └── monitoring.py       # ヘルスチェック・メトリクス
 ├── templates/                  # HTMLテンプレート
 ├── static/                     # 静的ファイル
-├── tests/                      # テストスイート（347件）
+├── tests/                      # テストスイート（420件）
 ├── scripts/                    # デプロイスクリプト
 ├── docs/                       # ドキュメント
 └── .github/                    # CI/CD設定
@@ -244,7 +249,7 @@ pytest tests/test_payment.py -v    # 決済テスト
 pytest tests/test_monitoring.py -v # モニタリングテスト
 ```
 
-**現在の状態**: 347テスト全パス
+**現在の状態**: 420テスト全パス（カバレッジ80%）
 
 ---
 
@@ -315,4 +320,9 @@ Proprietary - All Rights Reserved
 | Phase 12 | 管理者ダッシュボード | ✅ 完了 |
 | Phase 13 | ユーザーダッシュボード | ✅ 完了 |
 | Phase 14 | 本番運用監視 | ✅ 完了 |
-| Phase 15 | ローンチ準備 | 🔄 進行中 |
+| Phase 15 | ローンチ準備 | ✅ 完了 |
+| Phase 16 | テストカバレッジ80% | ✅ 完了 |
+| Phase 17 | 年額プラン・モバイル対応 | ✅ 完了 |
+| Phase 18 | SEO・アクセシビリティ | ✅ 完了 |
+| Phase 19 | PWA化・UX強化 | ✅ 完了 |
+| Phase 20 | 本番デプロイ | ⏳ 認証情報待ち |
