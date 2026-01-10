@@ -1,10 +1,10 @@
 ﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿# VisionCraftAI - ステータス
 
-最終更新: 2026-01-10
+最終更新: 2026-01-11
 
 ## 現在の状況
-- 状況: Phase 21 ソーシャル共有・バイラル機能完了
-- 進捗: テストスイート全パス（420 passed, 1 skipped）
+- 状況: Phase 22 ユーザー獲得・コンバージョン強化完了
+- 進捗: テストスイート全パス（487 passed, 1 skipped）
 - カバレッジ: 80%+
 
 ## Phase 1 進捗（完了）
@@ -237,6 +237,20 @@
 | i18n翻訳追加（日本語/英語） | 完了 |
 | テスト420件全パス確認 | 完了 |
 
+## Phase 22 進捗（完了）
+| タスク | 状態 |
+|--------|------|
+| リファラル（紹介）システム実装 | 完了 |
+| 紹介コード生成・管理 | 完了 |
+| 紹介報酬（クレジット付与）機能 | 完了 |
+| リファラルAPI（/api/v1/referral/*） | 完了 |
+| リファラルテスト30件追加 | 完了 |
+| オンボーディング進捗管理実装 | 完了 |
+| 無料トライアル機能実装 | 完了 |
+| オンボーディングAPI（/api/v1/onboarding/*） | 完了 |
+| オンボーディングテスト37件追加 | 完了 |
+| テスト487件全パス確認 | 完了 |
+
 ## 次のアクション
 
 ### 🔴 ブロッカー解消（人間対応必要）
@@ -427,6 +441,32 @@
 | `/api/v1/monitoring/metrics` | GET | 不要 | アプリメトリクス（JSON） |
 | `/api/v1/monitoring/metrics/prometheus` | GET | 不要 | Prometheusメトリクス |
 
+### リファラルエンドポイント
+| エンドポイント | メソッド | 認証 | 説明 |
+|---------------|---------|------|------|
+| `/api/v1/referral/code` | POST | **必須** | 紹介コード作成 |
+| `/api/v1/referral/code` | GET | **必須** | 自分の紹介コード取得 |
+| `/api/v1/referral/validate` | GET | 不要 | 紹介コード検証 |
+| `/api/v1/referral/apply` | POST | **必須** | 紹介コード適用 |
+| `/api/v1/referral/referrals` | GET | **必須** | 自分の紹介一覧 |
+| `/api/v1/referral/stats` | GET | **必須** | 紹介統計 |
+| `/api/v1/referral/leaderboard` | GET | 不要 | 紹介ランキング |
+| `/api/v1/referral/pending-rewards` | GET | **必須** | 報酬待ちリスト |
+
+### オンボーディングエンドポイント
+| エンドポイント | メソッド | 認証 | 説明 |
+|---------------|---------|------|------|
+| `/api/v1/onboarding/welcome` | GET | **必須** | ウェルカム情報 |
+| `/api/v1/onboarding/progress` | GET | **必須** | 進捗取得 |
+| `/api/v1/onboarding/hint` | GET | **必須** | 次ステップヒント |
+| `/api/v1/onboarding/step/complete` | POST | **必須** | ステップ完了 |
+| `/api/v1/onboarding/checklist/complete` | POST | **必須** | チェックリスト完了 |
+| `/api/v1/onboarding/trial/start` | POST | **必須** | トライアル開始 |
+| `/api/v1/onboarding/trial` | GET | **必須** | トライアル状況 |
+| `/api/v1/onboarding/trial/use-credits` | POST | **必須** | クレジット使用 |
+| `/api/v1/onboarding/trial/convert` | POST | **必須** | 有料転換 |
+| `/api/v1/onboarding/trial/stats` | GET | **必須** | トライアル統計 |
+
 ## プラン階層
 | プラン | 月間制限 | 日間制限 | 最大解像度 | バッチ上限 | 価格 |
 |--------|---------|---------|-----------|----------|------|
@@ -444,6 +484,16 @@
 | credits_500 | 500 | +100 | $149.99 |
 
 ## 最近の変更
+- 2026-01-11: Phase 22 ユーザー獲得・コンバージョン強化
+  - リファラル（紹介）システム実装（src/api/referral/*）
+  - 紹介コード生成・検証・適用機能
+  - 紹介報酬（クレジット付与）・統計・ランキング
+  - オンボーディング進捗管理（src/api/onboarding/*）
+  - 無料トライアル機能（7日間Proプラン体験）
+  - チェックリスト・ステップガイド機能
+  - リファラルテスト30件・オンボーディングテスト37件追加
+  - テスト487件全パス確認（+67件）
+  - 収益化直結機能：紹介ボーナスでユーザー獲得・トライアルで有料転換促進
 - 2026-01-11: Phase 21 ソーシャル共有・バイラル機能
   - ShareManagerクラス実装（static/js/share.js）
   - SNS共有ボタン（Twitter/Facebook/LINE/Pinterest）

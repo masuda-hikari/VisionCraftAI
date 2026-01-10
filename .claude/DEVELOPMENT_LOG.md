@@ -1,5 +1,36 @@
 # VisionCraftAI - 開発ログ
 
+## 2026-01-11 (セッション2)
+
+### セッション作業
+- **Phase 22 ユーザー獲得・コンバージョン強化** - 完了
+  - リファラル（紹介）システム実装（src/api/referral/*）
+    - ReferralCode, Referral, ReferralStatsモデル
+    - ReferralManagerクラス（コード生成・適用・報酬管理）
+    - APIエンドポイント8件（/api/v1/referral/*）
+    - テスト30件追加
+  - オンボーディング・無料トライアル機能（src/api/onboarding/*）
+    - OnboardingProgress, FreeTrialモデル
+    - OnboardingManagerクラス（進捗管理・トライアル管理）
+    - APIエンドポイント10件（/api/v1/onboarding/*）
+    - テスト37件追加
+  - テスト487件全パス（+67件）
+
+### 収益化への貢献
+- **リファラルシステム**: 紹介者・被紹介者に5クレジット付与でユーザー獲得促進
+- **無料トライアル**: 7日間Proプラン体験で有料転換率向上
+- **オンボーディング**: チェックリスト・ステップガイドで継続率向上
+
+### 技術課題
+- ブロッカー: Google Cloud認証情報・Stripe本番APIキー未設定
+
+### 次回作業（ブロッカー解消後）
+1. `gcloud auth login` → `python scripts/setup_gcloud.py`
+2. `python scripts/setup_stripe.py`
+3. `python scripts/deploy_cloudrun.py`
+
+---
+
 ## 2026-01-11 (セッション1)
 
 ### セッション作業
