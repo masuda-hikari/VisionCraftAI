@@ -240,7 +240,154 @@ Stripe APIキーが無効です
 
 ---
 
+---
+
+## 9. 無料プラットフォームへのデプロイ（認証情報不要）
+
+認証情報の設定なしでデモモードでデプロイ可能なプラットフォームを紹介します。
+
+### 9.1 Render.com（推奨）
+
+**特徴**: Python完全対応、無料Tier、GitHub連携で自動デプロイ
+
+```bash
+# 1. GitHubリポジトリをRenderに連携
+# 2. render.yamlが自動検出される
+# 3. 数分でデプロイ完了
+
+# 手動デプロイの場合:
+# Render Dashboard > New > Web Service > GitHub連携
+```
+
+**設定ファイル**: `render.yaml`（リポジトリに含まれています）
+
+**デプロイURL**: `https://visioncraftai.onrender.com`
+
+---
+
+### 9.2 Vercel
+
+**特徴**: Serverless、エッジデプロイ、無料Tier
+
+```bash
+# 1. Vercel CLIインストール
+npm i -g vercel
+
+# 2. デプロイ
+vercel
+
+# 3. 本番デプロイ
+vercel --prod
+```
+
+**設定ファイル**: `vercel.json`（リポジトリに含まれています）
+
+**デプロイURL**: `https://visioncraftai.vercel.app`
+
+---
+
+### 9.3 Cloudflare Workers/Pages
+
+**特徴**: エッジコンピューティング、高速、無料Tier
+
+```bash
+# 1. Wrangler CLIインストール
+npm i -g wrangler
+
+# 2. ログイン
+wrangler login
+
+# 3. デプロイ
+wrangler deploy
+
+# 注意: Pythonは直接サポートされないため、
+# 静的サイト配信 + APIプロキシとして機能
+```
+
+**設定ファイル**: `wrangler.toml`、`workers/index.js`
+
+---
+
+### 9.4 Railway
+
+**特徴**: シンプル、Dockerサポート、無料クレジット付き
+
+```bash
+# 1. Railway CLIインストール
+npm i -g @railway/cli
+
+# 2. ログイン
+railway login
+
+# 3. プロジェクト作成 & デプロイ
+railway init
+railway up
+```
+
+---
+
+### 9.5 Fly.io
+
+**特徴**: Dockerベース、グローバルデプロイ、無料Tier
+
+```bash
+# 1. Fly CLIインストール
+curl -L https://fly.io/install.sh | sh
+
+# 2. ログイン
+flyctl auth login
+
+# 3. アプリ作成 & デプロイ
+flyctl launch --no-deploy
+flyctl secrets set DEMO_MODE=true
+flyctl deploy
+```
+
+---
+
+### プラットフォーム比較
+
+| プラットフォーム | 無料Tier | Python対応 | 自動デプロイ | 推奨度 |
+|-----------------|---------|-----------|-------------|-------|
+| **Render.com** | ✅ | ✅ ネイティブ | ✅ GitHub連携 | ⭐⭐⭐⭐⭐ |
+| **Vercel** | ✅ | ✅ Serverless | ✅ GitHub連携 | ⭐⭐⭐⭐ |
+| **Railway** | ✅ $5クレジット | ✅ Docker | ✅ GitHub連携 | ⭐⭐⭐⭐ |
+| **Fly.io** | ✅ | ✅ Docker | ✅ GitHub連携 | ⭐⭐⭐⭐ |
+| **Cloudflare** | ✅ | ❌ JS/WASM | ✅ GitHub連携 | ⭐⭐⭐ |
+| **Cloud Run** | ✅ 一部 | ✅ Docker | ✅ GCP | ⭐⭐⭐⭐ |
+
+---
+
+## 10. クイックスタート（5分でデプロイ）
+
+### Render.comでの最速デプロイ
+
+1. **GitHubにプッシュ**
+   ```bash
+   git add .
+   git commit -m "Deploy to Render"
+   git push origin main
+   ```
+
+2. **Render.comにアクセス**
+   - https://dashboard.render.com/
+   - 「New +」→「Web Service」
+
+3. **リポジトリ連携**
+   - GitHubリポジトリを選択
+   - `render.yaml`が自動検出される
+
+4. **デプロイ開始**
+   - 「Create Web Service」をクリック
+   - 数分でデプロイ完了
+
+5. **アクセス確認**
+   - `https://visioncraftai.onrender.com`
+
+---
+
 ## 更新履歴
 | 日付 | 内容 |
 |------|------|
+| 2026-01-11 | 無料プラットフォーム（Render/Vercel/Cloudflare）追加 |
 | 2026-01-08 | 初版作成 |

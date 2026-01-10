@@ -1,5 +1,6 @@
 # VisionCraftAI 依存関係
 # Python 3.12+
+# pyproject.tomlと同期を保つこと
 
 # Google Cloud / Generative AI
 google-genai>=1.0.0
@@ -7,21 +8,26 @@ google-auth>=2.25.0
 
 # 画像処理
 Pillow>=10.1.0
-opencv-python>=4.8.0
+
+# Web フレームワーク
+fastapi>=0.115.0
+uvicorn[standard]>=0.34.0
+httpx>=0.28.0
+
+# 決済
+stripe>=11.0.0
+
+# テンプレート・静的ファイル
+jinja2>=3.1.0
+aiofiles>=23.0.0
 
 # ユーティリティ
 python-dotenv>=1.0.0
 pydantic>=2.5.0
-
-# CLI
 click>=8.1.0
 rich>=13.7.0
 
-# テスト
+# テスト（開発用）
 pytest>=7.4.0
 pytest-cov>=4.1.0
 pytest-asyncio>=0.23.0
-
-# 将来のWeb API用（コメントアウト）
-# fastapi>=0.104.0
-# uvicorn>=0.24.0

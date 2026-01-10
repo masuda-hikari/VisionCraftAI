@@ -3,9 +3,10 @@
 最終更新: 2026-01-11
 
 ## 現在の状況
-- 状況: Phase 24 A/Bテスト・分析基盤実装完了
+- 状況: Phase 25 マルチプラットフォームデプロイ対応完了
 - 進捗: テストスイート全パス（598 passed, 1 skipped）
 - カバレッジ: 80%+
+- デプロイ可能: Render.com / Vercel / Cloudflare / Railway / Fly.io
 
 ## Phase 1 進捗（完了）
 | タスク | 状態 |
@@ -276,35 +277,50 @@
 | 分析テスト66件追加 | 完了 |
 | テスト598件全パス確認 | 完了 |
 
+## Phase 25 進捗（完了）
+| タスク | 状態 |
+|--------|------|
+| Vercelデプロイ設定（vercel.json, api/index.py） | 完了 |
+| Cloudflare Workers設定（wrangler.toml, workers/index.js） | 完了 |
+| Render.com設定（render.yaml） | 完了 |
+| requirements.txt更新（pyproject.toml同期） | 完了 |
+| デプロイガイド大幅更新（無料プラットフォーム追加） | 完了 |
+| テスト598件全パス確認 | 完了 |
+
 ## 次のアクション
 
-### 🔴 ブロッカー解消（人間対応必要）
-1. **Google Cloud認証情報の設定**
-   ```bash
-   # gcloud CLIでログイン
-   gcloud auth login
+### 🟢 即時実行可能（認証情報不要）
+1. **無料プラットフォームへのデプロイ（デモモード）**
+   - **Render.com（推奨）**: GitHubリポジトリを連携するだけ
+     ```bash
+     # render.yamlが自動検出される
+     # https://dashboard.render.com/ でリポジトリ連携
+     ```
+   - **Vercel**: `npx vercel`
+   - **Railway**: `railway up`
 
-   # セットアップスクリプト実行
+### 🔴 ブロッカー解消（人間対応必要）
+2. **Google Cloud認証情報の設定**（本番AI生成機能用）
+   ```bash
+   gcloud auth login
    python scripts/setup_gcloud.py --project YOUR_PROJECT_ID
    ```
-   - サービスアカウントが自動作成され、credentials/に保存される
 
-2. **Stripe本番環境設定**
+3. **Stripe本番環境設定**（課金機能用）
    ```bash
    python scripts/setup_stripe.py --api-key sk_live_xxx --webhook-url https://your-domain.com
    ```
-   - Stripeダッシュボード: https://dashboard.stripe.com/apikeys
 
 ### ✅ ブロッカー解消後の自動実行
-3. **本番デプロイ実行**
+4. **本番デプロイ実行**
    ```bash
    python scripts/deploy_cloudrun.py --project YOUR_PROJECT_ID
    ```
 
 ### 📋 デプロイ後の作業
-4. カスタムドメイン設定・SSL証明書
-5. Product Huntローンチ
-6. マーケティング・初期ユーザー獲得
+5. カスタムドメイン設定・SSL証明書
+6. Product Huntローンチ
+7. マーケティング・初期ユーザー獲得
 
 ## ブロッカー
 - Google Cloud サービスアカウント認証情報が必要
@@ -567,6 +583,13 @@
 | credits_500 | 500 | +100 | $149.99 |
 
 ## 最近の変更
+- 2026-01-11: Phase 25 マルチプラットフォームデプロイ対応
+  - Vercelデプロイ設定（vercel.json, api/index.py）
+  - Cloudflare Workers設定（wrangler.toml, workers/index.js）
+  - Render.com設定（render.yaml）
+  - requirements.txt更新（pyproject.toml同期）
+  - デプロイガイド大幅更新（無料プラットフォーム追加）
+  - 収益化直結: 認証情報待ちでもデモモードでの公開が可能に
 - 2026-01-11: Phase 24 A/Bテスト・分析基盤実装
   - ABTestモデル実装（ABTest, ABTestVariant, ABTestAssignment）
   - ABTestManagerクラス実装（テスト作成・管理・バリアント割り当て）
