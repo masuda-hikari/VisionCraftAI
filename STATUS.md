@@ -3,8 +3,8 @@
 最終更新: 2026-01-11
 
 ## 現在の状況
-- 状況: Phase 22 ユーザー獲得・コンバージョン強化完了
-- 進捗: テストスイート全パス（487 passed, 1 skipped）
+- 状況: Phase 23 メール通知システム実装完了
+- 進捗: テストスイート全パス（532 passed, 1 skipped）
 - カバレッジ: 80%+
 
 ## Phase 1 進捗（完了）
@@ -251,6 +251,18 @@
 | オンボーディングテスト37件追加 | 完了 |
 | テスト487件全パス確認 | 完了 |
 
+## Phase 23 進捗（完了）
+| タスク | 状態 |
+|--------|------|
+| EmailServiceクラス実装（SMTP送信・開発モード対応） | 完了 |
+| NotificationManagerクラス実装 | 完了 |
+| メールテンプレート実装（日本語/英語） | 完了 |
+| 通知設定モデル・スキーマ実装 | 完了 |
+| 通知APIエンドポイント（/api/v1/notifications/*） | 完了 |
+| 開封・クリックトラッキング機能 | 完了 |
+| メール通知テスト45件追加 | 完了 |
+| テスト532件全パス確認 | 完了 |
+
 ## 次のアクション
 
 ### 🔴 ブロッカー解消（人間対応必要）
@@ -326,6 +338,14 @@
 - `src/api/payment/credit_manager.py` - クレジット管理
 - `src/api/payment/schemas.py` - 決済スキーマ
 - `src/api/payment/routes.py` - 決済エンドポイント
+
+### 通知
+- `src/api/notifications/models.py` - NotificationPreference, EmailTemplate, EmailLog モデル
+- `src/api/notifications/email_service.py` - SMTP送信サービス
+- `src/api/notifications/templates.py` - メールテンプレート（日本語/英語）
+- `src/api/notifications/manager.py` - 通知管理（設定・送信・ログ）
+- `src/api/notifications/schemas.py` - 通知スキーマ
+- `src/api/notifications/routes.py` - 通知エンドポイント
 
 ### フロントエンド
 - `templates/index.html` - ランディングページ
@@ -467,6 +487,23 @@
 | `/api/v1/onboarding/trial/convert` | POST | **必須** | 有料転換 |
 | `/api/v1/onboarding/trial/stats` | GET | **必須** | トライアル統計 |
 
+### 通知エンドポイント
+| エンドポイント | メソッド | 認証 | 説明 |
+|---------------|---------|------|------|
+| `/api/v1/notifications/types` | GET | 不要 | 通知タイプ一覧 |
+| `/api/v1/notifications/service/status` | GET | 不要 | メールサービス状態 |
+| `/api/v1/notifications/preferences` | GET | **必須** | 通知設定取得 |
+| `/api/v1/notifications/preferences` | PATCH | **必須** | 通知設定更新 |
+| `/api/v1/notifications/logs` | GET | **必須** | 送信ログ一覧 |
+| `/api/v1/notifications/logs/{log_id}` | GET | **必須** | 送信ログ詳細 |
+| `/api/v1/notifications/stats` | GET | **必須** | 自分の通知統計 |
+| `/api/v1/notifications/stats/all` | GET | **管理者** | 全体通知統計 |
+| `/api/v1/notifications/send` | POST | **管理者** | 通知送信 |
+| `/api/v1/notifications/test` | POST | **管理者** | テストメール送信 |
+| `/api/v1/notifications/unsubscribe` | POST | 不要 | 配信停止 |
+| `/api/v1/notifications/track/open/{log_id}` | GET | 不要 | 開封トラッキング |
+| `/api/v1/notifications/track/click/{log_id}` | GET | 不要 | クリックトラッキング |
+
 ## プラン階層
 | プラン | 月間制限 | 日間制限 | 最大解像度 | バッチ上限 | 価格 |
 |--------|---------|---------|-----------|----------|------|
@@ -484,6 +521,16 @@
 | credits_500 | 500 | +100 | $149.99 |
 
 ## 最近の変更
+- 2026-01-11: Phase 23 メール通知システム実装
+  - EmailServiceクラス実装（SMTP送信・開発モード対応）
+  - NotificationManagerクラス実装（通知設定・送信・ログ管理）
+  - メールテンプレート実装（ウェルカム/トライアル/決済/紹介報酬/週次サマリー）
+  - 日本語/英語対応テンプレート
+  - 通知設定API（オプトイン/オプトアウト管理）
+  - 開封・クリックトラッキング機能
+  - メール通知テスト45件追加
+  - テスト532件全パス確認（+45件）
+  - 収益化直結機能：トライアル終了間近通知で有料転換促進・紹介報酬通知でユーザー獲得
 - 2026-01-11: Phase 22 ユーザー獲得・コンバージョン強化
   - リファラル（紹介）システム実装（src/api/referral/*）
   - 紹介コード生成・検証・適用機能
