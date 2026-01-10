@@ -1,0 +1,30 @@
+# Cloudflare Workers 設定
+# VisionCraftAI - Serverless デプロイ用
+
+name = "visioncraftai"
+main = "workers/index.js"
+compatibility_date = "2024-01-01"
+
+# 環境変数
+[vars]
+DEMO_MODE = "true"
+APP_DEBUG = "false"
+
+# 本番環境設定
+[env.production]
+name = "visioncraftai-prod"
+vars = { DEMO_MODE = "true", APP_DEBUG = "false", STRIPE_TEST_MODE = "false" }
+
+# ステージング環境設定
+[env.staging]
+name = "visioncraftai-staging"
+vars = { DEMO_MODE = "true", APP_DEBUG = "true", STRIPE_TEST_MODE = "true" }
+
+# 静的アセット（Pagesと連携時）
+[site]
+bucket = "./static"
+
+# カスタムドメイン（設定後に有効化）
+# routes = [
+#   { pattern = "api.visioncraftai.com/*", zone_id = "your-zone-id" }
+# ]

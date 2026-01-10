@@ -1,0 +1,59 @@
+# Render.com Blueprint - VisionCraftAI デプロイ設定
+# Render.comは無料Tierあり、Pythonネイティブ対応
+# デプロイ: GitHubリポジトリを連携するだけ
+
+services:
+  # メインWebサービス
+  - type: web
+    name: visioncraftai
+    runtime: python
+    region: oregon  # 無料Tierは oregon/frankfurt
+    plan: free  # 無料プラン
+
+    # ビルドコマンド
+    buildCommand: pip install -r requirements.txt
+
+    # 起動コマンド
+    startCommand: uvicorn src.api.app:app --host 0.0.0.0 --port $PORT
+
+    # ヘルスチェック
+    healthCheckPath: /api/v1/health
+
+    # 環境変数
+    envVars:
+      - key: DEMO_MODE
+        value: "true"
+      - key: APP_DEBUG
+        value: "false"
+      - key: STRIPE_TEST_MODE
+        value: "true"
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      # 本番用（Render Dashboardで設定）
+      # - key: GOOGLE_CLOUD_PROJECT
+      #   sync: false  # Dashboardで手動設定
+      # - key: STRIPE_API_KEY
+      #   sync: false
+
+    # 自動デプロイ（mainブランチ）
+    autoDeploy: true
+
+    # ディスク（永続ストレージが必要な場合）
+    # disk:
+    #   name: visioncraftai-data
+    #   mountPath: /app/data
+    #   sizeGB: 1
+
+# 本番環境設定（有料プラン用）
+# services:
+#   - type: web
+#     name: visioncraftai-prod
+#     runtime: python
+#     region: oregon
+#     plan: starter  # $7/月
+#     buildCommand: pip install -r requirements.txt
+#     startCommand: uvicorn src.api.app:app --host 0.0.0.0 --port $PORT --workers 4
+#     healthCheckPath: /api/v1/health
+#     scaling:
+#       minInstances: 1
+#       maxInstances: 3
