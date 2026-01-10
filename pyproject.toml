@@ -4,24 +4,52 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "visioncraftai"
-version = "0.1.0"
-description = "AI画像生成プラットフォーム - Google Gemini APIを活用"
+version = "1.0.0"
+description = "AI画像生成プラットフォーム - Google Gemini APIを活用した高品質画像生成サービス"
 readme = "README.md"
 requires-python = ">=3.12"
 license = {text = "MIT"}
 authors = [
-    {name = "VisionCraftAI Team"}
+    {name = "VisionCraftAI Team", email = "contact@visioncraftai.com"}
+]
+maintainers = [
+    {name = "VisionCraftAI Team", email = "support@visioncraftai.com"}
+]
+keywords = [
+    "ai",
+    "image-generation",
+    "gemini",
+    "google-ai",
+    "fastapi",
+    "saas",
+    "api",
+    "generative-ai",
+    "text-to-image",
+    "machine-learning",
 ]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Framework :: FastAPI",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+    "Typing :: Typed",
 ]
+
+[project.urls]
+Homepage = "https://visioncraftai.com"
+Documentation = "https://visioncraftai.com/docs"
+Repository = "https://github.com/visioncraftai/visioncraftai"
+Issues = "https://github.com/visioncraftai/visioncraftai/issues"
+Changelog = "https://github.com/visioncraftai/visioncraftai/blob/main/CHANGELOG.md"
 dependencies = [
     "google-genai>=1.0.0",
     "google-auth>=2.25.0",

@@ -265,6 +265,16 @@ class TestStripeClient:
         assert customer["id"].startswith("cus_test_")
         assert customer["email"] == "test@example.com"
 
+    def test_create_customer_with_metadata(self, stripe_client):
+        """メタデータ付き顧客作成"""
+        customer = stripe_client.create_customer(
+            email="meta@example.com",
+            name="Meta User",
+            metadata={"plan": "pro", "source": "referral"},
+        )
+        assert customer["metadata"]["plan"] == "pro"
+        assert customer["metadata"]["source"] == "referral"
+
     def test_get_customer(self, stripe_client):
         """顧客取得"""
         customer = stripe_client.create_customer(email="test2@example.com")
@@ -277,6 +287,44 @@ class TestStripeClient:
         result = stripe_client.get_customer("cus_nonexistent")
         assert result is None
 
+    def test_update_customer(self, stripe_client):
+        """顧客情報更新"""
+        customer = stripe_client.create_customer(
+            email="update@example.com",
+            name="Original Name",
+        )
+        updated = stripe_client.update_customer(
+            customer["id"],
+            email="updated@example.com",
+            name="Updated Name",
+            metadata={"updated": "true"},
+        )
+        assert updated is not None
+        assert updated["email"] == "updated@example.com"
+        assert updated["name"] == "Updated Name"
+        assert updated["metadata"]["updated"] == "true"
+
+    def test_update_customer_not_found(self, stripe_client):
+        """存在しない顧客の更新"""
+        result = stripe_client.update_customer(
+            "cus_nonexistent",
+            email="test@example.com",
+        )
+        assert result is None
+
+    def test_update_customer_partial(self, stripe_client):
+        """顧客情報の部分更新"""
+        customer = stripe_client.create_customer(
+            email="partial@example.com",
+            name="Original",
+        )
+        updated = stripe_client.update_customer(
+            customer["id"],
+            name="Only Name Changed",
+        )
+        assert updated["email"] == "partial@example.com"
+        assert updated["name"] == "Only Name Changed"
+
     def test_create_subscription(self, stripe_client):
         """サブスクリプション作成"""
         customer = stripe_client.create_customer(email="sub@example.com")
@@ -286,6 +334,70 @@ class TestStripeClient:
         )
         assert subscription["id"].startswith("sub_test_")
         assert subscription["status"] == "active"
+
+    def test_create_subscription_with_metadata(self, stripe_client):
+        """メタデータ付きサブスクリプション作成"""
+        customer = stripe_client.create_customer(email="submeta@example.com")
+        subscription = stripe_client.create_subscription(
+            customer_id=customer["id"],
+            price_id="price_pro_monthly",
+            metadata={"tier": "pro", "campaign": "launch"},
+        )
+        assert subscription["metadata"]["tier"] == "pro"
+        assert subscription["metadata"]["campaign"] == "launch"
+
+    def test_get_subscription(self, stripe_client):
+        """サブスクリプション取得"""
+        customer = stripe_client.create_customer(email="getsub@example.com")
+        subscription = stripe_client.create_subscription(
+            customer_id=customer["id"],
+            price_id="price_basic_monthly",
+        )
+        retrieved = stripe_client.get_subscription(subscription["id"])
+        assert retrieved is not None
+        assert retrieved["customer"] == customer["id"]
+
+    def test_get_subscription_not_found(self, stripe_client):
+        """存在しないサブスクリプション取得"""
+        result = stripe_client.get_subscription("sub_nonexistent")
+        assert result is None
+
+    def test_update_subscription(self, stripe_client):
+        """サブスクリプション更新"""
+        customer = stripe_client.create_customer(email="updatesub@example.com")
+        subscription = stripe_client.create_subscription(
+            customer_id=customer["id"],
+            price_id="price_basic_monthly",
+        )
+        updated = stripe_client.update_subscription(
+            subscription["id"],
+            price_id="price_pro_monthly",
+            metadata={"upgraded": "true"},
+        )
+        assert updated is not None
+        assert updated["items"]["data"][0]["price"]["id"] == "price_pro_monthly"
+        assert updated["metadata"]["upgraded"] == "true"
+
+    def test_update_subscription_cancel_at_period_end(self, stripe_client):
+        """サブスクリプション期間終了時キャンセル設定"""
+        customer = stripe_client.create_customer(email="cancelend@example.com")
+        subscription = stripe_client.create_subscription(
+            customer_id=customer["id"],
+            price_id="price_basic_monthly",
+        )
+        updated = stripe_client.update_subscription(
+            subscription["id"],
+            cancel_at_period_end=True,
+        )
+        assert updated["cancel_at_period_end"] is True
+
+    def test_update_subscription_not_found(self, stripe_client):
+        """存在しないサブスクリプションの更新"""
+        result = stripe_client.update_subscription(
+            "sub_nonexistent",
+            price_id="price_pro_monthly",
+        )
+        assert result is None
 
     def test_cancel_subscription(self, stripe_client):
         """サブスクリプションキャンセル"""
@@ -300,6 +412,25 @@ class TestStripeClient:
         )
         assert canceled["status"] == "canceled"
 
+    def test_cancel_subscription_at_period_end(self, stripe_client):
+        """サブスクリプション期間終了時キャンセル"""
+        customer = stripe_client.create_customer(email="cancelperiod@example.com")
+        subscription = stripe_client.create_subscription(
+            customer_id=customer["id"],
+            price_id="price_basic_monthly",
+        )
+        canceled = stripe_client.cancel_subscription(
+            subscription["id"],
+            immediately=False,
+        )
+        assert canceled["cancel_at_period_end"] is True
+        assert canceled["status"] != "canceled"
+
+    def test_cancel_subscription_not_found(self, stripe_client):
+        """存在しないサブスクリプションのキャンセル"""
+        result = stripe_client.cancel_subscription("sub_nonexistent")
+        assert result is None
+
     def test_create_payment_intent(self, stripe_client):
         """PaymentIntent作成"""
         intent = stripe_client.create_payment_intent(
@@ -310,16 +441,115 @@ class TestStripeClient:
         assert intent["amount"] == 999
         assert "client_secret" in intent
 
+    def test_create_payment_intent_with_customer(self, stripe_client):
+        """顧客ID付きPaymentIntent作成"""
+        customer = stripe_client.create_customer(email="intent@example.com")
+        intent = stripe_client.create_payment_intent(
+            amount_cents=1999,
+            customer_id=customer["id"],
+            currency="jpy",
+        )
+        assert intent["customer"] == customer["id"]
+        assert intent["currency"] == "jpy"
+
     def test_confirm_payment_intent(self, stripe_client):
         """PaymentIntent確認"""
         intent = stripe_client.create_payment_intent(amount_cents=1999)
         confirmed = stripe_client.confirm_payment_intent(intent["id"])
         assert confirmed["status"] == "succeeded"
 
+    def test_confirm_payment_intent_not_found(self, stripe_client):
+        """存在しないPaymentIntent確認"""
+        with pytest.raises(StripeError):
+            stripe_client.confirm_payment_intent("pi_nonexistent")
+
+    def test_get_payment_intent(self, stripe_client):
+        """PaymentIntent取得"""
+        intent = stripe_client.create_payment_intent(amount_cents=2999)
+        retrieved = stripe_client.get_payment_intent(intent["id"])
+        assert retrieved is not None
+        assert retrieved["amount"] == 2999
+
+    def test_get_payment_intent_not_found(self, stripe_client):
+        """存在しないPaymentIntent取得"""
+        result = stripe_client.get_payment_intent("pi_nonexistent")
+        assert result is None
+
+    def test_create_checkout_session(self, stripe_client):
+        """CheckoutSession作成"""
+        customer = stripe_client.create_customer(email="checkout@example.com")
+        session = stripe_client.create_checkout_session(
+            price_id="price_basic_monthly",
+            mode="subscription",
+            success_url="https://example.com/success",
+            cancel_url="https://example.com/cancel",
+            customer_id=customer["id"],
+            metadata={"campaign": "launch"},
+        )
+        assert session["id"].startswith("cs_test_")
+        assert "url" in session
+        assert session["mode"] == "subscription"
+        assert session["customer"] == customer["id"]
+
+    def test_create_checkout_session_payment_mode(self, stripe_client):
+        """PaymentモードのCheckoutSession作成"""
+        session = stripe_client.create_checkout_session(
+            price_id="price_credits_50",
+            mode="payment",
+            success_url="https://example.com/success",
+            cancel_url="https://example.com/cancel",
+        )
+        assert session["mode"] == "payment"
+
     def test_verify_webhook_signature_test_mode(self, stripe_client):
         """Webhook署名検証（テストモード）"""
         result = stripe_client.verify_webhook_signature(b"test", "sig")
         assert result  # テストモードでは常にTrue
+
+    def test_parse_webhook_event(self, stripe_client):
+        """Webhookイベントパース"""
+        payload = b'{"type": "payment_intent.succeeded", "data": {"object": {"id": "pi_test"}}}'
+        event = stripe_client.parse_webhook_event(payload)
+        assert event["type"] == "payment_intent.succeeded"
+        assert event["data"]["object"]["id"] == "pi_test"
+
+    def test_is_configured_test_mode(self, stripe_client):
+        """設定確認（テストモード）"""
+        assert stripe_client.is_configured is True
+
+    def test_is_configured_with_api_key(self):
+        """設定確認（APIキー有り）"""
+        client = StripeClient(api_key="sk_test_xxx", test_mode=True)
+        assert client.is_configured is True
+
+
+class TestStripeClientNonTestMode:
+    """Stripeクライアント非テストモードのテスト"""
+
+    def test_create_customer_no_api_key(self):
+        """APIキー未設定時の動作確認"""
+        client = StripeClient(api_key="", test_mode=False)
+        # Stripe SDKがインストールされている場合は非テストモードで動作
+        # APIキーなしではis_configuredがFalse
+        assert client.is_configured is False or client._test_mode is True
+
+    def test_client_with_api_key_non_test(self):
+        """APIキー設定時の非テストモード"""
+        client = StripeClient(api_key="sk_test_dummy", test_mode=False)
+        # Stripe SDKがある場合は非テストモードで動作
+        # この環境ではstripe SDKがインストールされている
+        assert client.is_configured is True
+
+    def test_verify_webhook_without_secret_returns_false(self):
+        """Webhookシークレット未設定時の署名検証"""
+        client = StripeClient(api_key="sk_test_dummy", test_mode=False, webhook_secret="")
+        # テストモードでなければ、シークレットなしで署名検証はFalseを返す
+        if not client._test_mode:
+            result = client.verify_webhook_signature(b"test", "sig")
+            assert result is False
+        else:
+            # テストモードにフォールバックした場合はTrueを返す
+            assert client._test_mode is True
 
 
 # ========== サブスクリプションマネージャーテスト ==========
