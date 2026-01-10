@@ -593,6 +593,43 @@ body {
     width: 100%;
     border-radius: 16px;
     display: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.result-image:hover {
+    transform: scale(1.01);
+}
+
+/* 結果アクションボタン */
+.result-actions {
+    display: none;
+    gap: 12px;
+    margin-top: 16px;
+    justify-content: center;
+}
+
+.result-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.result-action-btn:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.result-action-btn svg {
+    flex-shrink: 0;
 }
 
 /* フッター */

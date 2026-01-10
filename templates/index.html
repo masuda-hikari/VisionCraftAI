@@ -39,6 +39,14 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+    <!-- PWA マニフェスト -->
+    <link rel="manifest" href="/static/manifest.json">
+
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/images/icon-180.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/images/icon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/images/icon-16.png">
+
     <title>VisionCraftAI - AI画像生成プラットフォーム | Google Gemini API</title>
 
     <!-- Preconnect for performance -->
@@ -63,6 +71,8 @@
     <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
     <link rel="stylesheet" href="/static/css/style.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="/static/css/style.css"></noscript>
+    <link rel="stylesheet" href="/static/css/lightbox.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/static/css/lightbox.css"></noscript>
 
     <!-- Schema.org 構造化データ -->
     <script type="application/ld+json">
@@ -433,7 +443,29 @@
                         生成された画像がここに表示されます
                     </div>
                     <img class="result-image" id="resultImage" alt="Generated Image">
+                    <div class="result-actions" id="resultActions" style="display: none;">
+                        <button class="result-action-btn" id="viewFullBtn" aria-label="拡大表示">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                <line x1="11" y1="8" x2="11" y2="14"></line>
+                                <line x1="8" y1="11" x2="14" y2="11"></line>
+                            </svg>
+                            拡大
+                        </button>
+                        <button class="result-action-btn" id="downloadBtn" aria-label="ダウンロード">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            保存
+                        </button>
+                    </div>
                 </div>
+
+                <!-- 生成履歴ギャラリー -->
+                <div class="gallery-container" id="galleryContainer"></div>
             </div>
         </div>
     </section>
@@ -493,6 +525,22 @@
 
     <!-- パフォーマンス最適化: defer/asyncでJS読み込み -->
     <script src="/static/js/app.js" defer></script>
+    <script src="/static/js/lightbox.js" defer></script>
+
+    <!-- サービスワーカー登録 -->
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/static/sw.js')
+                .then(registration => {
+                    console.log('SW registered:', registration.scope);
+                })
+                .catch(error => {
+                    console.log('SW registration failed:', error);
+                });
+        });
+    }
+    </script>
 
     <!-- Core Web Vitals最適化: LCP計測 -->
     <script>
