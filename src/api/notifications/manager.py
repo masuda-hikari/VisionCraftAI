@@ -7,8 +7,13 @@ VisionCraftAI - 通知マネージャー
 
 import logging
 import uuid
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Any
+
+
+def _utcnow() -> datetime:
+    """現在のUTC時刻を返す（タイムゾーン対応）"""
+    return datetime.now(UTC)
 
 from src.api.notifications.models import (
     NotificationPreference,
@@ -53,7 +58,7 @@ class NotificationManager:
 
     def set_preference(self, preference: NotificationPreference) -> None:
         """ユーザーの通知設定を保存"""
-        preference.updated_at = datetime.utcnow()
+        preference.updated_at = _utcnow()
         self._preferences[preference.user_id] = preference
 
     def create_default_preference(
@@ -94,7 +99,7 @@ class NotificationManager:
             if hasattr(preference, key):
                 setattr(preference, key, value)
 
-        preference.updated_at = datetime.utcnow()
+        preference.updated_at = _utcnow()
         self._preferences[user_id] = preference
         return preference
 

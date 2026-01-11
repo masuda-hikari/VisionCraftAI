@@ -3,8 +3,9 @@
 最終更新: 2026-01-11
 
 ## 現在の状況
-- 状況: Phase 25 マルチプラットフォームデプロイ対応完了
+- 状況: Phase 26 コード品質向上完了
 - 進捗: テストスイート全パス（598 passed, 1 skipped）
+- 警告: 1件のみ（外部ライブラリ由来）← 238件から大幅削減
 - カバレッジ: 80%+
 - デプロイ可能: Render.com / Vercel / Cloudflare / Railway / Fly.io
 
@@ -285,6 +286,15 @@
 | Render.com設定（render.yaml） | 完了 |
 | requirements.txt更新（pyproject.toml同期） | 完了 |
 | デプロイガイド大幅更新（無料プラットフォーム追加） | 完了 |
+| テスト598件全パス確認 | 完了 |
+
+## Phase 26 進捗（完了）
+| タスク | 状態 |
+|--------|------|
+| Pydantic ConfigDict移行（deprecation警告解消） | 完了 |
+| datetime.utcnow() → datetime.now(UTC)移行 | 完了 |
+| テストコードの警告修正 | 完了 |
+| 警告238件→1件に削減 | 完了 |
 | テスト598件全パス確認 | 完了 |
 
 ## 次のアクション
@@ -583,6 +593,13 @@
 | credits_500 | 500 | +100 | $149.99 |
 
 ## 最近の変更
+- 2026-01-11: Phase 26 コード品質向上
+  - Pydantic ConfigDict移行（deprecation警告解消）
+  - datetime.utcnow() → datetime.now(UTC)移行（Python 3.17対応）
+  - テストコードの警告修正
+  - 警告238件→1件に大幅削減（残り1件は外部ライブラリ由来）
+  - テスト598件全パス確認
+  - 収益化直結: 本番品質コード・長期サポート可能
 - 2026-01-11: Phase 25 マルチプラットフォームデプロイ対応
   - Vercelデプロイ設定（vercel.json, api/index.py）
   - Cloudflare Workers設定（wrangler.toml, workers/index.js）

@@ -8,7 +8,7 @@ VisionCraftAI - 通知APIスキーマ
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from src.api.notifications.models import NotificationType, EmailStatus
 
@@ -28,8 +28,7 @@ class NotificationPreferenceResponse(BaseModel):
     language: str
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class NotificationPreferenceUpdate(BaseModel):
@@ -73,8 +72,7 @@ class EmailLogResponse(BaseModel):
     error_message: str | None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class EmailLogsResponse(BaseModel):

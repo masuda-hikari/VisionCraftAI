@@ -6,11 +6,16 @@ A/Bテストとユーザー行動分析のデータモデルを定義します�
 """
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, UTC
 from enum import Enum
 from typing import Optional
 import hashlib
 import secrets
+
+
+def _utcnow() -> datetime:
+    """現在のUTC時刻を返す（タイムゾーン対応）"""
+    return datetime.now(UTC)
 
 
 class ABTestStatus(str, Enum):
@@ -116,8 +121,8 @@ class ABTest:
     end_date: Optional[datetime] = None
 
     # メタデータ
-    created_at: datetime = field(default_factory=datetime.utcnow)
-    updated_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=_utcnow)
+    updated_at: datetime = field(default_factory=_utcnow)
     created_by: str = ""
 
     # 統計的有意性
@@ -180,24 +185,24 @@ class ABTest:
         if len(self.variants) < 2:
             raise ValueError("最低2つのバリアントが必要です")
         self.status = ABTestStatus.RUNNING
-        self.start_date = datetime.utcnow()
-        self.updated_at = datetime.utcnow()
+        self.start_date = _utcnow()
+        self.updated_at = _utcnow()
 
     def pause(self):
         """テストを一時停止"""
         self.status = ABTestStatus.PAUSED
-        self.updated_at = datetime.utcnow()
+        self.updated_at = _utcnow()
 
     def resume(self):
         """テストを再開"""
         self.status = ABTestStatus.RUNNING
-        self.updated_at = datetime.utcnow()
+        self.updated_at = _utcnow()
 
     def complete(self):
         """テストを完了"""
         self.status = ABTestStatus.COMPLETED
-        self.end_date = datetime.utcnow()
-        self.updated_at = datetime.utcnow()
+        self.end_date = _utcnow()
+        self.updated_at = _utcnow()
 
     @property
     def is_active(self) -> bool:
@@ -259,7 +264,7 @@ class ABTestAssignment:
     user_id: str
     test_id: str
     variant_id: str
-    assigned_at: datetime = field(default_factory=datetime.utcnow)
+    assigned_at: datetime = field(default_factory=_utcnow)
     converted: bool = False
     converted_at: Optional[datetime] = None
     revenue: float = 0.0
@@ -313,7 +318,7 @@ class AnalyticsEvent:
     utm_content: str = ""
 
     # タイムスタンプ
-    timestamp: datetime = field(default_factory=datetime.utcnow)
+    timestamp: datetime = field(default_factory=_utcnow)
 
     # 収益関連
     revenue: float = 0.0
@@ -391,7 +396,7 @@ class ConversionGoal:
     current_value: float = 0.0
     current_count: int = 0
 
-    created_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=_utcnow)
 
     @property
     def value_progress(self) -> float:
