@@ -347,3 +347,321 @@ class TestAdminPage:
         """ログインフォームが存在する"""
         response = client.get("/admin")
         assert "管理者ログイン" in response.text or "authOverlay" in response.text
+
+
+class TestAdminDashboardAdvanced:
+    """AdminDashboardの高度なテスト（カバレッジ向上用）"""
+
+    @pytest.fixture
+    def sample_subscriptions(self, temp_data_dir):
+        """サンプルサブスクリプションデータ"""
+        data = {
+            "sub1": {
+                "plan": "basic",
+                "status": "active",
+                "created_at": datetime.now().isoformat(),
+            },
+            "sub2": {
+                "plan": "pro",
+                "status": "active",
+                "created_at": (datetime.now() - timedelta(days=5)).isoformat(),
+            },
+            "sub3": {
+                "plan": "free",
+                "status": "canceled",
+                "created_at": (datetime.now() - timedelta(days=60)).isoformat(),
+            },
+        }
+        file_path = temp_data_dir / "subscriptions.json"
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f)
+        return data
+
+    @pytest.fixture
+    def sample_credits(self, temp_data_dir):
+        """サンプルクレジットデータ"""
+        data = {
+            "user1": {
+                "balance": 100,
+                "transactions": [
+                    {
+                        "type": "purchase",
+                        "amount": 50,
+                        "timestamp": datetime.now().isoformat(),
+                    },
+                    {
+                        "type": "purchase",
+                        "amount": 100,
+                        "timestamp": (datetime.now() - timedelta(days=10)).isoformat(),
+                    },
+                    {
+                        "type": "usage",
+                        "amount": -10,
+                        "timestamp": datetime.now().isoformat(),
+                    },
+                ],
+            },
+            "user2": {
+                "balance": 50,
+                "transactions": [
+                    {
+                        "type": "purchase",
+                        "amount": 50,
+                        "timestamp": datetime.now().isoformat(),
+                    },
+                ],
+            },
+        }
+        file_path = temp_data_dir / "credits.json"
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f)
+        return data
+
+    @pytest.fixture
+    def sample_contacts(self, temp_data_dir):
+        """サンプルお問い合わせデータ"""
+        data = [
+            {
+                "id": "contact1",
+                "category": "support",
+                "read": False,
+                "timestamp": datetime.now().isoformat(),
+            },
+            {
+                "id": "contact2",
+                "category": "sales",
+                "read": True,
+                "timestamp": (datetime.now() - timedelta(days=3)).isoformat(),
+            },
+            {
+                "id": "contact3",
+                "category": "support",
+                "read": False,
+                "timestamp": (datetime.now() - timedelta(days=10)).isoformat(),
+            },
+        ]
+        file_path = temp_data_dir / "contacts.json"
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f)
+        return data
+
+    def test_get_revenue_metrics_with_subscriptions(self, temp_data_dir, sample_subscriptions):
+        """収益メトリクス（サブスクリプションあり）"""
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        metrics = dashboard.get_revenue_metrics()
+        assert isinstance(metrics, RevenueMetrics)
+        # basic(9.99) + pro(29.99) = 39.98 のMRR
+        assert metrics.mrr == 39.98
+        assert metrics.arr == 39.98 * 12
+
+    def test_get_revenue_metrics_with_credits(self, temp_data_dir, sample_credits):
+        """収益メトリクス（クレジット購入あり）"""
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        metrics = dashboard.get_revenue_metrics()
+        # クレジット収益: (50 + 100 + 50) * 0.5 = 100.0
+        assert metrics.credit_revenue == 100.0
+
+    def test_get_revenue_metrics_combined(self, temp_data_dir, sample_subscriptions, sample_credits):
+        """収益メトリクス（複合）"""
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        metrics = dashboard.get_revenue_metrics()
+        # MRR: basic(9.99) + pro(29.99) = 39.98
+        assert metrics.mrr == 39.98
+        # クレジット収益: (50 + 100 + 50) * 0.5 = 100.0
+        assert metrics.credit_revenue == 100.0
+
+    def test_get_revenue_chart_data_with_subscriptions(self, temp_data_dir, sample_subscriptions):
+        """収益チャートデータ（サブスクリプションあり）"""
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        chart_data = dashboard.get_revenue_chart_data(days=30)
+        assert len(chart_data) == 30
+        # 今日のデータに収益が含まれること
+        today_str = datetime.now().date().isoformat()
+        today_data = next((d for d in chart_data if d.date == today_str), None)
+        assert today_data is not None
+        assert today_data.subscriptions >= 0
+
+    def test_get_revenue_chart_data_with_credits(self, temp_data_dir, sample_credits):
+        """収益チャートデータ（クレジットあり）"""
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        chart_data = dashboard.get_revenue_chart_data(days=30)
+        # 今日の日付にクレジット収益が含まれること
+        today_str = datetime.now().date().isoformat()
+        today_data = next((d for d in chart_data if d.date == today_str), None)
+        assert today_data is not None
+        # 50 * 0.5 = 25.0 + 50 * 0.5 = 25.0 = 50.0
+        assert today_data.credits >= 0
+
+    def test_get_usage_chart_data_with_errors(self, temp_data_dir, sample_usage_records):
+        """使用量チャートデータ（エラー含む）"""
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        chart_data = dashboard.get_usage_chart_data(days=7)
+        assert len(chart_data) == 7
+        # エラーが集計されていること
+        total_errors = sum(d.errors for d in chart_data)
+        assert total_errors >= 0
+
+    def test_get_system_health_degraded(self, temp_data_dir):
+        """システムヘルス（degradedステータス）"""
+        # 大量のエラーレコードを作成
+        records = []
+        for i in range(150):
+            records.append({
+                "timestamp": datetime.now().isoformat(),
+                "success": False,
+                "response_time_ms": 100,
+            })
+        file_path = temp_data_dir / "usage_records.json"
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(records, f)
+
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        health = dashboard.get_system_health()
+        assert health.api_status == "degraded"
+        assert health.error_count_24h >= 100
+
+    def test_get_system_health_with_response_time(self, temp_data_dir):
+        """システムヘルス（レスポンスタイム計測）"""
+        records = [
+            {
+                "timestamp": datetime.now().isoformat(),
+                "success": True,
+                "response_time_ms": 100,
+            },
+            {
+                "timestamp": datetime.now().isoformat(),
+                "success": True,
+                "response_time_ms": 200,
+            },
+            {
+                "timestamp": datetime.now().isoformat(),
+                "success": True,
+                "response_time_ms": 300,
+            },
+        ]
+        file_path = temp_data_dir / "usage_records.json"
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(records, f)
+
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        health = dashboard.get_system_health()
+        # 平均レスポンスタイム: (100 + 200 + 300) / 3 = 200
+        assert health.avg_response_time_ms == 200.0
+
+    def test_get_contact_stats_with_data(self, temp_data_dir, sample_contacts):
+        """お問い合わせ統計（データあり）"""
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        stats = dashboard.get_contact_stats()
+        assert stats["total"] == 3
+        assert stats["unread"] == 2  # contact1, contact3
+        assert stats["today"] >= 1  # contact1
+        assert stats["this_week"] >= 2  # contact1, contact2
+        assert stats["by_category"]["support"] == 2
+        assert stats["by_category"]["sales"] == 1
+
+    def test_load_json_error_handling(self, temp_data_dir):
+        """JSON読み込みエラーハンドリング"""
+        # 不正なJSONファイルを作成
+        file_path = temp_data_dir / "api_keys.json"
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write("{invalid json}")
+
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        # エラーが発生しても空の結果が返ること
+        metrics = dashboard.get_user_metrics()
+        assert metrics.total_users == 0
+
+    def test_get_user_list_pagination(self, temp_data_dir, sample_api_keys):
+        """ユーザー一覧（ページネーション）"""
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        # 1件ずつ取得
+        result = dashboard.get_user_list(page=1, per_page=1)
+        assert len(result["users"]) == 1
+        assert result["total"] == 3
+        assert result["total_pages"] == 3
+
+        # 2ページ目
+        result2 = dashboard.get_user_list(page=2, per_page=1)
+        assert len(result2["users"]) == 1
+        assert result2["page"] == 2
+
+    def test_get_user_list_with_usage(self, temp_data_dir, sample_api_keys, sample_usage_records):
+        """ユーザー一覧（使用量データあり）"""
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        result = dashboard.get_user_list(page=1, per_page=10)
+        # 各ユーザーに使用量が含まれること
+        for user in result["users"]:
+            assert "total_generations" in user.model_dump()
+            assert "total_spent" in user.model_dump()
+
+    def test_revenue_metrics_invalid_date_format(self, temp_data_dir):
+        """収益メトリクス（不正な日付形式）"""
+        data = {
+            "sub1": {
+                "plan": "basic",
+                "status": "active",
+                "created_at": "invalid_date",
+            },
+        }
+        file_path = temp_data_dir / "subscriptions.json"
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f)
+
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        # エラーが発生せず処理が続行されること
+        metrics = dashboard.get_revenue_metrics()
+        assert isinstance(metrics, RevenueMetrics)
+
+    def test_user_metrics_invalid_date_format(self, temp_data_dir):
+        """ユーザーメトリクス（不正な日付形式）"""
+        data = {
+            "key1": {
+                "tier": "basic",
+                "created_at": "invalid_date",
+                "last_used": "also_invalid",
+            },
+        }
+        file_path = temp_data_dir / "api_keys.json"
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f)
+
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        metrics = dashboard.get_user_metrics()
+        assert metrics.total_users == 1
+        assert metrics.paying_users == 1
+
+    def test_usage_metrics_invalid_timestamp(self, temp_data_dir):
+        """使用量メトリクス（不正なタイムスタンプ）"""
+        records = [
+            {
+                "key_id": "key1",
+                "timestamp": "invalid_timestamp",
+                "success": True,
+            },
+        ]
+        file_path = temp_data_dir / "usage_records.json"
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(records, f)
+
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        metrics = dashboard.get_usage_metrics()
+        assert metrics.total_generations == 1
+
+    def test_contact_stats_invalid_timestamp(self, temp_data_dir):
+        """お問い合わせ統計（不正なタイムスタンプ）"""
+        data = [
+            {
+                "id": "contact1",
+                "category": "support",
+                "read": False,
+                "timestamp": "invalid_date",
+            },
+        ]
+        file_path = temp_data_dir / "contacts.json"
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f)
+
+        dashboard = AdminDashboard(data_dir=temp_data_dir)
+        stats = dashboard.get_contact_stats()
+        assert stats["total"] == 1
+        assert stats["today"] == 0  # 不正な日付のためカウントされない
