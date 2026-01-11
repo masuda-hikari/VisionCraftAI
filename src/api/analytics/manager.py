@@ -9,8 +9,13 @@ import hashlib
 import logging
 import random
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from typing import Optional
+
+
+def _utcnow() -> datetime:
+    """現在のUTC時刻を返す（タイムゾーン対応）"""
+    return datetime.now(UTC)
 
 from src.api.analytics.models import (
     ABTest,
@@ -252,7 +257,7 @@ class ABTestManager:
             assignment.revenue += revenue
         else:
             assignment.converted = True
-            assignment.converted_at = datetime.utcnow()
+            assignment.converted_at = _utcnow()
             assignment.revenue = revenue
 
         # テストのバリアント統計を更新
@@ -466,10 +471,10 @@ class AnalyticsTracker:
     ) -> list[dict]:
         """日次統計を取得"""
         if not start_date:
-            start_date = datetime.utcnow() - timedelta(days=30)
+            start_date = _utcnow() - timedelta(days=30)
 
         if not end_date:
-            end_date = datetime.utcnow()
+            end_date = _utcnow()
 
         results = []
         current_date = start_date
@@ -494,7 +499,7 @@ class AnalyticsTracker:
 
     def get_summary(self, days: int = 30) -> dict:
         """サマリー統計を取得"""
-        end_date = datetime.utcnow()
+        end_date = _utcnow()
         start_date = end_date - timedelta(days=days)
 
         # 期間内のイベントを集計
@@ -536,10 +541,10 @@ class AnalyticsTracker:
     ) -> dict:
         """ファネル分析を実行"""
         if not start_date:
-            start_date = datetime.utcnow() - timedelta(days=30)
+            start_date = _utcnow() - timedelta(days=30)
 
         if not end_date:
-            end_date = datetime.utcnow()
+            end_date = _utcnow()
 
         # ユーザーごとのイベントを取得
         user_events: dict[str, list[AnalyticsEvent]] = defaultdict(list)

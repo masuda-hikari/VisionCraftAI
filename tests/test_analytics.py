@@ -5,7 +5,7 @@ VisionCraftAI - 分析・A/Bテストモジュールテスト
 A/Bテストと分析機能のテストを行います。
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 
 import pytest
 from fastapi.testclient import TestClient
@@ -588,7 +588,7 @@ class TestAnalyticsTracker:
 
     def test_get_retention(self, tracker):
         """リテンション分析テスト"""
-        today = datetime.utcnow()
+        today = datetime.now(UTC)
 
         # 今日イベントがあったユーザー
         event1 = tracker.track_event(EventType.PAGE_VIEW, user_id="user_1")
@@ -677,7 +677,7 @@ class TestAnalyticsAPI:
         response = client.post(
             "/api/v1/analytics/retention",
             json={
-                "cohort_date": datetime.utcnow().isoformat(),
+                "cohort_date": datetime.now(UTC).isoformat(),
                 "periods": 7,
             },
         )

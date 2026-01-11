@@ -6,9 +6,14 @@ VisionCraftAI - メール通知モデル
 """
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, UTC
 from enum import Enum
 from typing import Any
+
+
+def _utcnow() -> datetime:
+    """現在のUTC時刻を返す（タイムゾーン対応）"""
+    return datetime.now(UTC)
 
 
 class NotificationType(str, Enum):
@@ -60,7 +65,7 @@ class NotificationPreference:
     language: str = "ja"
 
     # 最終更新
-    updated_at: datetime = field(default_factory=datetime.utcnow)
+    updated_at: datetime = field(default_factory=_utcnow)
 
     def can_receive(self, notification_type: NotificationType) -> bool:
         """指定された通知タイプを受け取れるかチェック"""
@@ -125,8 +130,8 @@ class EmailTemplate:
     # メタデータ
     version: int = 1
     active: bool = True
-    created_at: datetime = field(default_factory=datetime.utcnow)
-    updated_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=_utcnow)
+    updated_at: datetime = field(default_factory=_utcnow)
 
     def render(self, context: dict[str, Any]) -> tuple[str, str, str]:
         """
@@ -177,12 +182,12 @@ class EmailLog:
 
     # メタデータ
     metadata: dict[str, Any] = field(default_factory=dict)
-    created_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=_utcnow)
 
     def mark_sent(self) -> None:
         """送信済みにマーク"""
         self.status = EmailStatus.SENT
-        self.sent_at = datetime.utcnow()
+        self.sent_at = _utcnow()
 
     def mark_failed(self, error: str) -> None:
         """失敗にマーク"""
@@ -193,9 +198,9 @@ class EmailLog:
     def mark_opened(self) -> None:
         """開封にマーク"""
         self.status = EmailStatus.OPENED
-        self.opened_at = datetime.utcnow()
+        self.opened_at = _utcnow()
 
     def mark_clicked(self) -> None:
         """クリックにマーク"""
         self.status = EmailStatus.CLICKED
-        self.clicked_at = datetime.utcnow()
+        self.clicked_at = _utcnow()
