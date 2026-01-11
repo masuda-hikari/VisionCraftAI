@@ -776,5 +776,339 @@ class TestQuotaEnforcer:
         assert response.status_code not in [401, 429]
 
 
+# =====================
+# 依存性関数追加テスト（カバレッジ向上）
+# =====================
+
+
+class TestAuthDependenciesAdvanced:
+    """認証依存性の高度なテスト"""
+
+    def test_optional_api_key_with_bearer(self, test_client):
+        """get_optional_api_keyでBearerトークン認証"""
+        # キー作成
+        create_response = test_client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Optional Bearer Test"},
+        )
+        api_key = create_response.json()["api_key"]
+
+        # ヘルスエンドポイントは認証オプショナル
+        response = test_client.get(
+            "/api/v1/health",
+            headers={"Authorization": f"Bearer {api_key}"},
+        )
+        assert response.status_code == 200
+
+    def test_optional_api_key_without_bearer_prefix(self, test_client):
+        """get_optional_api_keyでBearerプレフィックスなし"""
+        create_response = test_client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Optional No Bearer Test"},
+        )
+        api_key = create_response.json()["api_key"]
+
+        # Bearerなしでもアクセス可能
+        response = test_client.get(
+            "/api/v1/health",
+            headers={"Authorization": api_key},
+        )
+        assert response.status_code == 200
+
+    def test_optional_api_key_invalid(self, test_client):
+        """get_optional_api_keyで無効なキー"""
+        # 無効なキーでもオプショナルなエンドポイントは動作
+        response = test_client.get(
+            "/api/v1/health",
+            headers={"X-API-Key": "invalid_key_12345"},
+        )
+        # 認証オプショナルなエンドポイントなのでエラーにならない
+        assert response.status_code == 200
+
+    def test_forwarded_for_multiple_ips(self, test_client):
+        """X-Forwarded-Forヘッダーで複数IP"""
+        create_response = test_client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Multi IP Test"},
+        )
+        api_key = create_response.json()["api_key"]
+
+        # 複数IPが含まれる場合は最初のIPを使用
+        response = test_client.get(
+            "/api/v1/auth/verify",
+            headers={
+                "X-API-Key": api_key,
+                "X-Forwarded-For": "203.0.113.1, 10.0.0.1, 192.168.1.1",
+            },
+        )
+        assert response.status_code == 200
+
+
+class TestRequireTierDecorator:
+    """require_tierデコレータのテスト"""
+
+    @pytest.mark.asyncio
+    async def test_require_tier_decorator_functionality(self):
+        """require_tierデコレータの動作確認"""
+        from src.api.auth.dependencies import require_tier
+        from src.api.auth.models import APIKey, APIKeyTier
+
+        @require_tier(APIKeyTier.PRO, APIKeyTier.ENTERPRISE)
+        async def premium_function(api_key: APIKey):
+            return {"status": "ok"}
+
+        # Proキーで呼び出し
+        api_key, _ = APIKey.generate(tier=APIKeyTier.PRO)
+        result = await premium_function(api_key=api_key)
+        assert result["status"] == "ok"
+
+    @pytest.mark.asyncio
+    async def test_require_tier_insufficient_tier(self):
+        """require_tierデコレータでTier不足"""
+        from src.api.auth.dependencies import require_tier
+        from src.api.auth.models import APIKey, APIKeyTier
+        from fastapi import HTTPException
+
+        @require_tier(APIKeyTier.PRO, APIKeyTier.ENTERPRISE)
+        async def premium_function(api_key: APIKey):
+            return {"status": "ok"}
+
+        # Freeキーで呼び出し（Tier不足）
+        api_key, _ = APIKey.generate(tier=APIKeyTier.FREE)
+        with pytest.raises(HTTPException) as exc_info:
+            await premium_function(api_key=api_key)
+        assert exc_info.value.status_code == 403
+        assert "INSUFFICIENT_TIER" in str(exc_info.value.detail)
+
+    @pytest.mark.asyncio
+    async def test_require_tier_no_api_key(self):
+        """require_tierデコレータでAPIキーなし"""
+        from src.api.auth.dependencies import require_tier
+        from src.api.auth.models import APIKeyTier
+        from fastapi import HTTPException
+
+        @require_tier(APIKeyTier.PRO)
+        async def premium_function():
+            return {"status": "ok"}
+
+        with pytest.raises(HTTPException) as exc_info:
+            await premium_function()
+        assert exc_info.value.status_code == 401
+        assert "MISSING_API_KEY" in str(exc_info.value.detail)
+
+    @pytest.mark.asyncio
+    async def test_require_tier_api_key_in_args(self):
+        """require_tierデコレータでAPIキーが位置引数として渡される"""
+        from src.api.auth.dependencies import require_tier
+        from src.api.auth.models import APIKey, APIKeyTier
+
+        @require_tier(APIKeyTier.BASIC, APIKeyTier.PRO)
+        async def function_with_arg(api_key: APIKey):
+            return {"status": "ok", "tier": api_key.tier.value}
+
+        # Basicキーを位置引数として渡す
+        api_key, _ = APIKey.generate(tier=APIKeyTier.BASIC)
+        result = await function_with_arg(api_key)
+        assert result["status"] == "ok"
+        assert result["tier"] == "basic"
+
+
+class TestTierCheckerClass:
+    """TierCheckerクラスの詳細テスト"""
+
+    @pytest.mark.asyncio
+    async def test_tier_checker_insufficient_tier(self):
+        """TierCheckerでTier不足"""
+        from src.api.auth.dependencies import TierChecker
+        from src.api.auth.models import APIKey, APIKeyTier
+        from fastapi import HTTPException
+
+        checker = TierChecker(APIKeyTier.PRO, APIKeyTier.ENTERPRISE)
+
+        # Freeキーでチェック
+        api_key, _ = APIKey.generate(tier=APIKeyTier.FREE)
+        with pytest.raises(HTTPException) as exc_info:
+            await checker.__call__(api_key=api_key)
+        assert exc_info.value.status_code == 403
+        assert "INSUFFICIENT_TIER" in str(exc_info.value.detail)
+
+    @pytest.mark.asyncio
+    async def test_tier_checker_allowed_tier(self):
+        """TierCheckerで許可されたTier"""
+        from src.api.auth.dependencies import TierChecker
+        from src.api.auth.models import APIKey, APIKeyTier
+
+        checker = TierChecker(APIKeyTier.BASIC, APIKeyTier.PRO)
+
+        # Basicキーでチェック
+        api_key, _ = APIKey.generate(tier=APIKeyTier.BASIC)
+        result = await checker.__call__(api_key=api_key)
+        assert result.tier == APIKeyTier.BASIC
+
+
+class TestCheckRateLimitFunction:
+    """check_rate_limit関数のテスト"""
+
+    def test_rate_limit_with_api_key(self, test_client):
+        """APIキー付きレート制限"""
+        create_response = test_client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Rate Limit API Key Test"},
+        )
+        api_key = create_response.json()["api_key"]
+
+        # レート制限付きエンドポイントにアクセス
+        response = test_client.get(
+            "/api/v1/auth/rate-limit",
+            headers={"X-API-Key": api_key},
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "current_count" in data or "limit" in data
+
+    def test_rate_limit_without_api_key(self, test_client):
+        """認証なしでレート制限"""
+        # 認証なしのエンドポイント（ヘルスチェック）
+        for i in range(5):
+            response = test_client.get("/api/v1/health")
+            assert response.status_code == 200
+
+
+class TestCheckQuotaFunction:
+    """check_quota関数のテスト"""
+
+    def test_quota_within_limit(self, test_client):
+        """クォータ内でのアクセス"""
+        create_response = test_client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Quota Within Limit Test"},
+        )
+        api_key = create_response.json()["api_key"]
+
+        response = test_client.get(
+            "/api/v1/auth/quota",
+            headers={"X-API-Key": api_key},
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["monthly_remaining"] > 0
+
+
+class TestQuotaEnforcerClass:
+    """QuotaEnforcerクラスの詳細テスト"""
+
+    @pytest.mark.asyncio
+    async def test_quota_enforcer_exceeded(self):
+        """QuotaEnforcerでクォータ超過"""
+        from src.api.auth.dependencies import QuotaEnforcer
+        from src.api.auth.models import APIKey, APIKeyTier
+        from src.api.auth.key_manager import APIKeyManager
+        from fastapi import HTTPException
+        import tempfile
+        import json
+        from pathlib import Path
+
+        # 一時ストレージを作成
+        with tempfile.NamedTemporaryFile(
+            mode='w', suffix='.json', delete=False
+        ) as f:
+            json.dump({"version": "1.0", "keys": []}, f)
+            temp_path = Path(f.name)
+
+        manager = APIKeyManager(storage_path=temp_path)
+        api_key, _ = manager.create_key(tier=APIKeyTier.FREE)  # 月5回制限
+
+        # クォータを使い切る
+        api_key.quota.monthly_used = 5
+
+        enforcer = QuotaEnforcer(count=1)
+        with pytest.raises(HTTPException) as exc_info:
+            await enforcer.__call__(api_key=api_key, key_manager=manager)
+        assert exc_info.value.status_code == 429
+        assert "QUOTA_EXCEEDED" in str(exc_info.value.detail)
+
+    @pytest.mark.asyncio
+    async def test_quota_enforcer_within_limit(self):
+        """QuotaEnforcerでクォータ内"""
+        from src.api.auth.dependencies import QuotaEnforcer
+        from src.api.auth.models import APIKey, APIKeyTier
+        from src.api.auth.key_manager import APIKeyManager
+        import tempfile
+        import json
+        from pathlib import Path
+
+        # 一時ストレージを作成
+        with tempfile.NamedTemporaryFile(
+            mode='w', suffix='.json', delete=False
+        ) as f:
+            json.dump({"version": "1.0", "keys": []}, f)
+            temp_path = Path(f.name)
+
+        manager = APIKeyManager(storage_path=temp_path)
+        api_key, _ = manager.create_key(tier=APIKeyTier.BASIC)  # 月100回制限
+
+        enforcer = QuotaEnforcer(count=1)
+        result = await enforcer.__call__(api_key=api_key, key_manager=manager)
+        assert result.tier == APIKeyTier.BASIC
+
+
+class TestRecordUsageFunction:
+    """record_usage関数のテスト"""
+
+    @pytest.mark.asyncio
+    async def test_record_usage_success(self):
+        """使用量記録の成功"""
+        from src.api.auth.dependencies import record_usage
+        from src.api.auth.models import APIKey, APIKeyTier
+        from src.api.auth.key_manager import APIKeyManager
+        import tempfile
+        import json
+        from pathlib import Path
+
+        # 一時ストレージを作成
+        with tempfile.NamedTemporaryFile(
+            mode='w', suffix='.json', delete=False
+        ) as f:
+            json.dump({"version": "1.0", "keys": []}, f)
+            temp_path = Path(f.name)
+
+        manager = APIKeyManager(storage_path=temp_path)
+        api_key, _ = manager.create_key(tier=APIKeyTier.BASIC)
+
+        # record_usageはNoneを返す
+        await record_usage(api_key=api_key, key_manager=manager)
+
+        # 使用量が記録されたことを確認
+        status = manager.get_quota_status(api_key.key_id)
+        assert status["monthly_remaining"] == 99  # 100 - 1
+
+    @pytest.mark.asyncio
+    async def test_record_usage_error_handling(self):
+        """使用量記録のエラーハンドリング"""
+        from src.api.auth.dependencies import record_usage
+        from src.api.auth.models import APIKey, APIKeyTier
+        from src.api.auth.key_manager import APIKeyManager
+        import tempfile
+        import json
+        from pathlib import Path
+
+        # 一時ストレージを作成
+        with tempfile.NamedTemporaryFile(
+            mode='w', suffix='.json', delete=False
+        ) as f:
+            json.dump({"version": "1.0", "keys": []}, f)
+            temp_path = Path(f.name)
+
+        manager = APIKeyManager(storage_path=temp_path)
+        api_key, _ = manager.create_key(tier=APIKeyTier.FREE)  # 月5回制限
+
+        # クォータを使い切る
+        api_key.quota.monthly_used = 5
+
+        # record_usageは例外を投げずにログを出力
+        await record_usage(api_key=api_key, key_manager=manager)
+        # エラーでも例外にならないことを確認
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
