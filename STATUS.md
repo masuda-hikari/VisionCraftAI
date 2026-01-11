@@ -3,12 +3,13 @@
 最終更新: 2026-01-11
 
 ## 現在の状況
-- 状況: 商用化基準対応完了（LLM名称露出修正）
+- 状況: デプロイ準備完了（ブロッカー解消待ち）
 - 進捗: テストスイート全パス（598 passed, 1 skipped）
 - 警告: 1件のみ（外部ライブラリ由来）
 - カバレッジ: 80%+
 - デプロイ可能: Render.com / Vercel / Cloudflare / Railway / Fly.io
 - ガバナンス: LLM名称露出禁止ルール準拠
+- 自動化: quick_deploy.py でブロッカー確認可能
 
 ## Phase 1 進捗（完了）
 | タスク | 状態 |
@@ -300,7 +301,13 @@
 
 ## 次のアクション
 
-### 🔴 ブロッカー（人間対応必要）
+### クイックデプロイ
+```bash
+# ブロッカー確認スクリプトを実行
+python scripts/quick_deploy.py
+```
+
+### ブロッカー（人間対応必要・4件）
 
 1. **GitHubリポジトリをPublicに変更**（デプロイ前提）
    - 現状: リポジトリが非公開またはアクセス不可
@@ -313,31 +320,40 @@
    python scripts/setup_gcloud.py --project YOUR_PROJECT_ID
    ```
 
-3. **Stripe本番環境設定**（課金機能用）
+3. **.envファイル作成**
+   ```bash
+   cp .env.example .env
+   # 必要な値を設定
+   ```
+
+4. **Stripe本番環境設定**（課金機能用）
    ```bash
    python scripts/setup_stripe.py --api-key sk_live_xxx --webhook-url https://your-domain.com
    ```
 
-### 🟢 ブロッカー解消後即時実行
-4. **Render.comでデモモードデプロイ**
+### ブロッカー解消後即時実行
+5. **Render.comでデモモードデプロイ**
    - GitHubリポジトリを連携
    - render.yamlが自動検出
    - DEMO_MODE=true で起動
 
-5. **本番デプロイ実行**（Google Cloud/Stripe設定後）
+6. **本番デプロイ実行**（Google Cloud/Stripe設定後）
    ```bash
    python scripts/deploy_cloudrun.py --project YOUR_PROJECT_ID
    ```
 
-### 📋 デプロイ後の作業
-6. カスタムドメイン設定・SSL証明書
-7. Product Huntローンチ
-8. マーケティング・初期ユーザー獲得
+### デプロイ後の作業
+7. カスタムドメイン設定・SSL証明書
+8. Product Huntローンチ
+9. マーケティング・初期ユーザー獲得
 
-## ブロッカー
-- **GitHubリポジトリ公開設定**: API確認で404（非公開またはアクセス不可）
-- **Google Cloud認証情報**: サービスアカウント認証情報が必要
-- **Stripe本番APIキー**: Webhookシークレットが必要
+## ブロッカーサマリー
+| 項目 | 状態 | 対応者 |
+|------|------|--------|
+| GitHubリポジトリ公開設定 | 404 | 人間 |
+| Google Cloud認証情報 | 未設定 | 人間 |
+| .envファイル作成 | 未作成 | 人間 |
+| Stripe本番APIキー | 未設定 | 人間 |
 
 ## 実装済みモジュール
 ### コア
@@ -596,6 +612,12 @@
 | credits_500 | 500 | +100 | $149.99 |
 
 ## 最近の変更
+- 2026-01-11: デプロイ準備・ブロッカー確認自動化
+  - REVENUE_METRICS.md作成（ガバナンス必須ファイル）
+  - quick_deploy.py作成（ブロッカー確認・対応手順自動表示）
+  - テスト598件全パス再確認（22.75秒）
+  - ブロッカー4件を明確化
+  - 収益化直結: デプロイ自動化・収益追跡体制整備
 - 2026-01-11: 商用化基準対応（LLM名称露出修正）
   - index.html: Google Gemini 3 → 最先端AI技術に変更
   - README.md: 同上 + Phase 26までの進捗更新
