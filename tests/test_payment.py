@@ -1468,3 +1468,162 @@ class TestYearlyBillingAPI:
             assert data["billing_interval"] == "monthly"
         finally:
             app.dependency_overrides.clear()
+
+
+# ========== StripeClient高度なテスト ==========
+
+
+class TestStripeClientWebhookSignature:
+    """Webhook署名検証の詳細テスト"""
+
+    def test_manual_verify_signature_valid(self):
+        """手動署名検証（有効な署名）"""
+        import hashlib
+        import hmac
+        import time
+
+        secret = "whsec_test_secret_12345"
+        payload = b'{"type": "test.event"}'
+        timestamp = str(int(time.time()))
+
+        # 正しい署名を計算
+        signed_payload = f"{timestamp}.{payload.decode('utf-8')}"
+        expected_sig = hmac.new(
+            secret.encode("utf-8"),
+            signed_payload.encode("utf-8"),
+            hashlib.sha256,
+        ).hexdigest()
+
+        signature = f"t={timestamp},v1={expected_sig}"
+
+        # テストモードでないクライアントで検証
+        client = StripeClient(
+            api_key="sk_test_dummy",
+            webhook_secret=secret,
+            test_mode=False,
+        )
+
+        # Stripeライブラリがない場合は手動検証が使われる
+        if client._stripe is None:
+            result = client._manual_verify_signature(payload, signature)
+            assert result is True
+
+    def test_manual_verify_signature_invalid_format(self):
+        """手動署名検証（不正な形式）"""
+        client = StripeClient(
+            api_key="sk_test_dummy",
+            webhook_secret="whsec_test",
+            test_mode=False,
+        )
+
+        # Stripeライブラリがない場合のみテスト
+        if client._stripe is None:
+            result = client._manual_verify_signature(b"test", "invalid_signature")
+            assert result is False
+
+    def test_manual_verify_signature_no_timestamp(self):
+        """手動署名検証（タイムスタンプなし）"""
+        client = StripeClient(
+            api_key="sk_test_dummy",
+            webhook_secret="whsec_test",
+            test_mode=False,
+        )
+
+        if client._stripe is None:
+            # タイムスタンプがない場合
+            result = client._manual_verify_signature(b"test", "v1=signature_only")
+            assert result is False
+
+    def test_manual_verify_signature_no_v1(self):
+        """手動署名検証（v1署名なし）"""
+        client = StripeClient(
+            api_key="sk_test_dummy",
+            webhook_secret="whsec_test",
+            test_mode=False,
+        )
+
+        if client._stripe is None:
+            # v1署名がない場合
+            result = client._manual_verify_signature(b"test", "t=12345")
+            assert result is False
+
+    def test_verify_webhook_without_secret(self):
+        """Webhookシークレット未設定時"""
+        client = StripeClient(
+            api_key="sk_test_dummy",
+            webhook_secret="",
+            test_mode=False,
+        )
+
+        # stripeライブラリがインストールされていてもシークレットなしはFalse
+        if not client._test_mode:
+            result = client.verify_webhook_signature(b"test", "t=123,v1=abc")
+            assert result is False
+
+
+class TestStripeClientSingletonAndConfig:
+    """Stripeクライアントのシングルトンと設定テスト"""
+
+    def test_get_stripe_client_singleton(self):
+        """シングルトンインスタンス取得"""
+        from src.api.payment.stripe_client import get_stripe_client, _client
+
+        # 既存のクライアントをリセット
+        import src.api.payment.stripe_client as stripe_module
+        stripe_module._client = None
+
+        client1 = get_stripe_client(test_mode=True)
+        client2 = get_stripe_client(test_mode=True)
+
+        # 同一インスタンスであること
+        assert client1 is client2
+
+        # リセット
+        stripe_module._client = None
+
+    def test_stripe_client_mock_id_generation(self):
+        """モックID生成"""
+        client = StripeClient(test_mode=True)
+
+        id1 = client._generate_mock_id("test")
+        id2 = client._generate_mock_id("test")
+
+        assert id1.startswith("test_")
+        assert id2.startswith("test_")
+        assert id1 != id2  # ユニークであること
+
+    def test_stripe_client_test_mode_enabled_by_default(self):
+        """テストモードがデフォルトで有効"""
+        client = StripeClient()
+        assert client._test_mode is True
+
+
+class TestStripeClientErrorCases:
+    """Stripeクライアントのエラーケース"""
+
+    def test_create_customer_no_api_error(self):
+        """APIキーなしで顧客作成を試行"""
+        # テストモードではエラーにならない
+        client = StripeClient(test_mode=True)
+        customer = client.create_customer(email="test@example.com")
+        assert customer is not None
+
+    def test_create_subscription_no_api_error(self):
+        """APIキーなしでサブスクリプション作成を試行"""
+        client = StripeClient(test_mode=True)
+        customer = client.create_customer(email="test@example.com")
+        sub = client.create_subscription(
+            customer_id=customer["id"],
+            price_id="price_test",
+        )
+        assert sub is not None
+
+    def test_checkout_session_without_customer(self):
+        """顧客ID なしでCheckoutSession作成"""
+        client = StripeClient(test_mode=True)
+        session = client.create_checkout_session(
+            price_id="price_test",
+            mode="payment",
+        )
+        assert session["customer"] is None
+        assert session["id"].startswith("cs_test_")
