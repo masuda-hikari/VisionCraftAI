@@ -299,17 +299,13 @@
 
 ## 次のアクション
 
-### 🟢 即時実行可能（認証情報不要）
-1. **無料プラットフォームへのデプロイ（デモモード）**
-   - **Render.com（推奨）**: GitHubリポジトリを連携するだけ
-     ```bash
-     # render.yamlが自動検出される
-     # https://dashboard.render.com/ でリポジトリ連携
-     ```
-   - **Vercel**: `npx vercel`
-   - **Railway**: `railway up`
+### 🔴 ブロッカー（人間対応必要）
 
-### 🔴 ブロッカー解消（人間対応必要）
+1. **GitHubリポジトリをPublicに変更**（デプロイ前提）
+   - 現状: リポジトリが非公開またはアクセス不可
+   - 対応: GitHub Settings > Danger Zone > Change visibility > Public
+   - または: Render.comでPrivateリポジトリ連携設定
+
 2. **Google Cloud認証情報の設定**（本番AI生成機能用）
    ```bash
    gcloud auth login
@@ -321,20 +317,26 @@
    python scripts/setup_stripe.py --api-key sk_live_xxx --webhook-url https://your-domain.com
    ```
 
-### ✅ ブロッカー解消後の自動実行
-4. **本番デプロイ実行**
+### 🟢 ブロッカー解消後即時実行
+4. **Render.comでデモモードデプロイ**
+   - GitHubリポジトリを連携
+   - render.yamlが自動検出
+   - DEMO_MODE=true で起動
+
+5. **本番デプロイ実行**（Google Cloud/Stripe設定後）
    ```bash
    python scripts/deploy_cloudrun.py --project YOUR_PROJECT_ID
    ```
 
 ### 📋 デプロイ後の作業
-5. カスタムドメイン設定・SSL証明書
-6. Product Huntローンチ
-7. マーケティング・初期ユーザー獲得
+6. カスタムドメイン設定・SSL証明書
+7. Product Huntローンチ
+8. マーケティング・初期ユーザー獲得
 
 ## ブロッカー
-- Google Cloud サービスアカウント認証情報が必要
-- Stripe本番APIキー・Webhookシークレットが必要
+- **GitHubリポジトリ公開設定**: API確認で404（非公開またはアクセス不可）
+- **Google Cloud認証情報**: サービスアカウント認証情報が必要
+- **Stripe本番APIキー**: Webhookシークレットが必要
 
 ## 実装済みモジュール
 ### コア
