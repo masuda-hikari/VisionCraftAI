@@ -10,13 +10,13 @@
 
 ## 短い説明（60文字以内）
 
-Google Gemini 3で高品質AI画像を生成。APIファースト設計。
+最先端AIで高品質画像を生成。APIファースト設計。
 
 ---
 
 ## 説明文（500文字）
 
-VisionCraftAIは、最先端のGoogle Gemini 3モデルを活用したAI画像生成プラットフォームです。
+VisionCraftAIは、最先端AI技術を活用した画像生成プラットフォームです。
 
 **開発者向けの特徴:**
 - 完全なRESTful API
@@ -40,7 +40,7 @@ VisionCraftAIは、最先端のGoogle Gemini 3モデルを活用したAI画像�
 
 ## ハッシュタグ
 
-#AIArt #ImageGeneration #GoogleGemini #DeveloperTools #API #SaaS #StartupLaunch
+#AIArt #ImageGeneration #DeveloperTools #API #SaaS #StartupLaunch
 
 ---
 
@@ -56,7 +56,7 @@ VisionCraftAIを紹介できることを嬉しく思います。
 **主な特徴:**
 1. **シンプルなAPI** - 1つのエンドポイントで画像生成
 2. **透明な価格** - 月額$9.99から、隠れた費用なし
-3. **高品質出力** - Google Gemini 3の最新技術
+3. **高品質出力** - 最先端AIの最新技術
 4. **本番対応** - Prometheus/Kubernetesフルサポート
 
 **デモを試してみてください！**
@@ -70,7 +70,7 @@ https://visioncraftai.example.com でAPIキーなしで試せます。
 
 ### Q: 他のAI画像生成サービスとの違いは？
 
-**A:** VisionCraftAIは「APIファースト」で設計されています。開発者が自分のアプリケーションに簡単に統合できることを最優先にしました。また、Google Gemini 3という最新モデルを採用しており、高品質な出力を提供します。
+**A:** VisionCraftAIは「APIファースト」で設計されています。開発者が自分のアプリケーションに簡単に統合できることを最優先にしました。また、最先端AIモデルを採用しており、高品質な出力を提供します。
 
 ### Q: 無料プランでできることは？
 
@@ -128,7 +128,7 @@ https://visioncraftai.example.com でAPIキーなしで試せます。
 ```
 VisionCraftAI をProduct Huntにローンチしました！
 
-Google Gemini 3で高品質AI画像を生成できるAPIファーストプラットフォームです。
+最先端AIで高品質画像を生成できるAPIファーストプラットフォームです。
 
 月額$9.99から、開発者向けの完全なAPIアクセス。
 
@@ -143,7 +143,7 @@ https://producthunt.com/posts/visioncraftai
 ```
 本日、VisionCraftAIをProduct Huntにローンチしました。
 
-Google Gemini 3モデルを活用したAI画像生成プラットフォームです。
+最先端AI技術を活用した画像生成プラットフォームです。
 
 **開発者向けの特徴:**
 - RESTful API
