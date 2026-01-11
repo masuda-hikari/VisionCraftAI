@@ -233,6 +233,221 @@ class TestEmailService:
         assert success is False
         assert "not configured" in error
 
+    @pytest.mark.asyncio
+    async def test_email_service_with_text_body(self):
+        """テキスト本文付き送信テスト（開発モード）"""
+        config = EmailConfig(
+            smtp_host="smtp.example.com",
+            smtp_user="user",
+            smtp_password="pass",
+            from_email="noreply@example.com",
+            enabled=False,  # 開発モード
+        )
+        service = EmailService(config)
+
+        success, error = await service.send(
+            to_email="test@example.com",
+            subject="Test",
+            html_body="<p>Test</p>",
+            text_body="Test plain text",
+            reply_to="reply@example.com",
+            metadata={"key": "value"},
+        )
+
+        assert success is True
+        assert error is None
+
+    @pytest.mark.asyncio
+    async def test_email_service_smtp_auth_error(self):
+        """SMTP認証エラーテスト"""
+        import smtplib
+
+        config = EmailConfig(
+            smtp_host="smtp.example.com",
+            smtp_user="user",
+            smtp_password="pass",
+            from_email="noreply@example.com",
+            enabled=True,
+        )
+        service = EmailService(config)
+
+        with patch.object(
+            service, '_send_smtp',
+            side_effect=smtplib.SMTPAuthenticationError(535, b"Auth failed")
+        ):
+            success, error = await service.send(
+                to_email="test@example.com",
+                subject="Test",
+                html_body="<p>Test</p>",
+            )
+
+        assert success is False
+        assert "authentication" in error.lower()
+
+    @pytest.mark.asyncio
+    async def test_email_service_smtp_recipient_refused(self):
+        """SMTP受信者拒否エラーテスト"""
+        import smtplib
+
+        config = EmailConfig(
+            smtp_host="smtp.example.com",
+            smtp_user="user",
+            smtp_password="pass",
+            from_email="noreply@example.com",
+            enabled=True,
+        )
+        service = EmailService(config)
+
+        with patch.object(
+            service, '_send_smtp',
+            side_effect=smtplib.SMTPRecipientsRefused(
+                {"test@example.com": (550, b"User unknown")}
+            )
+        ):
+            success, error = await service.send(
+                to_email="test@example.com",
+                subject="Test",
+                html_body="<p>Test</p>",
+            )
+
+        assert success is False
+        assert "refused" in error.lower()
+
+    @pytest.mark.asyncio
+    async def test_email_service_smtp_exception(self):
+        """SMTPエラーテスト"""
+        import smtplib
+
+        config = EmailConfig(
+            smtp_host="smtp.example.com",
+            smtp_user="user",
+            smtp_password="pass",
+            from_email="noreply@example.com",
+            enabled=True,
+        )
+        service = EmailService(config)
+
+        with patch.object(
+            service, '_send_smtp',
+            side_effect=smtplib.SMTPException("Connection failed")
+        ):
+            success, error = await service.send(
+                to_email="test@example.com",
+                subject="Test",
+                html_body="<p>Test</p>",
+            )
+
+        assert success is False
+        assert "SMTP error" in error
+
+    @pytest.mark.asyncio
+    async def test_email_service_general_exception(self):
+        """一般的な例外テスト"""
+        config = EmailConfig(
+            smtp_host="smtp.example.com",
+            smtp_user="user",
+            smtp_password="pass",
+            from_email="noreply@example.com",
+            enabled=True,
+        )
+        service = EmailService(config)
+
+        with patch.object(
+            service, '_send_smtp',
+            side_effect=Exception("Unexpected error")
+        ):
+            success, error = await service.send(
+                to_email="test@example.com",
+                subject="Test",
+                html_body="<p>Test</p>",
+            )
+
+        assert success is False
+        assert "Failed to send email" in error
+
+    @pytest.mark.asyncio
+    async def test_email_service_batch_send(self):
+        """バッチ送信テスト（開発モード）"""
+        config = EmailConfig(
+            smtp_host="smtp.example.com",
+            smtp_user="user",
+            smtp_password="pass",
+            from_email="noreply@example.com",
+            enabled=False,  # 開発モード
+        )
+        service = EmailService(config)
+
+        recipients = [
+            ("user1@example.com", "Subject 1", "<p>Body 1</p>", "Text 1"),
+            ("user2@example.com", "Subject 2", "<p>Body 2</p>", None),
+        ]
+
+        results = await service.send_batch(recipients)
+
+        assert len(results) == 2
+        assert all(success for _, success, _ in results)
+
+    def test_email_service_connection_test_not_configured(self):
+        """接続テスト（未設定）"""
+        config = EmailConfig(
+            smtp_host="",
+            smtp_user="",
+            smtp_password="",
+            from_email="",
+        )
+        service = EmailService(config)
+
+        success, error = service.test_connection()
+
+        assert success is False
+        assert "not configured" in error
+
+    def test_email_service_connection_test_ssl_error(self):
+        """接続テスト（SSL接続エラー）"""
+        import smtplib
+
+        config = EmailConfig(
+            smtp_host="smtp.example.com",
+            smtp_port=465,
+            smtp_user="user",
+            smtp_password="pass",
+            from_email="noreply@example.com",
+            use_ssl=True,
+            use_tls=False,
+        )
+        service = EmailService(config)
+
+        with patch('smtplib.SMTP_SSL') as mock_smtp:
+            mock_smtp.side_effect = Exception("SSL connection failed")
+
+            success, error = service.test_connection()
+
+        assert success is False
+        assert "SSL connection failed" in error
+
+    def test_email_service_connection_test_tls_error(self):
+        """接続テスト（TLS接続エラー）"""
+        import smtplib
+
+        config = EmailConfig(
+            smtp_host="smtp.example.com",
+            smtp_port=587,
+            smtp_user="user",
+            smtp_password="pass",
+            from_email="noreply@example.com",
+            use_ssl=False,
+            use_tls=True,
+        )
+        service = EmailService(config)
+
+        with patch('smtplib.SMTP') as mock_smtp:
+            mock_smtp.side_effect = Exception("TLS connection failed")
+
+            success, error = service.test_connection()
+
+        assert success is False
+        assert "TLS connection failed" in error
+
 
 # --- NotificationManagerテスト ---
 class TestNotificationManager:
