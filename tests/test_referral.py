@@ -408,3 +408,156 @@ class TestReferralRewards:
         rewards = REFERRAL_REWARDS["premium"]
         assert rewards["referrer_credits"] == 10
         assert rewards["referee_credits"] == 10
+
+
+# === APIルートテスト ===
+from fastapi.testclient import TestClient
+from src.api.app import app
+
+
+class TestReferralRoutes:
+    """リファラルAPIルートのテスト"""
+
+    @pytest.fixture
+    def client(self):
+        """テストクライアント"""
+        return TestClient(app)
+
+    @pytest.fixture
+    def api_key(self, client):
+        """テスト用APIキー取得"""
+        response = client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Test Referral"}
+        )
+        return response.json()["api_key"]
+
+    def test_create_referral_code(self, client, api_key):
+        """紹介コード作成"""
+        response = client.post(
+            "/api/v1/referral/code",
+            headers={"X-API-Key": api_key}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "code" in data
+        assert len(data["code"]) == 8
+
+    def test_get_referral_code(self, client, api_key):
+        """紹介コード取得"""
+        # 作成
+        client.post(
+            "/api/v1/referral/code",
+            headers={"X-API-Key": api_key}
+        )
+        # 取得
+        response = client.get(
+            "/api/v1/referral/code",
+            headers={"X-API-Key": api_key}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "code" in data
+
+    def test_validate_code(self, client, api_key):
+        """コード検証"""
+        # コード作成
+        create_response = client.post(
+            "/api/v1/referral/code",
+            headers={"X-API-Key": api_key}
+        )
+        code = create_response.json()["code"]
+
+        # 検証
+        response = client.get(
+            f"/api/v1/referral/validate?code={code}"
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["valid"] is True
+
+    def test_validate_invalid_code(self, client):
+        """無効なコード検証"""
+        response = client.get(
+            "/api/v1/referral/validate?code=INVALID1"
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["valid"] is False
+
+    def test_apply_code(self, client, api_key):
+        """コード適用"""
+        # 紹介者のコード作成
+        create_response = client.post(
+            "/api/v1/referral/code",
+            headers={"X-API-Key": api_key}
+        )
+        code = create_response.json()["code"]
+
+        # 別のユーザーを作成
+        new_key_response = client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Referee User"}
+        )
+        referee_key = new_key_response.json()["api_key"]
+
+        # コード適用
+        response = client.post(
+            "/api/v1/referral/apply",
+            headers={"X-API-Key": referee_key},
+            json={"code": code}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["success"] is True
+
+    def test_apply_invalid_code(self, client, api_key):
+        """無効なコード適用"""
+        response = client.post(
+            "/api/v1/referral/apply",
+            headers={"X-API-Key": api_key},
+            json={"code": "INVALID1"}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["success"] is False
+
+    def test_get_referrals(self, client, api_key):
+        """リファラル一覧取得"""
+        response = client.get(
+            "/api/v1/referral/referrals",
+            headers={"X-API-Key": api_key}
+        )
+        assert response.status_code == 200
+        assert isinstance(response.json(), list)
+
+    def test_get_stats(self, client, api_key):
+        """統計取得"""
+        response = client.get(
+            "/api/v1/referral/stats",
+            headers={"X-API-Key": api_key}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "total_referrals" in data
+
+    def test_get_leaderboard(self, client):
+        """ランキング取得"""
+        response = client.get(
+            "/api/v1/referral/leaderboard"
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "leaderboard" in data
+        assert isinstance(data["leaderboard"], list)
+
+    def test_get_pending_rewards(self, client, api_key):
+        """報酬待ち取得"""
+        response = client.get(
+            "/api/v1/referral/pending-rewards",
+            headers={"X-API-Key": api_key}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "referrals" in data
+        assert isinstance(data["referrals"], list)

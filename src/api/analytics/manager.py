@@ -220,8 +220,9 @@ class ABTestManager:
             return None
 
         # ユーザーIDをハッシュして0-100の値を生成
+        # セキュリティ目的ではないため usedforsecurity=False を指定
         hash_input = f"{test.id}:{user_id}"
-        hash_value = int(hashlib.md5(hash_input.encode()).hexdigest(), 16) % 100
+        hash_value = int(hashlib.md5(hash_input.encode(), usedforsecurity=False).hexdigest(), 16) % 100
 
         # 重みに基づいてバリアントを選択
         cumulative_weight = 0.0
