@@ -416,3 +416,208 @@ class TestOnboardingHelp:
             assert "title" in help_info
             assert "description" in help_info
             assert "action" in help_info
+
+
+# === APIルートテスト ===
+from fastapi.testclient import TestClient
+from src.api.app import app
+
+
+class TestOnboardingRoutes:
+    """オンボーディングAPIルートのテスト"""
+
+    @pytest.fixture
+    def client(self):
+        """テストクライアント"""
+        return TestClient(app)
+
+    @pytest.fixture
+    def api_key(self, client):
+        """テスト用APIキー取得"""
+        response = client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Test Onboarding"}
+        )
+        return response.json()["api_key"]
+
+    def test_welcome_endpoint(self, client, api_key):
+        """ウェルカムエンドポイント"""
+        response = client.get(
+            "/api/v1/onboarding/welcome",
+            headers={"X-API-Key": api_key}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "message" in data
+        assert "has_trial" in data
+        assert "tips" in data
+
+    def test_welcome_without_auth(self, client):
+        """認証なしでウェルカム取得"""
+        response = client.get("/api/v1/onboarding/welcome")
+        assert response.status_code == 401
+
+    def test_get_progress(self, client, api_key):
+        """進捗取得"""
+        response = client.get(
+            "/api/v1/onboarding/progress",
+            headers={"X-API-Key": api_key}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "current_step" in data
+        assert "checklist" in data
+        assert "completion_rate" in data
+
+    def test_get_hint(self, client, api_key):
+        """ヒント取得"""
+        response = client.get(
+            "/api/v1/onboarding/hint",
+            headers={"X-API-Key": api_key}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "step" in data
+        assert "title" in data
+        assert "description" in data
+
+    def test_complete_step(self, client, api_key):
+        """ステップ完了"""
+        response = client.post(
+            "/api/v1/onboarding/step/complete",
+            headers={"X-API-Key": api_key},
+            json={"step": "welcome"}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "welcome" in data["completed_steps"]
+
+    def test_complete_step_invalid(self, client, api_key):
+        """無効なステップ完了"""
+        response = client.post(
+            "/api/v1/onboarding/step/complete",
+            headers={"X-API-Key": api_key},
+            json={"step": "invalid_step"}
+        )
+        assert response.status_code == 400
+
+    def test_complete_checklist(self, client, api_key):
+        """チェックリスト完了"""
+        response = client.post(
+            "/api/v1/onboarding/checklist/complete",
+            headers={"X-API-Key": api_key},
+            json={"item": "api_key_created"}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["checklist"]["api_key_created"] is True
+
+    def test_complete_checklist_invalid(self, client, api_key):
+        """無効なチェックリスト項目完了"""
+        response = client.post(
+            "/api/v1/onboarding/checklist/complete",
+            headers={"X-API-Key": api_key},
+            json={"item": "invalid_item"}
+        )
+        assert response.status_code == 400
+
+    def test_start_trial(self, client, api_key):
+        """トライアル開始"""
+        response = client.post(
+            "/api/v1/onboarding/trial/start",
+            headers={"X-API-Key": api_key}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["is_active"] is True
+        assert "trial_id" in data
+
+    def test_start_trial_already_active(self, client, api_key):
+        """アクティブなトライアルがある場合"""
+        # 1回目
+        client.post(
+            "/api/v1/onboarding/trial/start",
+            headers={"X-API-Key": api_key}
+        )
+        # 2回目
+        response = client.post(
+            "/api/v1/onboarding/trial/start",
+            headers={"X-API-Key": api_key}
+        )
+        assert response.status_code == 400
+
+    def test_get_trial(self, client, api_key):
+        """トライアル取得"""
+        # まずトライアル開始
+        client.post(
+            "/api/v1/onboarding/trial/start",
+            headers={"X-API-Key": api_key}
+        )
+        response = client.get(
+            "/api/v1/onboarding/trial",
+            headers={"X-API-Key": api_key}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "trial_id" in data
+        assert "remaining_credits" in data
+
+    def test_get_trial_not_started(self, client):
+        """トライアル未開始の場合"""
+        # 新しいAPIキーを作成
+        response = client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "No Trial User"}
+        )
+        new_key = response.json()["api_key"]
+
+        response = client.get(
+            "/api/v1/onboarding/trial",
+            headers={"X-API-Key": new_key}
+        )
+        assert response.status_code == 404
+
+    def test_use_trial_credits(self, client, api_key):
+        """トライアルクレジット使用"""
+        # トライアル開始
+        client.post(
+            "/api/v1/onboarding/trial/start",
+            headers={"X-API-Key": api_key}
+        )
+        response = client.post(
+            "/api/v1/onboarding/trial/use-credits",
+            headers={"X-API-Key": api_key},
+            json={"amount": 3}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["success"] is True
+        assert data["remaining_credits"] >= 0
+
+    def test_convert_trial(self, client, api_key):
+        """トライアル転換"""
+        # トライアル開始
+        client.post(
+            "/api/v1/onboarding/trial/start",
+            headers={"X-API-Key": api_key}
+        )
+        response = client.post(
+            "/api/v1/onboarding/trial/convert",
+            headers={"X-API-Key": api_key},
+            json={"plan_id": "pro"}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["success"] is True
+        assert data["converted_to"] == "pro"
+
+    def test_trial_stats(self, client, api_key):
+        """トライアル統計"""
+        response = client.get(
+            "/api/v1/onboarding/trial/stats",
+            headers={"X-API-Key": api_key}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "total_trials" in data
+        assert "conversion_rate" in data
