@@ -2,7 +2,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)](https://fastapi.tiangolo.com/)
-[![Tests](https://img.shields.io/badge/Tests-420%20passed-brightgreen.svg)](#テスト)
+[![Tests](https://img.shields.io/badge/Tests-598%20passed-brightgreen.svg)](#テスト)
 [![Coverage](https://img.shields.io/badge/Coverage-80%25-brightgreen.svg)](#テスト)
 [![License](https://img.shields.io/badge/License-Proprietary-red.svg)](#ライセンス)
 
