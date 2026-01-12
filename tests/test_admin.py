@@ -665,3 +665,200 @@ class TestAdminDashboardAdvanced:
         stats = dashboard.get_contact_stats()
         assert stats["total"] == 1
         assert stats["today"] == 0  # 不正な日付のためカウントされない
+
+
+class TestAdminRoutesExceptionHandling:
+    """管理者ルートの例外ハンドリングテスト（依存性注入オーバーライド）"""
+
+    @pytest.fixture
+    def admin_headers(self):
+        """管理者認証ヘッダー"""
+        secret = os.environ.get("ADMIN_SECRET", "admin_default_secret_change_me")
+        return {"X-Admin-Secret": secret}
+
+    def _create_error_dashboard(self, method_name: str, error_msg: str):
+        """エラーを発生させるダッシュボードを作成"""
+        from unittest.mock import MagicMock
+        mock_dashboard = MagicMock(spec=AdminDashboard)
+
+        def raise_error(*args, **kwargs):
+            raise Exception(error_msg)
+
+        getattr(mock_dashboard, method_name).side_effect = raise_error
+        return mock_dashboard
+
+    def test_dashboard_exception_handling(self, admin_headers):
+        """ダッシュボード例外ハンドリング"""
+        from src.api.admin.routes import get_dashboard
+
+        def error_dashboard():
+            return self._create_error_dashboard("get_dashboard_summary", "テストエラー")
+
+        app.dependency_overrides[get_dashboard] = error_dashboard
+        try:
+            client = TestClient(app)
+            response = client.get("/api/v1/admin/dashboard", headers=admin_headers)
+            assert response.status_code == 500
+            assert "テストエラー" in response.json()["detail"]
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_revenue_exception_handling(self, admin_headers):
+        """収益メトリクス例外ハンドリング"""
+        from src.api.admin.routes import get_dashboard
+
+        def error_dashboard():
+            return self._create_error_dashboard("get_revenue_metrics", "収益エラー")
+
+        app.dependency_overrides[get_dashboard] = error_dashboard
+        try:
+            client = TestClient(app)
+            response = client.get("/api/v1/admin/revenue", headers=admin_headers)
+            assert response.status_code == 500
+            assert "収益エラー" in response.json()["detail"]
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_users_exception_handling(self, admin_headers):
+        """ユーザーメトリクス例外ハンドリング"""
+        from src.api.admin.routes import get_dashboard
+
+        def error_dashboard():
+            return self._create_error_dashboard("get_user_metrics", "ユーザーエラー")
+
+        app.dependency_overrides[get_dashboard] = error_dashboard
+        try:
+            client = TestClient(app)
+            response = client.get("/api/v1/admin/users", headers=admin_headers)
+            assert response.status_code == 500
+            assert "ユーザーエラー" in response.json()["detail"]
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_usage_exception_handling(self, admin_headers):
+        """使用量メトリクス例外ハンドリング"""
+        from src.api.admin.routes import get_dashboard
+
+        def error_dashboard():
+            return self._create_error_dashboard("get_usage_metrics", "使用量エラー")
+
+        app.dependency_overrides[get_dashboard] = error_dashboard
+        try:
+            client = TestClient(app)
+            response = client.get("/api/v1/admin/usage", headers=admin_headers)
+            assert response.status_code == 500
+            assert "使用量エラー" in response.json()["detail"]
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_plans_exception_handling(self, admin_headers):
+        """プラン分布例外ハンドリング"""
+        from src.api.admin.routes import get_dashboard
+
+        def error_dashboard():
+            return self._create_error_dashboard("get_plan_distribution", "プランエラー")
+
+        app.dependency_overrides[get_dashboard] = error_dashboard
+        try:
+            client = TestClient(app)
+            response = client.get("/api/v1/admin/plans", headers=admin_headers)
+            assert response.status_code == 500
+            assert "プランエラー" in response.json()["detail"]
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_users_list_exception_handling(self, admin_headers):
+        """ユーザー一覧例外ハンドリング"""
+        from src.api.admin.routes import get_dashboard
+
+        def error_dashboard():
+            return self._create_error_dashboard("get_user_list", "一覧エラー")
+
+        app.dependency_overrides[get_dashboard] = error_dashboard
+        try:
+            client = TestClient(app)
+            response = client.get("/api/v1/admin/users/list", headers=admin_headers)
+            assert response.status_code == 500
+            assert "一覧エラー" in response.json()["detail"]
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_revenue_chart_exception_handling(self, admin_headers):
+        """収益チャート例外ハンドリング"""
+        from src.api.admin.routes import get_dashboard
+
+        def error_dashboard():
+            return self._create_error_dashboard("get_revenue_chart_data", "チャートエラー")
+
+        app.dependency_overrides[get_dashboard] = error_dashboard
+        try:
+            client = TestClient(app)
+            response = client.get("/api/v1/admin/charts/revenue", headers=admin_headers)
+            assert response.status_code == 500
+            assert "チャートエラー" in response.json()["detail"]
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_usage_chart_exception_handling(self, admin_headers):
+        """使用量チャート例外ハンドリング"""
+        from src.api.admin.routes import get_dashboard
+
+        def error_dashboard():
+            return self._create_error_dashboard("get_usage_chart_data", "使用量チャートエラー")
+
+        app.dependency_overrides[get_dashboard] = error_dashboard
+        try:
+            client = TestClient(app)
+            response = client.get("/api/v1/admin/charts/usage", headers=admin_headers)
+            assert response.status_code == 500
+            assert "使用量チャートエラー" in response.json()["detail"]
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_health_exception_handling(self, admin_headers):
+        """システムヘルス例外ハンドリング"""
+        from src.api.admin.routes import get_dashboard
+
+        def error_dashboard():
+            return self._create_error_dashboard("get_system_health", "ヘルスエラー")
+
+        app.dependency_overrides[get_dashboard] = error_dashboard
+        try:
+            client = TestClient(app)
+            response = client.get("/api/v1/admin/health", headers=admin_headers)
+            assert response.status_code == 500
+            assert "ヘルスエラー" in response.json()["detail"]
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_contacts_stats_exception_handling(self, admin_headers):
+        """お問い合わせ統計例外ハンドリング"""
+        from src.api.admin.routes import get_dashboard
+
+        def error_dashboard():
+            return self._create_error_dashboard("get_contact_stats", "統計エラー")
+
+        app.dependency_overrides[get_dashboard] = error_dashboard
+        try:
+            client = TestClient(app)
+            response = client.get("/api/v1/admin/contacts/stats", headers=admin_headers)
+            assert response.status_code == 500
+            assert "統計エラー" in response.json()["detail"]
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_export_exception_handling(self, admin_headers):
+        """エクスポート例外ハンドリング"""
+        from src.api.admin.routes import get_dashboard
+
+        def error_dashboard():
+            return self._create_error_dashboard("get_dashboard_summary", "エクスポートエラー")
+
+        app.dependency_overrides[get_dashboard] = error_dashboard
+        try:
+            client = TestClient(app)
+            response = client.get("/api/v1/admin/export", headers=admin_headers)
+            assert response.status_code == 500
+            assert "エクスポートエラー" in response.json()["detail"]
+        finally:
+            app.dependency_overrides.clear()

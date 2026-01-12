@@ -897,3 +897,265 @@ class TestUnsubscribe:
 
         assert response.status_code == 200
         assert "変更はありません" in response.json()["message"]
+
+    def test_unsubscribe_all(self):
+        """全配信停止テスト"""
+        from src.api.notifications.manager import get_notification_manager
+        manager = get_notification_manager()
+        manager.create_default_preference("unsub_all_test", "test@example.com")
+
+        response = client.post(
+            "/api/v1/notifications/unsubscribe",
+            json={"user_id": "unsub_all_test", "unsubscribe_all": True},
+        )
+
+        assert response.status_code == 200
+        assert "全て" in response.json()["message"]
+
+        # 設定が更新されたことを確認
+        pref = manager.get_preference("unsub_all_test")
+        assert pref.marketing_emails is False
+        assert pref.weekly_summary is False
+
+    def test_unsubscribe_specific_types(self):
+        """特定タイプの配信停止テスト"""
+        from src.api.notifications.manager import get_notification_manager
+        manager = get_notification_manager()
+        manager.create_default_preference("unsub_type_test", "test@example.com")
+
+        response = client.post(
+            "/api/v1/notifications/unsubscribe",
+            json={
+                "user_id": "unsub_type_test",
+                "notification_types": ["weekly_summary", "monthly_report"],
+            },
+        )
+
+        assert response.status_code == 200
+        assert "2種類" in response.json()["message"]
+
+        # 設定が更新されたことを確認
+        pref = manager.get_preference("unsub_type_test")
+        assert pref.weekly_summary is False
+        assert pref.monthly_report is False
+
+    def test_unsubscribe_usage_alerts(self):
+        """使用量アラート配信停止テスト"""
+        from src.api.notifications.manager import get_notification_manager
+        manager = get_notification_manager()
+        manager.create_default_preference("unsub_usage_test", "test@example.com")
+
+        response = client.post(
+            "/api/v1/notifications/unsubscribe",
+            json={
+                "user_id": "unsub_usage_test",
+                "notification_types": ["usage_warning", "credits_low"],
+            },
+        )
+
+        assert response.status_code == 200
+
+        pref = manager.get_preference("unsub_usage_test")
+        assert pref.usage_alerts is False
+
+    def test_unsubscribe_referral(self):
+        """紹介通知配信停止テスト"""
+        from src.api.notifications.manager import get_notification_manager
+        manager = get_notification_manager()
+        manager.create_default_preference("unsub_ref_test", "test@example.com")
+
+        response = client.post(
+            "/api/v1/notifications/unsubscribe",
+            json={
+                "user_id": "unsub_ref_test",
+                "notification_types": ["referral_signed_up"],
+            },
+        )
+
+        assert response.status_code == 200
+
+        pref = manager.get_preference("unsub_ref_test")
+        assert pref.referral_notifications is False
+
+
+class TestNotificationRoutesErrorCases:
+    """通知ルートのエラーケーステスト（カバレッジ向上）"""
+
+    def test_get_log_detail_not_found(self):
+        """存在しないログ詳細取得で404"""
+        # APIキー作成
+        response = client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Log Test"},
+        )
+        if response.status_code != 201:
+            pytest.skip("API key creation failed")
+
+        api_key = response.json()["api_key"]
+
+        log_response = client.get(
+            "/api/v1/notifications/logs/nonexistent_log_id",
+            headers={"X-API-Key": api_key},
+        )
+
+        assert log_response.status_code == 404
+        assert "not found" in log_response.json()["detail"].lower()
+
+    def test_get_log_detail_access_denied(self):
+        """他ユーザーのログ詳細取得で403"""
+        from src.api.notifications.manager import get_notification_manager
+        from src.api.notifications.models import EmailLog, EmailStatus
+
+        manager = get_notification_manager()
+
+        # 他ユーザーのログを作成
+        log = EmailLog(
+            log_id="test_log_403",
+            user_id="other_user",
+            email="other@example.com",
+            notification_type="welcome",
+            subject="Test",
+            template_id="welcome",
+        )
+        manager._logs["test_log_403"] = log
+
+        # APIキー作成
+        response = client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Access Test"},
+        )
+        if response.status_code != 201:
+            pytest.skip("API key creation failed")
+
+        api_key = response.json()["api_key"]
+
+        log_response = client.get(
+            "/api/v1/notifications/logs/test_log_403",
+            headers={"X-API-Key": api_key},
+        )
+
+        assert log_response.status_code == 403
+        assert "denied" in log_response.json()["detail"].lower()
+
+    def test_send_notification_admin_success(self):
+        """管理者による通知送信成功テスト"""
+        # Enterprise（管理者）APIキー作成
+        response = client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "enterprise", "name": "Admin Send Test"},
+        )
+        if response.status_code != 201:
+            pytest.skip("API key creation failed")
+
+        api_key = response.json()["api_key"]
+
+        # 対象ユーザーの設定を作成
+        from src.api.notifications.manager import get_notification_manager
+        manager = get_notification_manager()
+        manager.create_default_preference("target_user", "target@example.com")
+
+        # 通知送信
+        send_response = client.post(
+            "/api/v1/notifications/send",
+            headers={"X-API-Key": api_key},
+            json={
+                "user_id": "target_user",
+                "notification_type": "welcome",
+                "context": {"user_name": "Test User"},
+            },
+        )
+
+        assert send_response.status_code == 200
+        data = send_response.json()
+        # 開発モードなのでログIDは生成されるがメールは送信されない
+        assert "success" in data
+
+    def test_send_test_email_admin(self):
+        """管理者によるテストメール送信テスト"""
+        # Enterprise（管理者）APIキー作成
+        response = client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "enterprise", "name": "Test Email Admin"},
+        )
+        if response.status_code != 201:
+            pytest.skip("API key creation failed")
+
+        api_key = response.json()["api_key"]
+
+        # テストメール送信
+        send_response = client.post(
+            "/api/v1/notifications/test",
+            headers={"X-API-Key": api_key},
+            json={
+                "email": "test@example.com",
+                "notification_type": "welcome",
+                "context": {"extra": "data"},
+            },
+        )
+
+        assert send_response.status_code == 200
+        data = send_response.json()
+        assert "success" in data
+
+    def test_send_test_email_non_admin(self):
+        """非管理者によるテストメール送信で403"""
+        response = client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "Non-admin Test Email"},
+        )
+        if response.status_code != 201:
+            pytest.skip("API key creation failed")
+
+        api_key = response.json()["api_key"]
+
+        send_response = client.post(
+            "/api/v1/notifications/test",
+            headers={"X-API-Key": api_key},
+            json={
+                "email": "test@example.com",
+                "notification_type": "welcome",
+                "context": {},
+            },
+        )
+
+        assert send_response.status_code == 403
+
+    def test_update_preferences_creates_default(self):
+        """設定が存在しない場合の更新でデフォルト作成テスト"""
+        # 新しいAPIキー作成（設定が存在しない状態）
+        response = client.post(
+            "/api/v1/auth/keys",
+            json={"tier": "basic", "name": "New Pref User"},
+        )
+        if response.status_code != 201:
+            pytest.skip("API key creation failed")
+
+        api_key = response.json()["api_key"]
+
+        # 設定更新（デフォルト作成が行われる）
+        update_response = client.patch(
+            "/api/v1/notifications/preferences",
+            headers={"X-API-Key": api_key},
+            json={"weekly_summary": False},
+        )
+
+        assert update_response.status_code == 200
+        data = update_response.json()
+        assert data["weekly_summary"] is False
+
+    def test_track_open(self):
+        """メール開封トラッキングテスト"""
+        response = client.get("/api/v1/notifications/track/open/test_log_id")
+
+        assert response.status_code == 200
+        assert response.headers["content-type"] == "image/gif"
+
+    def test_track_click(self):
+        """リンククリックトラッキングテスト"""
+        response = client.get(
+            "/api/v1/notifications/track/click/test_log_id?url=https://example.com",
+            follow_redirects=False,
+        )
+
+        assert response.status_code == 302
+        assert response.headers["location"] == "https://example.com"

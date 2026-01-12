@@ -871,3 +871,157 @@ class TestGoalAPI:
         data = response.json()
         assert "goals" in data
         assert "total" in data
+
+
+class TestAnalyticsAPIErrorCases:
+    """分析APIエラーケースのテスト（カバレッジ向上）"""
+
+    def test_get_ab_test_not_found(self):
+        """存在しないA/Bテスト取得で404"""
+        response = client.get("/api/v1/analytics/ab-tests/nonexistent_test_id")
+        assert response.status_code == 404
+        assert "見つかりません" in response.json()["detail"]
+
+    def test_add_variant_to_nonexistent_test(self):
+        """存在しないテストへのバリアント追加で404"""
+        response = client.post(
+            "/api/v1/analytics/ab-tests/nonexistent_test_id/variants",
+            json={"name": "Control", "weight": 50.0},
+        )
+        assert response.status_code == 404
+        assert "見つかりません" in response.json()["detail"]
+
+    def test_add_variant_to_running_test(self):
+        """実行中テストへのバリアント追加で400"""
+        # テスト作成・開始
+        create_response = client.post(
+            "/api/v1/analytics/ab-tests",
+            json={
+                "name": "実行中テスト",
+                "variants": [
+                    {"name": "A", "weight": 50.0},
+                    {"name": "B", "weight": 50.0},
+                ],
+            },
+        )
+        test_id = create_response.json()["id"]
+        client.post(f"/api/v1/analytics/ab-tests/{test_id}/start")
+
+        # 実行中にバリアント追加
+        response = client.post(
+            f"/api/v1/analytics/ab-tests/{test_id}/variants",
+            json={"name": "C", "weight": 50.0},
+        )
+        assert response.status_code == 400
+        assert "変更" in response.json()["detail"] or "追加" in response.json()["detail"]
+
+    def test_start_nonexistent_test(self):
+        """存在しないテスト開始で404"""
+        response = client.post("/api/v1/analytics/ab-tests/nonexistent_test_id/start")
+        assert response.status_code == 404
+        assert "見つかりません" in response.json()["detail"]
+
+    def test_start_test_without_variants(self):
+        """バリアントなしテスト開始で400"""
+        create_response = client.post(
+            "/api/v1/analytics/ab-tests",
+            json={"name": "空のテスト"},
+        )
+        test_id = create_response.json()["id"]
+
+        # バリアントなしで開始
+        response = client.post(f"/api/v1/analytics/ab-tests/{test_id}/start")
+        assert response.status_code == 400
+        assert "バリアント" in response.json()["detail"]
+
+    def test_pause_nonexistent_test(self):
+        """存在しないテスト一時停止で404"""
+        response = client.post("/api/v1/analytics/ab-tests/nonexistent_test_id/pause")
+        assert response.status_code == 404
+        assert "見つかりません" in response.json()["detail"]
+
+    def test_resume_nonexistent_test(self):
+        """存在しないテスト再開で404"""
+        response = client.post("/api/v1/analytics/ab-tests/nonexistent_test_id/resume")
+        assert response.status_code == 404
+        assert "見つかりません" in response.json()["detail"]
+
+    def test_complete_nonexistent_test(self):
+        """存在しないテスト完了で404"""
+        response = client.post("/api/v1/analytics/ab-tests/nonexistent_test_id/complete")
+        assert response.status_code == 404
+        assert "見つかりません" in response.json()["detail"]
+
+    def test_get_results_nonexistent_test(self):
+        """存在しないテスト結果取得で404"""
+        response = client.get("/api/v1/analytics/ab-tests/nonexistent_test_id/results")
+        assert response.status_code == 404
+        assert "見つかりません" in response.json()["detail"]
+
+    def test_assign_variant_nonexistent_test(self):
+        """存在しないテストへのバリアント割り当てで404"""
+        response = client.post(
+            "/api/v1/analytics/ab-tests/nonexistent_test_id/assign?user_id=test_user"
+        )
+        assert response.status_code == 404
+        # エラーメッセージ: "A/Bテストが見つからないか、アクティブではありません"
+        assert "見つから" in response.json()["detail"]
+
+    def test_get_assignment_not_found(self):
+        """存在しない割り当て取得で404"""
+        # テスト作成・開始
+        create_response = client.post(
+            "/api/v1/analytics/ab-tests",
+            json={
+                "name": "割り当てテスト",
+                "variants": [
+                    {"name": "A", "weight": 50.0},
+                    {"name": "B", "weight": 50.0},
+                ],
+            },
+        )
+        test_id = create_response.json()["id"]
+        client.post(f"/api/v1/analytics/ab-tests/{test_id}/start")
+
+        # 存在しないユーザーの割り当て取得
+        response = client.get(
+            f"/api/v1/analytics/ab-tests/{test_id}/assignment?user_id=nonexistent_user"
+        )
+        assert response.status_code == 404
+        assert "見つかりません" in response.json()["detail"]
+
+    def test_record_conversion_no_assignment(self):
+        """割り当てなしコンバージョン記録で404"""
+        # テスト作成・開始
+        create_response = client.post(
+            "/api/v1/analytics/ab-tests",
+            json={
+                "name": "コンバージョンテスト",
+                "variants": [
+                    {"name": "A", "weight": 50.0},
+                    {"name": "B", "weight": 50.0},
+                ],
+            },
+        )
+        test_id = create_response.json()["id"]
+        client.post(f"/api/v1/analytics/ab-tests/{test_id}/start")
+
+        # 割り当てなしでコンバージョン記録
+        response = client.post(
+            f"/api/v1/analytics/ab-tests/{test_id}/conversion",
+            json={"user_id": "unassigned_user", "revenue": 29.99},
+        )
+        assert response.status_code == 404
+        assert "見つかりません" in response.json()["detail"]
+
+    def test_delete_nonexistent_test(self):
+        """存在しないテスト削除で404"""
+        response = client.delete("/api/v1/analytics/ab-tests/nonexistent_test_id")
+        assert response.status_code == 404
+        assert "見つかりません" in response.json()["detail"]
+
+    def test_get_goal_not_found(self):
+        """存在しないゴール取得で404"""
+        response = client.get("/api/v1/analytics/goals/nonexistent_goal_id")
+        assert response.status_code == 404
+        assert "見つかりません" in response.json()["detail"]
