@@ -1,0 +1,223 @@
+Run started:2026-01-08 20:09:26.945710+00:00
+
+Test results:
+>> Issue: [B110:try_except_pass] Try, Except, Pass detected.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b110_try_except_pass.html
+   Location: src/api\admin\dashboard.py:104:20
+103	                        subscription_revenue += price
+104	                    except Exception:
+105	                        pass
+106	
+
+--------------------------------------------------
+>> Issue: [B110:try_except_pass] Try, Except, Pass detected.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b110_try_except_pass.html
+   Location: src/api\admin\dashboard.py:130:28
+129	                                    daily_credit_revenue += tx_revenue
+130	                            except Exception:
+131	                                pass
+132	
+
+--------------------------------------------------
+>> Issue: [B110:try_except_pass] Try, Except, Pass detected.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b110_try_except_pass.html
+   Location: src/api\admin\dashboard.py:184:20
+183	                            new_users_today += 1
+184	                    except Exception:
+185	                        pass
+186	
+
+--------------------------------------------------
+>> Issue: [B110:try_except_pass] Try, Except, Pass detected.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b110_try_except_pass.html
+   Location: src/api\admin\dashboard.py:192:20
+191	                            active_users += 1
+192	                    except Exception:
+193	                        pass
+194	
+
+--------------------------------------------------
+>> Issue: [B110:try_except_pass] Try, Except, Pass detected.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b110_try_except_pass.html
+   Location: src/api\admin\dashboard.py:248:20
+247	                                daily_errors += 1
+248	                    except Exception:
+249	                        pass
+250	
+
+--------------------------------------------------
+>> Issue: [B110:try_except_pass] Try, Except, Pass detected.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b110_try_except_pass.html
+   Location: src/api\admin\dashboard.py:332:20
+331	                        created_at = datetime.fromisoformat(created_str.replace("Z", "+00:00"))
+332	                    except Exception:
+333	                        pass
+334	
+
+--------------------------------------------------
+>> Issue: [B110:try_except_pass] Try, Except, Pass detected.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b110_try_except_pass.html
+   Location: src/api\admin\dashboard.py:338:20
+337	                        last_active = datetime.fromisoformat(last_used_str.replace("Z", "+00:00"))
+338	                    except Exception:
+339	                        pass
+340	
+
+--------------------------------------------------
+>> Issue: [B110:try_except_pass] Try, Except, Pass detected.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b110_try_except_pass.html
+   Location: src/api\admin\dashboard.py:403:20
+402	                            chart_data[date_str]["revenue"] += price
+403	                    except Exception:
+404	                        pass
+405	
+
+--------------------------------------------------
+>> Issue: [B110:try_except_pass] Try, Except, Pass detected.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b110_try_except_pass.html
+   Location: src/api\admin\dashboard.py:423:28
+422	                                    chart_data[date_str]["revenue"] += tx_revenue
+423	                            except Exception:
+424	                                pass
+425	
+
+--------------------------------------------------
+>> Issue: [B110:try_except_pass] Try, Except, Pass detected.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b110_try_except_pass.html
+   Location: src/api\admin\dashboard.py:470:20
+469	                                chart_data[date_str]["errors"] += 1
+470	                    except Exception:
+471	                        pass
+472	
+
+--------------------------------------------------
+>> Issue: [B110:try_except_pass] Try, Except, Pass detected.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b110_try_except_pass.html
+   Location: src/api\admin\dashboard.py:513:20
+512	                                response_count += 1
+513	                    except Exception:
+514	                        pass
+515	
+
+--------------------------------------------------
+>> Issue: [B110:try_except_pass] Try, Except, Pass detected.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b110_try_except_pass.html
+   Location: src/api\admin\dashboard.py:568:20
+567	                            week_count += 1
+568	                    except Exception:
+569	                        pass
+570	
+
+--------------------------------------------------
+>> Issue: [B104:hardcoded_bind_all_interfaces] Possible binding to all interfaces.
+   Severity: Medium   Confidence: Medium
+   CWE: CWE-605 (https://cwe.mitre.org/data/definitions/605.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b104_hardcoded_bind_all_interfaces.html
+   Location: src/api\app.py:207:27
+206	
+207	def run_server(host: str = "0.0.0.0", port: int = 8000, reload: bool = False):
+208	    """
+
+--------------------------------------------------
+>> Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+   Severity: Low   Confidence: High
+   CWE: CWE-330 (https://cwe.mitre.org/data/definitions/330.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/blacklists/blacklist_calls.html#b311-random
+   Location: src/api\demo_routes.py:152:15
+151	    if best_score < 2:
+152	        return random.choice(list(DEMO_SAMPLES.keys()))
+153	
+
+--------------------------------------------------
+>> Issue: [B324:hashlib] Use of weak MD5 hash for security. Consider usedforsecurity=False
+   Severity: High   Confidence: High
+   CWE: CWE-327 (https://cwe.mitre.org/data/definitions/327.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b324_hashlib.html
+   Location: src/api\demo_routes.py:170:15
+169	    # プロンプトからハッシュを生成して色を決定
+170	    hash_val = hashlib.md5(prompt.encode()).hexdigest()
+171	    color1 = f"#{hash_val[:6]}"
+
+--------------------------------------------------
+>> Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+   Severity: Low   Confidence: High
+   CWE: CWE-330 (https://cwe.mitre.org/data/definitions/330.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/blacklists/blacklist_calls.html#b311-random
+   Location: src/api\demo_routes.py:252:25
+251	    # 擬似生成時間（リアリティのため）
+252	    generation_time_ms = random.randint(500, 2000)
+253	
+
+--------------------------------------------------
+>> Issue: [B104:hardcoded_bind_all_interfaces] Possible binding to all interfaces.
+   Severity: Medium   Confidence: Medium
+   CWE: CWE-605 (https://cwe.mitre.org/data/definitions/605.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b104_hardcoded_bind_all_interfaces.html
+   Location: src/utils\config.py:44:16
+43	    """サーバー設定"""
+44	    host: str = "0.0.0.0"  # noqa: S104
+45	    port: int = 8000
+
+--------------------------------------------------
+>> Issue: [B104:hardcoded_bind_all_interfaces] Possible binding to all interfaces.
+   Severity: Medium   Confidence: Medium
+   CWE: CWE-605 (https://cwe.mitre.org/data/definitions/605.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/plugins/b104_hardcoded_bind_all_interfaces.html
+   Location: src/utils\config.py:109:42
+108	        server_config = ServerConfig(
+109	            host=os.getenv("SERVER_HOST", "0.0.0.0"),
+110	            port=int(os.getenv("SERVER_PORT", "8000")),
+
+--------------------------------------------------
+>> Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+   Severity: Low   Confidence: High
+   CWE: CWE-330 (https://cwe.mitre.org/data/definitions/330.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.2/blacklists/blacklist_calls.html#b311-random
+   Location: src/utils\retry.py:94:48
+93	    if config.jitter:
+94	        jitter = delay * config.jitter_factor * random.random()
+95	        delay += jitter
+
+--------------------------------------------------
+
+Code scanned:
+	Total lines of code: 7757
+	Total lines skipped (#nosec): 0
+	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0
+		Low: 15
+		Medium: 3
+		High: 1
+	Total issues (by confidence):
+		Undefined: 0
+		Low: 0
+		Medium: 3
+		High: 16
+Files skipped (0):

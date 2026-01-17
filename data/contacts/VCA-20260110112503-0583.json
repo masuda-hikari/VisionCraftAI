@@ -1,0 +1,12 @@
+{
+  "ticket_id": "VCA-20260110112503-0583",
+  "timestamp": "2026-01-10T11:25:03.161853",
+  "name": "山田太郎",
+  "email": "yamada@example.com",
+  "company": null,
+  "category": "general",
+  "subject": "サービスについての質問",
+  "message": "サービスの利用方法について教えてください。APIの使い方がわかりません。",
+  "api_key_provided": false,
+  "status": "new"
+}

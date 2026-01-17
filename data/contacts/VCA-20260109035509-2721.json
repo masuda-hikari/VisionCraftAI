@@ -1,0 +1,12 @@
+{
+  "ticket_id": "VCA-20260109035509-2721",
+  "timestamp": "2026-01-09T03:55:09.067004",
+  "name": "テスト",
+  "email": "test@example.com",
+  "company": null,
+  "category": "other",
+  "subject": "otherのテスト",
+  "message": "otherカテゴリでのお問い合わせテストです。",
+  "api_key_provided": false,
+  "status": "new"
+}

@@ -1,0 +1,12 @@
+{
+  "ticket_id": "VCA-20260112125429-3290",
+  "timestamp": "2026-01-12T12:54:29.222594",
+  "name": "鈴木一郎",
+  "email": "suzuki@company.co.jp",
+  "company": "株式会社テスト",
+  "category": "enterprise",
+  "subject": "Enterpriseプランについて",
+  "message": "Enterpriseプランの詳細と見積もりをいただきたいです。月間1000枚程度の利用を想定しています。",
+  "api_key_provided": false,
+  "status": "new"
+}

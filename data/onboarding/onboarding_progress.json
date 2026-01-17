@@ -1,0 +1,1956 @@
+{
+  "progress": [
+    {
+      "user_id": "vca_c21d99cdc011fdf7",
+      "api_key_id": "vca_c21d99cdc011fdf7",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T20:15:12.742513",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:15:12.742518"
+    },
+    {
+      "user_id": "vca_c5a9ef2ca05ce2cb",
+      "api_key_id": "vca_c5a9ef2ca05ce2cb",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T20:15:12.813892",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:15:12.813903"
+    },
+    {
+      "user_id": "vca_5d6191135304e4fb",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T20:15:12.881364",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:15:12.881372"
+    },
+    {
+      "user_id": "vca_0d52951930c9b106",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T20:15:12.953766",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:15:12.954521"
+    },
+    {
+      "user_id": "vca_a093a32af561b47e",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-11T20:15:13.111075",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:15:13.111842"
+    },
+    {
+      "user_id": "vca_bce07762997f8a1e",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T20:15:13.175512",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:15:13.175519"
+    },
+    {
+      "user_id": "vca_ccbdb7cb69aa6050",
+      "api_key_id": "vca_ccbdb7cb69aa6050",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T20:15:44.069062",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:15:44.069066"
+    },
+    {
+      "user_id": "vca_280ab795df6f041d",
+      "api_key_id": "vca_280ab795df6f041d",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T20:15:44.142709",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:15:44.142717"
+    },
+    {
+      "user_id": "vca_e8df0e9e97c466a2",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T20:15:44.209184",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:15:44.209192"
+    },
+    {
+      "user_id": "vca_a426c8767b425e74",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T20:15:44.279036",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:15:44.280057"
+    },
+    {
+      "user_id": "vca_faa6eb1f68201361",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-11T20:15:44.411915",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:15:44.412912"
+    },
+    {
+      "user_id": "vca_6ddec0fe2859524b",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T20:15:44.480811",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:15:44.480818"
+    },
+    {
+      "user_id": "vca_68e68f5fbd4b1674",
+      "api_key_id": "vca_68e68f5fbd4b1674",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T20:16:14.749451",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:16:14.749455"
+    },
+    {
+      "user_id": "vca_6c8ae06afcc88029",
+      "api_key_id": "vca_6c8ae06afcc88029",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T20:16:14.820878",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:16:14.820884"
+    },
+    {
+      "user_id": "vca_a4cfb1b265e4c3b6",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T20:16:14.890542",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:16:14.890549"
+    },
+    {
+      "user_id": "vca_ce756ebb2fddb745",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T20:16:14.958249",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:16:14.959211"
+    },
+    {
+      "user_id": "vca_63505af128e9ac0b",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-11T20:16:15.095618",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:16:15.096695"
+    },
+    {
+      "user_id": "vca_a1ea2ee6b0dcb4ff",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T20:16:15.165288",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T20:16:15.165296"
+    },
+    {
+      "user_id": "vca_395ae68bdd8b4d4e",
+      "api_key_id": "vca_395ae68bdd8b4d4e",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T22:11:48.486847",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:11:48.486852"
+    },
+    {
+      "user_id": "vca_282185442c50b443",
+      "api_key_id": "vca_282185442c50b443",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T22:11:48.561071",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:11:48.561077"
+    },
+    {
+      "user_id": "vca_dc79d69b4fe9d2f1",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T22:11:48.631115",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:11:48.631123"
+    },
+    {
+      "user_id": "vca_adbf7dfc441fa6af",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T22:11:48.702247",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:11:48.703491"
+    },
+    {
+      "user_id": "vca_6372ab08ee13e20c",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-11T22:11:48.844536",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:11:48.845663"
+    },
+    {
+      "user_id": "vca_3a21b1f8f5c024d7",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T22:11:48.913533",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:11:48.913540"
+    },
+    {
+      "user_id": "vca_bcb0de31f19623c8",
+      "api_key_id": "vca_bcb0de31f19623c8",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T22:12:41.396458",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:12:41.396463"
+    },
+    {
+      "user_id": "vca_d1ec8f415c26f5de",
+      "api_key_id": "vca_d1ec8f415c26f5de",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T22:12:41.469709",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:12:41.469716"
+    },
+    {
+      "user_id": "vca_5703889123761e0f",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T22:12:41.578227",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:12:41.578234"
+    },
+    {
+      "user_id": "vca_536fcdb8696a217e",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T22:12:41.649488",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:12:41.650797"
+    },
+    {
+      "user_id": "vca_ade68863db3d140c",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-11T22:12:41.793034",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:12:41.794205"
+    },
+    {
+      "user_id": "vca_53feb4c5a6193d17",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T22:12:41.862799",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:12:41.862806"
+    },
+    {
+      "user_id": "vca_10316730d4254f28",
+      "api_key_id": "vca_10316730d4254f28",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T22:15:44.442251",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:15:44.442255"
+    },
+    {
+      "user_id": "vca_eb1756351fb342b9",
+      "api_key_id": "vca_eb1756351fb342b9",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T22:15:44.521334",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:15:44.521341"
+    },
+    {
+      "user_id": "vca_398f85bca617f224",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T22:15:44.598266",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:15:44.598273"
+    },
+    {
+      "user_id": "vca_4c387ff8c6786f70",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T22:15:44.675691",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:15:44.677248"
+    },
+    {
+      "user_id": "vca_e1df45e873748028",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-11T22:15:44.828111",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:15:44.829464"
+    },
+    {
+      "user_id": "vca_f85ed8753c1ec027",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-11T22:15:44.905640",
+      "completed_at": null,
+      "last_activity_at": "2026-01-11T22:15:44.905646"
+    },
+    {
+      "user_id": "vca_9e5b56d298f1caac",
+      "api_key_id": "vca_9e5b56d298f1caac",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T00:00:51.813295",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T00:00:51.813298"
+    },
+    {
+      "user_id": "vca_2541af27aa4e1929",
+      "api_key_id": "vca_2541af27aa4e1929",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T00:00:51.899613",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T00:00:51.899622"
+    },
+    {
+      "user_id": "vca_1ef56828fad6530e",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T00:00:51.988955",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T00:00:51.988962"
+    },
+    {
+      "user_id": "vca_0beef9344402d609",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T00:00:52.072408",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T00:00:52.074193"
+    },
+    {
+      "user_id": "vca_1ba676ad85603968",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-12T00:00:52.238055",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T00:00:52.239771"
+    },
+    {
+      "user_id": "vca_65efc126847d2c98",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T00:00:52.321210",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T00:00:52.321216"
+    },
+    {
+      "user_id": "vca_1da1445f9f98aa25",
+      "api_key_id": "vca_1da1445f9f98aa25",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T00:03:13.449719",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T00:03:13.449724"
+    },
+    {
+      "user_id": "vca_a0b17af7e1d995ed",
+      "api_key_id": "vca_a0b17af7e1d995ed",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T00:03:13.540570",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T00:03:13.540578"
+    },
+    {
+      "user_id": "vca_d06fad125bd54e7c",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T00:03:13.624489",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T00:03:13.624495"
+    },
+    {
+      "user_id": "vca_95437dc45ffcdbee",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T00:03:13.705923",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T00:03:13.707647"
+    },
+    {
+      "user_id": "vca_538c32f9e2b8229a",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-12T00:03:13.869751",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T00:03:13.871483"
+    },
+    {
+      "user_id": "vca_dfe9b2eb218c6ade",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T00:03:13.952427",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T00:03:13.952433"
+    },
+    {
+      "user_id": "vca_e3dbd86c64d08759",
+      "api_key_id": "vca_e3dbd86c64d08759",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T01:36:42.724423",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:36:42.724427"
+    },
+    {
+      "user_id": "vca_63428c26c8f909ad",
+      "api_key_id": "vca_63428c26c8f909ad",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T01:36:42.812854",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:36:42.812862"
+    },
+    {
+      "user_id": "vca_31414fee5b548aed",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T01:36:42.896805",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:36:42.896812"
+    },
+    {
+      "user_id": "vca_db0834f4c95b665d",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T01:36:42.981625",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:36:42.983695"
+    },
+    {
+      "user_id": "vca_c3dffbb53b09324d",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-12T01:36:43.192230",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:36:43.194323"
+    },
+    {
+      "user_id": "vca_ea5d367281ffe179",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T01:36:43.280669",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:36:43.280675"
+    },
+    {
+      "user_id": "vca_7adf3a9a6d2df5bd",
+      "api_key_id": "vca_7adf3a9a6d2df5bd",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T01:37:12.250345",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:37:12.250349"
+    },
+    {
+      "user_id": "vca_e978f14f4489c6f3",
+      "api_key_id": "vca_e978f14f4489c6f3",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T01:37:12.337995",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:37:12.338001"
+    },
+    {
+      "user_id": "vca_349154295cda379d",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T01:37:12.424800",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:37:12.424808"
+    },
+    {
+      "user_id": "vca_ba036c09b267b407",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T01:37:12.511649",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:37:12.513647"
+    },
+    {
+      "user_id": "vca_aed6bc6dbaecef6d",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-12T01:37:12.686102",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:37:12.688146"
+    },
+    {
+      "user_id": "vca_97270160b2447e79",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T01:37:12.776423",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:37:12.776431"
+    },
+    {
+      "user_id": "vca_319ed986dc36216c",
+      "api_key_id": "vca_319ed986dc36216c",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T01:40:59.441266",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:40:59.441271"
+    },
+    {
+      "user_id": "vca_b78567a241878f22",
+      "api_key_id": "vca_b78567a241878f22",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T01:40:59.534386",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:40:59.534392"
+    },
+    {
+      "user_id": "vca_92a1bf78b1774a23",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T01:40:59.623883",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:40:59.623889"
+    },
+    {
+      "user_id": "vca_c94304667a9b0f51",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T01:40:59.713563",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:40:59.715802"
+    },
+    {
+      "user_id": "vca_b7c786bd1d98ab0f",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-12T01:40:59.889188",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:40:59.891233"
+    },
+    {
+      "user_id": "vca_cf9629d62c21f09e",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T01:40:59.978885",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T01:40:59.978892"
+    },
+    {
+      "user_id": "vca_a390db92c0109b23",
+      "api_key_id": "vca_a390db92c0109b23",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:48:18.233827",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:48:18.233831"
+    },
+    {
+      "user_id": "vca_2f86da0d6544f87a",
+      "api_key_id": "vca_2f86da0d6544f87a",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:48:18.327267",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:48:18.327273"
+    },
+    {
+      "user_id": "vca_239877ce96a58924",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:48:18.417315",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:48:18.417320"
+    },
+    {
+      "user_id": "vca_48b5dc2424509ee6",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:48:18.507097",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:48:18.509116"
+    },
+    {
+      "user_id": "vca_d74a3b1db390e92f",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-12T12:48:18.688236",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:48:18.690258"
+    },
+    {
+      "user_id": "vca_787e34fc4e6f6452",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:48:18.779661",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:48:18.779666"
+    },
+    {
+      "user_id": "vca_f05701da6a08d255",
+      "api_key_id": "vca_f05701da6a08d255",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:50:36.712530",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:50:36.712536"
+    },
+    {
+      "user_id": "vca_70f450df42ec00b3",
+      "api_key_id": "vca_70f450df42ec00b3",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:50:36.809665",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:50:36.809672"
+    },
+    {
+      "user_id": "vca_996da36d1fdde568",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:50:36.905500",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:50:36.905507"
+    },
+    {
+      "user_id": "vca_4a07ea143bfe797b",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:50:36.999577",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:50:37.001918"
+    },
+    {
+      "user_id": "vca_670aa9bbe9cc93d9",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-12T12:50:37.189718",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:50:37.192035"
+    },
+    {
+      "user_id": "vca_6b8ded3b5fa04633",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:50:37.291249",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:50:37.291258"
+    },
+    {
+      "user_id": "vca_ce2d2672f6c132f0",
+      "api_key_id": "vca_ce2d2672f6c132f0",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:52:39.165229",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:52:39.165232"
+    },
+    {
+      "user_id": "vca_02582efb94d45c98",
+      "api_key_id": "vca_02582efb94d45c98",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:52:39.262418",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:52:39.262423"
+    },
+    {
+      "user_id": "vca_fd79d2bd926a6c3a",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:52:39.357190",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:52:39.357196"
+    },
+    {
+      "user_id": "vca_9d2af1a219f34af3",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:52:39.452043",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:52:39.454377"
+    },
+    {
+      "user_id": "vca_b85dd1bc955e77eb",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-12T12:52:39.648243",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:52:39.650862"
+    },
+    {
+      "user_id": "vca_8af72b31a7eba096",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:52:39.757450",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:52:39.757456"
+    },
+    {
+      "user_id": "vca_1b679a45b7315e66",
+      "api_key_id": "vca_1b679a45b7315e66",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:54:42.122949",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:54:42.122954"
+    },
+    {
+      "user_id": "vca_e3695f175c515703",
+      "api_key_id": "vca_e3695f175c515703",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:54:42.228976",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:54:42.228983"
+    },
+    {
+      "user_id": "vca_acff4345a5721b55",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:54:42.328381",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:54:42.328387"
+    },
+    {
+      "user_id": "vca_d6b858d8a89a0f06",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:54:42.428627",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:54:42.431175"
+    },
+    {
+      "user_id": "vca_a1b83d3a9057ade7",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-12T12:54:42.632539",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:54:42.635623"
+    },
+    {
+      "user_id": "vca_2324348c19dfff48",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-12T12:54:42.740683",
+      "completed_at": null,
+      "last_activity_at": "2026-01-12T12:54:42.740690"
+    },
+    {
+      "user_id": "vca_eea99b52e248c935",
+      "api_key_id": "vca_eea99b52e248c935",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-17T11:42:17.896169",
+      "completed_at": null,
+      "last_activity_at": "2026-01-17T11:42:17.896172"
+    },
+    {
+      "user_id": "vca_7bcb6b73ecf9e301",
+      "api_key_id": "vca_7bcb6b73ecf9e301",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-17T11:42:18.000026",
+      "completed_at": null,
+      "last_activity_at": "2026-01-17T11:42:18.000031"
+    },
+    {
+      "user_id": "vca_6867b5ed80795b1d",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-17T11:42:18.101360",
+      "completed_at": null,
+      "last_activity_at": "2026-01-17T11:42:18.101364"
+    },
+    {
+      "user_id": "vca_24c06976ba8b6575",
+      "api_key_id": "",
+      "current_step": "create_api_key",
+      "completed_steps": [
+        "welcome"
+      ],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-17T11:42:18.203963",
+      "completed_at": null,
+      "last_activity_at": "2026-01-17T11:42:18.207290"
+    },
+    {
+      "user_id": "vca_ed7dcd6238f655db",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": true,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.125,
+      "started_at": "2026-01-17T11:42:18.404289",
+      "completed_at": null,
+      "last_activity_at": "2026-01-17T11:42:18.406863"
+    },
+    {
+      "user_id": "vca_85b332c3b528fa29",
+      "api_key_id": "",
+      "current_step": "welcome",
+      "completed_steps": [],
+      "checklist": {
+        "api_key_created": false,
+        "first_image_generated": false,
+        "prompt_enhanced": false,
+        "image_downloaded": false,
+        "image_shared": false,
+        "referral_code_created": false,
+        "dashboard_visited": false,
+        "pricing_viewed": false
+      },
+      "completion_rate": 0.0,
+      "started_at": "2026-01-17T11:42:18.508318",
+      "completed_at": null,
+      "last_activity_at": "2026-01-17T11:42:18.508323"
+    }
+  ]
+}

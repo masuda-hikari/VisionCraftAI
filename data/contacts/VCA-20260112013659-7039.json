@@ -1,0 +1,12 @@
+{
+  "ticket_id": "VCA-20260112013659-7039",
+  "timestamp": "2026-01-12T01:36:59.990357",
+  "name": "テストユーザー",
+  "email": "test@example.com",
+  "company": null,
+  "category": "technical",
+  "subject": "技術的な問題",
+  "message": "画像生成時にエラーが発生します。エラーコード500が返されます。調査をお願いします。",
+  "api_key_provided": true,
+  "status": "new"
+}
