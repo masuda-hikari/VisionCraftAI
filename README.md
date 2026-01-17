@@ -20,12 +20,9 @@
 | **RESTful API** | 開発者向けの完全なAPIアクセス |
 | **Webインターフェース** | 直感的なブラウザベースのUI |
 | **バッチ処理** | 複数画像の一括生成 |
-| **サブスクリプション** | Stripe統合による柔軟な課金 |
-| **クレジット購入** | 従量課金オプション |
-| **管理者ダッシュボード** | 収益・使用量のリアルタイム監視 |
+| **管理者ダッシュボード** | 使用量のリアルタイム監視 |
 | **ユーザーダッシュボード** | セルフサービスでの利用管理 |
 | **本番運用監視** | Prometheus対応メトリクス・ヘルスチェック |
-| **年額プラン** | 20%割引の年間サブスクリプション |
 | **PWA対応** | オフライン対応・ホーム画面追加対応 |
 | **画像ギャラリー** | 生成履歴保存・ライトボックス表示 |
 | **モバイル対応** | レスポンシブUI・ハンバーガーメニュー |
@@ -56,7 +53,6 @@ curl -X POST http://localhost:8000/api/v1/demo/generate \
 
 - Python 3.12以上
 - Google Cloud アカウント（本番利用時）
-- Stripe アカウント（決済機能利用時）
 
 ### インストール
 
@@ -82,7 +78,6 @@ cp .env.example .env
 # 必要に応じて編集
 # GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json
 # GOOGLE_CLOUD_PROJECT=your-project-id
-# STRIPE_API_KEY=sk_test_xxx
 ```
 
 ### サーバー起動
@@ -146,28 +141,6 @@ curl -X POST http://localhost:8000/api/v1/batch/generate \
 
 ---
 
-## 料金プラン
-
-| プラン | 月額 | 月間制限 | 最大解像度 | バッチ上限 |
-|--------|------|---------|-----------|----------|
-| **Free** | 無料 | 5枚 | 512x512 | 1 |
-| **Basic** | $9.99 | 100枚 | 1024x1024 | 10 |
-| **Pro** | $29.99 | 500枚 | 2048x2048 | 50 |
-| **Enterprise** | $99.99 | 無制限 | 4096x4096 | 100 |
-
-### クレジットパッケージ
-
-追加クレジットを購入して、月間制限を超えた画像生成が可能です。
-
-| パッケージ | クレジット | ボーナス | 価格 |
-|-----------|-----------|---------|------|
-| Small | 10 | - | $4.99 |
-| Medium | 50 | +5 | $19.99 |
-| Large | 100 | +15 | $34.99 |
-| Mega | 500 | +100 | $149.99 |
-
----
-
 ## プロジェクト構成
 
 ```
@@ -178,7 +151,6 @@ VisionCraftAI/
 │   │   ├── routes.py           # APIルーター
 │   │   ├── schemas.py          # Pydanticスキーマ
 │   │   ├── auth/               # 認証・認可
-│   │   ├── payment/            # Stripe決済
 │   │   ├── admin/              # 管理者機能
 │   │   ├── demo_routes.py      # デモAPI
 │   │   ├── contact_routes.py   # お問い合わせ
@@ -222,10 +194,7 @@ docker run -p 8000:8000 --env-file .env visioncraftai
 # 1. Google Cloud セットアップ
 python scripts/setup_gcloud.py --project YOUR_PROJECT_ID
 
-# 2. Stripe セットアップ
-python scripts/setup_stripe.py --api-key sk_live_xxx --webhook-url https://your-domain.com
-
-# 3. Cloud Run デプロイ
+# 2. Cloud Run デプロイ
 python scripts/deploy_cloudrun.py --project YOUR_PROJECT_ID
 ```
 
@@ -245,7 +214,6 @@ pytest tests/ --cov=src --cov-report=html
 # 特定カテゴリのみ
 pytest tests/test_api.py -v        # APIテスト
 pytest tests/test_auth.py -v       # 認証テスト
-pytest tests/test_payment.py -v    # 決済テスト
 pytest tests/test_monitoring.py -v # モニタリングテスト
 ```
 
@@ -291,7 +259,6 @@ curl http://localhost:8000/api/v1/monitoring/metrics/prometheus
 - [ユーザーガイド](docs/USER_GUIDE.md)
 - [APIクイックスタート](docs/API_QUICKSTART.md)
 - [デプロイガイド](docs/DEPLOY_GUIDE.md)
-- [マーケティング戦略](docs/MARKETING_STRATEGY.md)
 
 ---
 
@@ -312,22 +279,22 @@ Proprietary - All Rights Reserved
 
 | Phase | 内容 | 状態 |
 |-------|------|------|
-| Phase 1-6 | 基盤・認証・決済・UI | ✅ 完了 |
+| Phase 1-6 | 基盤・認証・UI | ✅ 完了 |
 | Phase 7-8 | デプロイ準備・自動化 | ✅ 完了 |
 | Phase 9 | CI/CD・セキュリティ | ✅ 完了 |
-| Phase 10 | マーケティング準備・デモ | ✅ 完了 |
+| Phase 10 | デモ機能 | ✅ 完了 |
 | Phase 11 | ドキュメント・法的ページ | ✅ 完了 |
 | Phase 12 | 管理者ダッシュボード | ✅ 完了 |
 | Phase 13 | ユーザーダッシュボード | ✅ 完了 |
 | Phase 14 | 本番運用監視 | ✅ 完了 |
 | Phase 15 | ローンチ準備 | ✅ 完了 |
 | Phase 16 | テストカバレッジ80% | ✅ 完了 |
-| Phase 17 | 年額プラン・モバイル対応 | ✅ 完了 |
+| Phase 17 | モバイル対応 | ✅ 完了 |
 | Phase 18 | SEO・アクセシビリティ | ✅ 完了 |
 | Phase 19 | PWA化・UX強化 | ✅ 完了 |
 | Phase 20 | 多言語対応（i18n） | ✅ 完了 |
-| Phase 21 | ソーシャル共有・バイラル | ✅ 完了 |
-| Phase 22 | リファラル・オンボーディング | ✅ 完了 |
+| Phase 21 | ソーシャル共有 | ✅ 完了 |
+| Phase 22 | オンボーディング | ✅ 完了 |
 | Phase 23 | メール通知システム | ✅ 完了 |
 | Phase 24 | A/Bテスト・分析基盤 | ✅ 完了 |
 | Phase 25 | マルチプラットフォームデプロイ | ✅ 完了 |
