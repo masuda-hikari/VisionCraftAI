@@ -1,0 +1,90 @@
+{
+  "collection_date": "2026-01-17",
+  "category": "competitor_pricing",
+  "sources": [
+    {
+      "title": "DALL·E 3・Midjourney・Stable Diffusionの違い徹底比較",
+      "url": "https://hblab.co.jp/blog/dall-e-3-midjourney-stable-diffusion/",
+      "accessed": "2026-01-17"
+    },
+    {
+      "title": "Midjourney料金ガイド！4プランの特徴と失敗しない選び方",
+      "url": "https://www.adcal-inc.com/column/midjourney-ai-guide/",
+      "accessed": "2026-01-17"
+    }
+  ],
+  "competitors": {
+    "midjourney": {
+      "pricing_model": "月額固定制",
+      "free_plan": false,
+      "plans": {
+        "basic": {
+          "monthly": "$10 (約1,423円)",
+          "yearly": "$8/月 (約1,138円)",
+          "images_per_month": "約200枚"
+        },
+        "standard": {
+          "monthly": "$30 (約4,269円)",
+          "yearly": "$24/月 (約3,415円)",
+          "images_per_month": "約900枚"
+        },
+        "pro": {
+          "monthly": "$60 (約8,538円)",
+          "yearly": "$48/月 (約6,831円)",
+          "images_per_month": "約1,800枚"
+        },
+        "mega": {
+          "monthly": "$120 (約17,077円)",
+          "yearly": "$96/月 (約13,662円)",
+          "images_per_month": "約3,600枚"
+        }
+      },
+      "strengths": ["高画質", "芸術性", "固定料金で予算管理しやすい"],
+      "weaknesses": ["無料プラン廃止", "低頻度利用ではコスト高"]
+    },
+    "dall_e": {
+      "pricing_model": "従量課金（クレジット制）",
+      "free_plan": true,
+      "free_tier": "ChatGPT無料版で1日最大3枚",
+      "pricing": {
+        "dalle3_standard": "$0.04/枚",
+        "dalle3_hd": "$0.08/枚",
+        "dalle2": "$0.02/枚"
+      },
+      "subscription": {
+        "chatgpt_plus": "$20/月（一定量のクレジット含む）"
+      },
+      "strengths": ["無料プランあり", "低頻度利用に経済的", "従量制"],
+      "weaknesses": ["高頻度利用でコスト増", "ChatGPT Plus必須で追加枚数"]
+    },
+    "stable_diffusion": {
+      "pricing_model": "オープンソース（自前）/クラウドサービス",
+      "free_plan": true,
+      "self_hosted": "無料（高性能GPU必要）",
+      "cloud_services": "約1000枚で$10程度〜月額制まで様々",
+      "strengths": ["完全無料（自前）", "高度カスタマイズ可能", "潜在的低コスト"],
+      "weaknesses": ["技術的障壁高", "GPU必要"]
+    }
+  },
+  "visioncraftai_positioning": {
+    "current_pricing": {
+      "free": "$0 (月5枚)",
+      "basic": "$9.99 (月100枚)",
+      "pro": "$29.99 (月500枚)",
+      "enterprise": "$99.99 (無制限)"
+    },
+    "competitive_advantages": [
+      "Midjourneyより安価なBasicプラン（$9.99 vs $10）",
+      "無料プランあり（Midjourneyは廃止）",
+      "DALL-Eより高いコスパ（$9.99で月100枚 vs DALL-E $0.04/枚＝$4で100枚だが無料3枚/日制限）",
+      "固定料金＋従量課金のハイブリッド対応",
+      "APIアクセス対応（開発者向け）"
+    ],
+    "recommended_adjustments": {
+      "free_plan": "月10枚に増量（競争力強化）",
+      "basic_plan": "$8.99に値下げ（Midjourneyより明確に安価）",
+      "annual_discount": "20%割引維持（年額プラン訴求）"
+    }
+  },
+  "next_collection": "2026-02-17"
+}

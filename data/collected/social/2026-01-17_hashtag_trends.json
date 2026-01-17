@@ -1,0 +1,84 @@
+{
+  "collection_date": "2026-01-17",
+  "category": "social_media_trends",
+  "platform": "X (Twitter)",
+  "sources": [
+    {
+      "title": "【2026年保存版】Twitter(X)でイラストのいいねが３倍増えるハッシュタグ一覧",
+      "url": "https://yurugonomi.com/illustration-twitter-hashtag/",
+      "accessed": "2026-01-17"
+    },
+    {
+      "title": "X(旧Twitter)で映える！画像生成AIプロンプト完全ガイド",
+      "url": "https://aikakumei.jp/ai-prompt-guide-for-x/",
+      "accessed": "2026-01-17"
+    }
+  ],
+  "recommended_hashtags": {
+    "general": [
+      "#画像生成AI",
+      "#AIイラスト",
+      "#AIart",
+      "#AI画像生成",
+      "#生成AI",
+      "#AIアート"
+    ],
+    "tool_specific": [
+      "#Midjourney",
+      "#StableDiffusion",
+      "#DALL_E",
+      "#dalle3"
+    ],
+    "content_specific": [
+      "#風景画",
+      "#キャラクター",
+      "#猫イラスト",
+      "#ファンタジー"
+    ],
+    "disclosure": [
+      "#AIgenerated",
+      "#AI生成"
+    ]
+  },
+  "trends_2026": [
+    {
+      "trend": "Gemini 2.5 Flash Image",
+      "date": "2025年8月",
+      "description": "被写体の特徴やスタイルを保ったまま自然な画像編集",
+      "impact": "高品質編集機能への需要増"
+    },
+    {
+      "trend": "Nano Banana (Google)",
+      "date": "2025年8月",
+      "description": "自撮りを3Dフィギュア風に変換",
+      "impact": "Instagram/Xで拡散、Geminiアプリランキング首位",
+      "insight": "バイラル機能の重要性"
+    }
+  ],
+  "best_practices": [
+    "AI生成であることを明示（ハッシュタグ #AIgenerated 使用）",
+    "複数ハッシュタグ併用（一般＋ツール別＋内容別）",
+    "トレンド機能（例: 3Dフィギュア変換）を活用",
+    "バイラル性の高い機能実装"
+  ],
+  "visioncraftai_strategy": {
+    "initial_hashtags": [
+      "#画像生成AI",
+      "#AIイラスト",
+      "#VisionCraftAI",
+      "#AIgenerated"
+    ],
+    "content_ideas": [
+      "毎日のAI生成作品投稿",
+      "プロンプト例＋結果画像",
+      "ビフォーアフター（編集機能）",
+      "ユーザー作品のリツイート"
+    ],
+    "viral_feature_candidate": [
+      "SNS共有ボタン（実装済み）",
+      "アバター生成機能（今後検討）",
+      "スタイル変換機能（今後検討）"
+    ]
+  },
+  "next_collection": "2026-01-18"
+}

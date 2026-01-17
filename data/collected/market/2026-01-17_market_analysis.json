@@ -1,0 +1,50 @@
+{
+  "collection_date": "2026-01-17",
+  "category": "market",
+  "sources": [
+    {
+      "title": "総務省 令和7年版 情報通信白書 市場概況",
+      "url": "https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r07/html/nd219100.html",
+      "accessed": "2026-01-17"
+    },
+    {
+      "title": "【2025年予測】生成AI日本市場規模と成長分野",
+      "url": "https://jp.ext.hp.com/techdevice/ai/ai_explained_16/",
+      "accessed": "2026-01-17"
+    },
+    {
+      "title": "日本における生成AI市場の将来展望（今後10年間）",
+      "url": "https://note.com/mate_inc/n/n57cd2ede41c9",
+      "accessed": "2026-01-17"
+    }
+  ],
+  "key_findings": {
+    "market_size": {
+      "2024": "1兆3,412億円（AIシステム市場全体）",
+      "2028": "約8,000億円（生成AI関連支出）",
+      "2029": "4兆1,873億円（AIシステム市場全体）",
+      "2030_estimated": "1兆円規模（生成AI市場）"
+    },
+    "growth_rate": {
+      "cagr_2023_2028": "30.6%（年平均成長率）",
+      "5year_growth": "約3倍（2024-2029）"
+    },
+    "use_cases": [
+      "要約・検索・翻訳（一般オフィス業務）",
+      "エンターテインメント",
+      "顧客体験分野（対話型ボット）",
+      "音声・画像生成"
+    ],
+    "key_players": {
+      "japanese_companies": ["NEC", "日立"],
+      "focus_areas": ["対話型AI", "画像生成技術"]
+    }
+  },
+  "implications_for_visioncraftai": {
+    "market_opportunity": "生成AI市場は2026年に向けて年平均30%以上の高成長",
+    "positioning": "画像生成特化サービスとして急成長市場の一角を狙う",
+    "target_market_size_2028": "約8,000億円市場の一部",
+    "competitive_advantage": "APIアクセス対応、多言語対応、無料プランでの市場浸透"
+  },
+  "next_collection": "2026-02-17"
+}
